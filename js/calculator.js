@@ -63,6 +63,9 @@ export function initCalculator() {
   calculate();
 }
 
+// ============================================================
+// ОСНОВНАЯ ФУНКЦИЯ РАСЧЁТА — ЭКСПОРТИРУЕТСЯ
+// ============================================================
 export function calculate() {
   const gender = document.getElementById('gender').value;
   const age = parseInt(document.getElementById('ageSlider').value) || 30;
@@ -71,6 +74,13 @@ export function calculate() {
   const goalWeight = parseInt(document.getElementById('goalWeightSlider').value) || 65;
   const activity = parseFloat(document.getElementById('activity').value) || 1.375;
   const activeGoal = document.querySelector('.goal-btn.active');
+  
+  // Проверка, что есть активная цель
+  if (!activeGoal) {
+    console.warn('Нет активной цели');
+    return;
+  }
+  
   const factor = parseFloat(activeGoal.dataset.factor);
   const plan = activeGoal.dataset.plan;
 
