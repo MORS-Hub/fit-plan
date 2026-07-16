@@ -5,1380 +5,601 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#0a0a0f">
-    <meta name="description" content="FitPlan PS Edition — персональный конструктор питания с AI. 200+ рецептов, калькулятор КБЖУ, трекинг прогресса.">
+    <meta name="theme-color" content="#08080c">
+    <meta name="description" content="FitPlan — персональный конструктор питания. 200+ рецептов, умный калькулятор КБЖУ, трекинг прогресса, PWA.">
     <meta name="apple-mobile-web-app-title" content="FitPlan">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' style='stop-color:%230070D1'/><stop offset='100%25' style='stop-color:%2300A3FF'/></linearGradient></defs><circle cx='50' cy='50' r='45' fill='%230a0a0f' stroke='url(%23g)' stroke-width='6'/><path d='M30 50 L45 65 L70 35' fill='none' stroke='url(%23g)' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' style='stop-color:%231a7a64'/><stop offset='100%25' style='stop-color:%232ecc71'/></linearGradient></defs><circle cx='50' cy='50' r='46' fill='%2308080c' stroke='url(%23g)' stroke-width='5'/><path d='M28 50 L44 66 L72 36' fill='none' stroke='url(%23g)' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
-    <title>FitPlan PS Edition</title>
+    <title>FitPlan — конструктор питания</title>
     <style>
-        /* ============================================================
-           CRITICAL CSS — загружается мгновенно
-           ============================================================ */
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-tertiary: #1a1a25;
-            --bg-card: #181820;
-            --bg-card-hover: #1e1e28;
-            --text-primary: #ffffff;
+            --bg-primary: #08080c;
+            --bg-secondary: #101016;
+            --bg-tertiary: #181820;
+            --bg-card: #14141c;
+            --bg-card-hover: #1a1a24;
+            --text-primary: #f0f0f5;
             --text-secondary: #b0b0c0;
             --text-muted: #707080;
-            --accent-blue: #0070D1;
-            --accent-blue-light: #00A3FF;
-            --accent-green: #2ECC71;
-            --accent-orange: #F39C12;
-            --accent-red: #E74C3C;
-            --accent-purple: #8E44AD;
-            --border-color: rgba(255,255,255,0.06);
-            --border-color-strong: rgba(255,255,255,0.12);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
-            --shadow-glow-blue: 0 0 20px rgba(0,112,209,0.3);
-            --shadow-glow-green: 0 0 20px rgba(46,204,113,0.3);
+            --accent: #1a7a64;
+            --accent-light: #2ecc71;
+            --accent-glow: rgba(26, 122, 100, 0.35);
+            --orange: #f5a623;
+            --red: #e74c3c;
+            --blue: #3498db;
+            --purple: #8e44ad;
+            --border: rgba(255,255,255,0.06);
+            --border-strong: rgba(255,255,255,0.10);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.5);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
             --radius-xs: 6px;
             --radius-sm: 10px;
             --radius-md: 16px;
             --radius-lg: 24px;
             --radius-xl: 32px;
-            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-bounce: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            --header-height: 60px;
-            --bottom-nav-height: 64px;
-            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+            --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --transition-fast: 0.2s cubic-bezier(0.4,0,0.2,1);
+            --transition: 0.3s cubic-bezier(0.4,0,0.2,1);
+            --transition-bounce: 0.4s cubic-bezier(0.34,1.56,0.64,1);
+            --header-h: 60px;
+            --nav-h: 64px;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
-            user-select: none;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        html, body { height:100%; overflow:hidden; font-family:var(--font); background:var(--bg-primary); color:var(--text-primary); -webkit-font-smoothing:antialiased; font-size:16px; line-height:1.5; }
+        body { display:flex; flex-direction:column; }
 
-        html, body {
-            height: 100%;
-            overflow: hidden;
-            font-family: var(--font-family);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            font-size: 16px;
-            line-height: 1.5;
-        }
+        /* Splash */
+        .splash { position:fixed; inset:0; background:var(--bg-primary); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity 0.5s ease, visibility 0.5s ease; }
+        .splash.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+        .splash-logo { text-align:center; animation:splashPulse 2s ease-in-out infinite; }
+        @keyframes splashPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
+        .splash-logo svg { width:80px; height:80px; margin-bottom:12px; }
+        .splash-logo h1 { font-size:2rem; font-weight:800; letter-spacing:-0.02em; background:linear-gradient(135deg, var(--accent), var(--accent-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .splash-subtitle { display:block; font-size:0.78rem; font-weight:500; color:var(--text-muted); letter-spacing:0.15em; text-transform:uppercase; margin-top:4px; }
+        .splash-loader { width:120px; height:3px; background:var(--bg-tertiary); border-radius:10px; margin-top:28px; overflow:hidden; }
+        .splash-loader-bar { height:100%; width:30%; background:linear-gradient(90deg, var(--accent), var(--accent-light)); border-radius:10px; animation:splashLoad 1.5s ease-in-out infinite; }
+        @keyframes splashLoad { 0%{transform:translateX(-100%)} 100%{transform:translateX(400%)} }
 
-        body {
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Splash Screen */
-        .splash-screen {
-            position: fixed;
-            inset: 0;
-            background: var(--bg-primary);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .splash-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-        .splash-logo {
-            text-align: center;
-            animation: splashPulse 2s ease-in-out infinite;
-        }
-        @keyframes splashPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        .splash-logo svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 16px;
-        }
-        .splash-logo h1 {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .splash-subtitle {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text-muted);
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-        .splash-loader {
-            width: 120px;
-            height: 3px;
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            margin-top: 32px;
-            overflow: hidden;
-        }
-        .splash-loader-bar {
-            height: 100%;
-            width: 30%;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-blue-light));
-            border-radius: 10px;
-            animation: splashLoading 1.5s ease-in-out infinite;
-        }
-        @keyframes splashLoading {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(400%); }
-        }
-
-        /* App Shell */
-        .app-shell {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            overflow: hidden;
-        }
-        .app-shell.hidden {
-            display: none;
-        }
+        /* App */
+        .app { display:flex; flex-direction:column; height:100%; overflow:hidden; }
+        .app.hidden { display:none; }
 
         /* Header */
-        .app-header {
-            height: var(--header-height);
-            background: rgba(10,10,15,0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 16px;
-            z-index: 100;
-            flex-shrink: 0;
-        }
-        .header-left, .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .header-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-light));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .icon-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all var(--transition-fast);
-            position: relative;
-        }
-        .icon-btn:hover {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-        .icon-btn:active {
-            transform: scale(0.92);
-        }
-        .user-level {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--bg-tertiary);
-            padding: 4px 12px 4px 8px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color-strong);
-        }
-        .level-icon {
-            font-size: 1rem;
-        }
-        .level-text {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--accent-blue-light);
-        }
-        .notification-dot {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            width: 8px;
-            height: 8px;
-            background: var(--accent-red);
-            border-radius: 50%;
-            border: 2px solid var(--bg-primary);
-        }
-        .notification-dot.hidden {
-            display: none;
-        }
+        .header { height:var(--header-h); background:rgba(8,8,12,0.95); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 16px; z-index:100; flex-shrink:0; }
+        .header-l, .header-r { display:flex; align-items:center; gap:10px; }
+        .header-title { font-size:1.1rem; font-weight:700; letter-spacing:-0.01em; background:linear-gradient(135deg, var(--accent), var(--accent-light)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .icon-btn { width:36px; height:36px; border-radius:50%; border:none; background:transparent; color:var(--text-secondary); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all var(--transition-fast); position:relative; }
+        .icon-btn:hover { background:var(--bg-tertiary); color:var(--text-primary); }
+        .icon-btn:active { transform:scale(0.92); }
+        .badge-lvl { display:flex; align-items:center; gap:5px; background:var(--bg-tertiary); padding:3px 10px 3px 6px; border-radius:20px; border:1px solid var(--border-strong); font-size:0.75rem; font-weight:700; }
+        .badge-lvl .lvl-num { color:var(--accent-light); }
+        .notif-dot { position:absolute; top:6px; right:6px; width:8px; height:8px; background:var(--red); border-radius:50%; border:2px solid var(--bg-primary); }
+        .notif-dot.hidden { display:none; }
 
         /* Side Menu */
-        .side-menu {
-            position: fixed;
-            inset: 0;
-            z-index: 200;
-            pointer-events: none;
-        }
-        .side-menu.active {
-            pointer-events: auto;
-        }
-        .side-menu-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            opacity: 0;
-            transition: opacity var(--transition-smooth);
-        }
-        .side-menu.active .side-menu-overlay {
-            opacity: 1;
-        }
-        .side-menu-content {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 280px;
-            max-width: 85vw;
-            background: var(--bg-secondary);
-            border-right: 1px solid var(--border-color);
-            transform: translateX(-100%);
-            transition: transform var(--transition-bounce);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-        .side-menu.active .side-menu-content {
-            transform: translateX(0);
-        }
-        .side-menu-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .user-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 0.9rem;
-            flex-shrink: 0;
-        }
-        .user-info strong {
-            display: block;
-            font-size: 0.9rem;
-        }
-        .user-info .text-muted {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-        .side-menu-items {
-            flex: 1;
-            padding: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .side-menu-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: var(--radius-sm);
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.9rem;
-            transition: all var(--transition-fast);
-            cursor: pointer;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-            font-family: var(--font-family);
-        }
-        .side-menu-item:hover, .side-menu-item.active {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-        }
-        .side-menu-item.active {
-            border-left: 3px solid var(--accent-blue);
-            padding-left: 13px;
-        }
-        .menu-icon {
-            font-size: 1.2rem;
-            width: 24px;
-            text-align: center;
-        }
-        .side-menu-footer {
-            padding: 12px;
-            border-top: 1px solid var(--border-color);
-        }
+        .side-menu { position:fixed; inset:0; z-index:200; pointer-events:none; }
+        .side-menu.active { pointer-events:auto; }
+        .side-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); opacity:0; transition:opacity var(--transition); }
+        .side-menu.active .side-overlay { opacity:1; }
+        .side-content { position:absolute; top:0; left:0; bottom:0; width:280px; max-width:85vw; background:var(--bg-secondary); border-right:1px solid var(--border); transform:translateX(-100%); transition:transform var(--transition-bounce); display:flex; flex-direction:column; overflow-y:auto; }
+        .side-menu.active .side-content { transform:translateX(0); }
+        .side-head { padding:20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; }
+        .avatar { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-light)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem; flex-shrink:0; }
+        .side-head .info strong { display:block; font-size:0.9rem; }
+        .side-head .info .muted { font-size:0.72rem; color:var(--text-muted); }
+        .side-items { flex:1; padding:12px; display:flex; flex-direction:column; gap:3px; }
+        .side-item { display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:var(--radius-sm); color:var(--text-secondary); text-decoration:none; font-weight:500; font-size:0.88rem; transition:all var(--transition-fast); cursor:pointer; border:none; background:none; width:100%; text-align:left; font-family:var(--font); }
+        .side-item:hover, .side-item.active { background:var(--bg-tertiary); color:var(--text-primary); }
+        .side-item.active { border-left:3px solid var(--accent); padding-left:11px; }
+        .side-icon { font-size:1.1rem; width:24px; text-align:center; }
+        .side-foot { padding:12px; border-top:1px solid var(--border); }
 
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 16px;
-            padding-bottom: calc(var(--bottom-nav-height) + var(--safe-area-bottom) + 16px);
-            -webkit-overflow-scrolling: touch;
-        }
-        .main-content::-webkit-scrollbar {
-            width: 3px;
-        }
-        .main-content::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .main-content::-webkit-scrollbar-thumb {
-            background: var(--border-color-strong);
-            border-radius: 10px;
-        }
+        /* Main */
+        .main { flex:1; overflow-y:auto; overflow-x:hidden; padding:16px; padding-bottom:calc(var(--nav-h) + var(--safe-bottom) + 16px); -webkit-overflow-scrolling:touch; }
+        .main::-webkit-scrollbar { width:3px; }
+        .main::-webkit-scrollbar-track { background:transparent; }
+        .main::-webkit-scrollbar-thumb { background:var(--border-strong); border-radius:10px; }
 
         /* Pages */
-        .page {
-            display: none;
-            animation: pageFadeIn 0.4s ease;
-        }
-        .page.active {
-            display: block;
-        }
-        @keyframes pageFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+        .page { display:none; animation:pageIn 0.4s ease; }
+        .page.active { display:block; }
+        @keyframes pageIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
 
         /* Cards */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 20px;
-            margin-bottom: 16px;
-            transition: all var(--transition-fast);
-        }
-        .card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--border-color-strong);
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-        .card-title {
-            font-size: 1rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-        }
-        .card-subtitle {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
+        .card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:20px; margin-bottom:14px; transition:all var(--transition-fast); }
+        .card:hover { background:var(--bg-card-hover); border-color:var(--border-strong); }
+        .card-head { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px; }
+        .card-title { font-size:0.95rem; font-weight:700; letter-spacing:-0.01em; }
+        .card-sub { font-size:0.78rem; color:var(--text-muted); }
 
         /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border-radius: var(--radius-sm);
-            font-weight: 600;
-            font-size: 0.85rem;
-            font-family: var(--font-family);
-            border: none;
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            letter-spacing: -0.01em;
-            white-space: nowrap;
-        }
-        .btn:active {
-            transform: scale(0.96);
-        }
-        .btn-primary {
-            background: var(--accent-blue);
-            color: #fff;
-            box-shadow: var(--shadow-glow-blue);
-        }
-        .btn-primary:hover {
-            background: #0080e0;
-            box-shadow: 0 0 24px rgba(0,112,209,0.45);
-        }
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color-strong);
-        }
-        .btn-secondary:hover {
-            background: var(--bg-card-hover);
-        }
-        .btn-success {
-            background: var(--accent-green);
-            color: #fff;
-        }
-        .btn-danger {
-            background: var(--accent-red);
-            color: #fff;
-        }
-        .btn-sm {
-            padding: 6px 14px;
-            font-size: 0.75rem;
-            border-radius: var(--radius-xs);
-        }
-        .btn-lg {
-            padding: 14px 28px;
-            font-size: 0.95rem;
-            border-radius: var(--radius-md);
-        }
-        .btn-block {
-            width: 100%;
-        }
-        .btn-icon {
-            width: 36px;
-            height: 36px;
-            padding: 0;
-            border-radius: 50%;
-        }
+        .btn { display:inline-flex; align-items:center; justify-content:center; gap:7px; padding:10px 20px; border-radius:var(--radius-sm); font-weight:600; font-size:0.84rem; font-family:var(--font); border:none; cursor:pointer; transition:all var(--transition-fast); letter-spacing:-0.01em; white-space:nowrap; }
+        .btn:active { transform:scale(0.96); }
+        .btn-primary { background:var(--accent); color:#fff; box-shadow:0 4px 16px var(--accent-glow); }
+        .btn-primary:hover { background:#1e8a70; box-shadow:0 6px 24px var(--accent-glow); }
+        .btn-secondary { background:var(--bg-tertiary); color:var(--text-primary); border:1px solid var(--border-strong); }
+        .btn-secondary:hover { background:var(--bg-card-hover); }
+        .btn-accent { background:var(--orange); color:#fff; box-shadow:0 4px 16px rgba(245,166,35,0.3); }
+        .btn-danger { background:var(--red); color:#fff; }
+        .btn-sm { padding:6px 14px; font-size:0.73rem; border-radius:var(--radius-xs); }
+        .btn-lg { padding:14px 28px; font-size:0.95rem; border-radius:var(--radius-md); }
+        .btn-block { width:100%; }
+        .btn-icon { width:36px; height:36px; padding:0; border-radius:50%; }
 
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: var(--bottom-nav-height);
-            padding-bottom: var(--safe-area-bottom);
-            background: rgba(10,10,15,0.95);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            z-index: 100;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            padding: 6px 12px;
-            border: none;
-            background: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all var(--transition-fast);
-            font-family: var(--font-family);
-            font-size: 0.6rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
-            text-transform: uppercase;
-            position: relative;
-        }
-        .nav-item:hover {
-            color: var(--text-secondary);
-        }
-        .nav-item.active {
-            color: var(--accent-blue-light);
-        }
-        .nav-item.active::before {
-            content: '';
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 3px;
-            background: var(--accent-blue-light);
-            border-radius: 0 0 4px 4px;
-        }
-        .nav-item-center {
-            margin-top: -20px;
-        }
-        .nav-center-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-blue-light));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            box-shadow: var(--shadow-glow-blue);
-            transition: all var(--transition-fast);
-        }
-        .nav-item-center:active .nav-center-btn {
-            transform: scale(0.9);
-        }
+        /* Bottom Nav */
+        .bottom-nav { position:fixed; bottom:0; left:0; right:0; height:var(--nav-h); padding-bottom:var(--safe-bottom); background:rgba(8,8,12,0.95); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-around; z-index:100; }
+        .nav-item { display:flex; flex-direction:column; align-items:center; gap:2px; padding:5px 10px; border:none; background:none; color:var(--text-muted); cursor:pointer; transition:all var(--transition-fast); font-family:var(--font); font-size:0.58rem; font-weight:500; letter-spacing:0.02em; text-transform:uppercase; position:relative; }
+        .nav-item:hover { color:var(--text-secondary); }
+        .nav-item.active { color:var(--accent-light); }
+        .nav-item.active::before { content:''; position:absolute; top:-8px; left:50%; transform:translateX(-50%); width:18px; height:3px; background:var(--accent-light); border-radius:0 0 4px 4px; }
+        .nav-item-center { margin-top:-22px; }
+        .nav-center-btn { width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-light)); display:flex; align-items:center; justify-content:center; color:#fff; box-shadow:0 4px 20px var(--accent-glow); transition:all var(--transition-fast); }
+        .nav-item-center:active .nav-center-btn { transform:scale(0.9); }
 
         /* Toast */
-        .toast-container {
-            position: fixed;
-            top: calc(var(--header-height) + 16px);
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 300;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            pointer-events: none;
-            width: 90%;
-            max-width: 400px;
-        }
-        .toast {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color-strong);
-            border-radius: var(--radius-sm);
-            padding: 12px 16px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            box-shadow: var(--shadow-lg);
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all var(--transition-bounce);
-            pointer-events: auto;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .toast-success { border-left: 3px solid var(--accent-green); }
-        .toast-error { border-left: 3px solid var(--accent-red); }
-        .toast-info { border-left: 3px solid var(--accent-blue); }
-        .toast-warning { border-left: 3px solid var(--accent-orange); }
+        .toast-container { position:fixed; top:calc(var(--header-h) + 12px); left:50%; transform:translateX(-50%); z-index:300; display:flex; flex-direction:column; gap:6px; pointer-events:none; width:90%; max-width:400px; }
+        .toast { background:var(--bg-card); border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:11px 15px; font-size:0.84rem; font-weight:500; color:var(--text-primary); box-shadow:var(--shadow-lg); opacity:0; transform:translateY(-16px); transition:all var(--transition-bounce); pointer-events:auto; display:flex; align-items:center; gap:9px; }
+        .toast.show { opacity:1; transform:translateY(0); }
+        .toast-s { border-left:3px solid var(--accent-light); }
+        .toast-e { border-left:3px solid var(--red); }
+        .toast-i { border-left:3px solid var(--blue); }
+        .toast-w { border-left:3px solid var(--orange); }
 
         /* Modal */
-        .modal-container {
-            position: fixed;
-            inset: 0;
-            z-index: 250;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            pointer-events: none;
-        }
-        .modal-container.active {
-            pointer-events: auto;
-        }
-        .modal-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            opacity: 0;
-            transition: opacity var(--transition-smooth);
-        }
-        .modal-container.active .modal-overlay {
-            opacity: 1;
-        }
-        .modal {
-            position: relative;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color-strong);
-            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            padding: 24px;
-            width: 100%;
-            max-width: 500px;
-            max-height: 85vh;
-            overflow-y: auto;
-            transform: translateY(100%);
-            transition: transform var(--transition-bounce);
-            box-shadow: var(--shadow-lg);
-        }
-        @media (min-width: 768px) {
-            .modal-container {
-                align-items: center;
-            }
-            .modal {
-                border-radius: var(--radius-lg);
-                margin: 16px;
-            }
-        }
-        .modal-container.active .modal {
-            transform: translateY(0);
-        }
-        .modal-handle {
-            width: 40px;
-            height: 4px;
-            background: var(--border-color-strong);
-            border-radius: 10px;
-            margin: 0 auto 16px;
-        }
+        .modal-container { position:fixed; inset:0; z-index:250; display:flex; align-items:flex-end; justify-content:center; pointer-events:none; }
+        .modal-container.active { pointer-events:auto; }
+        .modal-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); opacity:0; transition:opacity var(--transition); }
+        .modal-container.active .modal-overlay { opacity:1; }
+        .modal { position:relative; background:var(--bg-secondary); border:1px solid var(--border-strong); border-radius:var(--radius-lg) var(--radius-lg) 0 0; padding:22px; width:100%; max-width:500px; max-height:85vh; overflow-y:auto; transform:translateY(100%); transition:transform var(--transition-bounce); box-shadow:var(--shadow-lg); }
+        @media(min-width:768px) { .modal-container { align-items:center; } .modal { border-radius:var(--radius-lg); margin:16px; } }
+        .modal-container.active .modal { transform:translateY(0); }
+        .modal-handle { width:36px; height:4px; background:var(--border-strong); border-radius:10px; margin:0 auto 14px; }
+
+        /* Form elements */
+        input[type="range"] { width:100%; margin-top:6px; accent-color:var(--accent); height:6px; border-radius:10px; background:var(--bg-tertiary); -webkit-appearance:none; appearance:none; outline:none; cursor:pointer; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:24px; height:24px; border-radius:50%; background:var(--accent); cursor:pointer; border:3px solid var(--bg-card); box-shadow:0 2px 10px rgba(0,0,0,0.3); }
+        select, input[type="text"], input[type="number"] { width:100%; padding:10px 14px; border-radius:var(--radius-sm); background:var(--bg-tertiary); border:1px solid var(--border-strong); color:var(--text-primary); font-family:var(--font); font-size:0.85rem; outline:none; transition:all var(--transition-fast); }
+        select:focus, input[type="text"]:focus, input[type="number"]:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(26,122,100,0.15); }
+
+        /* Grids & utils */
+        .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+        .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+        .grid-4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; }
+        .grid-auto { display:grid; grid-template-columns:repeat(auto-fill, minmax(140px,1fr)); gap:10px; }
+        .stat-box { background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:14px 10px; text-align:center; border:1px solid var(--border); transition:all var(--transition-fast); }
+        .stat-box:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); border-color:var(--border-strong); }
+        .stat-num { font-size:1.4rem; font-weight:800; letter-spacing:-0.02em; }
+        .stat-label { font-size:0.65rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.04em; margin-top:2px; }
+        .text-accent { color:var(--accent-light); }
+        .text-orange { color:var(--orange); }
+        .text-blue { color:var(--blue); }
+        .text-purple { color:var(--purple); }
+        .text-red { color:var(--red); }
+        .text-muted { color:var(--text-muted); }
+        .mt-1 { margin-top:8px; }
+        .mt-2 { margin-top:14px; }
+        .mt-3 { margin-top:20px; }
+        .mb-1 { margin-bottom:8px; }
+        .mb-2 { margin-bottom:14px; }
+        .gap-1 { gap:8px; }
+        .gap-2 { gap:12px; }
+        .flex-wrap { display:flex; flex-wrap:wrap; }
+        .flex-between { display:flex; justify-content:space-between; align-items:center; }
+
+        /* Progress ring */
+        .ring-wrap { display:flex; align-items:center; gap:20px; flex-wrap:wrap; }
+        .ring { position:relative; width:105px; height:105px; flex-shrink:0; }
+        .ring svg { transform:rotate(-90deg); }
+        .ring circle { fill:none; stroke-width:7; stroke-linecap:round; }
+        .ring .bg { stroke:rgba(255,255,255,0.05); }
+        .ring .fg { stroke:url(#ringGrad); transition:stroke-dashoffset 0.9s ease; }
+        .ring-center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .ring-center .big { font-size:1.4rem; font-weight:800; }
+        .ring-center .small { font-size:0.62rem; color:var(--text-muted); }
+
+        /* BJU bar */
+        .bju-bar { display:flex; gap:3px; height:10px; border-radius:10px; overflow:hidden; background:var(--bg-tertiary); }
+        .bju-bar .seg { height:100%; transition:width 0.6s ease; }
+        .seg-p { background:var(--accent-light); }
+        .seg-f { background:var(--orange); }
+        .seg-c { background:var(--blue); }
+
+        /* Chips */
+        .chip { padding:5px 13px; border-radius:20px; font-size:0.7rem; font-weight:500; border:1px solid var(--border-strong); background:transparent; color:var(--text-secondary); cursor:pointer; transition:all var(--transition-fast); font-family:var(--font); }
+        .chip:hover { background:var(--bg-tertiary); color:var(--text-primary); }
+        .chip.active { background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:0 2px 10px var(--accent-glow); }
+
+        /* Recipe card */
+        .recipe-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(155px,1fr)); gap:10px; max-height:420px; overflow-y:auto; padding-right:3px; }
+        .recipe-card { background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; transition:all var(--transition-fast); cursor:pointer; position:relative; }
+        .recipe-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-md); border-color:var(--accent); }
+        .recipe-card .fav { position:absolute; top:8px; right:8px; background:none; border:none; font-size:1rem; cursor:pointer; transition:all var(--transition-fast); }
+        .recipe-card .fav:hover { transform:scale(1.2); }
+        .recipe-card .name { font-weight:600; font-size:0.82rem; margin-bottom:4px; padding-right:28px; }
+        .recipe-card .meta { font-size:0.65rem; color:var(--text-muted); display:flex; flex-wrap:wrap; gap:3px; margin:4px 0 6px; }
+        .recipe-card .meta span { background:rgba(26,122,100,0.15); padding:1px 8px; border-radius:20px; }
+        .recipe-card .add-btn { width:100%; margin-top:6px; padding:5px 0; border-radius:20px; font-size:0.68rem; font-weight:600; background:var(--accent); color:#fff; border:none; transition:all var(--transition-fast); cursor:pointer; font-family:var(--font); }
+        .recipe-card .add-btn:hover { background:#1e8a70; }
+
+        /* Meal plan */
+        .day-block { background:var(--bg-tertiary); border-left:3px solid var(--accent); border-radius:var(--radius-sm); padding:13px 16px; margin-bottom:8px; border:1px solid var(--border); border-left-width:3px; transition:all var(--transition-fast); }
+        .day-block:hover { box-shadow:var(--shadow-md); }
+        .day-title { font-weight:600; font-size:0.88rem; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+        .day-badge { background:rgba(26,122,100,0.2); color:var(--accent-light); padding:2px 12px; border-radius:20px; font-size:0.68rem; font-weight:600; }
+        .meal-row { display:flex; align-items:center; gap:8px; padding:4px 0; border-bottom:1px dashed var(--border); font-size:0.82rem; }
+        .meal-row:last-child { border-bottom:none; }
+        .meal-name { flex:1; font-weight:500; }
+        .meal-kcal { font-weight:600; color:var(--accent-light); font-size:0.75rem; }
+        .meal-actions { display:flex; gap:3px; }
+        .meal-actions button { background:none; border:none; font-size:0.7rem; cursor:pointer; padding:2px 4px; color:var(--text-muted); transition:all var(--transition-fast); border-radius:4px; }
+        .meal-actions button:hover { color:var(--accent); background:rgba(26,122,100,0.15); }
+        .meal-actions .rem-btn:hover { color:var(--red); background:rgba(231,76,60,0.15); }
+
+        /* Calendar */
+        .cal-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; }
+        .cal-nav { display:flex; align-items:center; gap:12px; }
+        .cal-nav strong { font-size:1rem; font-weight:600; min-width:120px; text-align:center; }
+        .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; font-size:0.78rem; }
+        .cal-day-header { font-weight:600; color:var(--text-muted); padding:4px 0; text-align:center; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.04em; }
+        .cal-day { padding:5px 2px; border-radius:var(--radius-xs); background:var(--bg-tertiary); border:1px solid var(--border); cursor:pointer; transition:all var(--transition-fast); text-align:center; min-height:44px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+        .cal-day:hover { transform:scale(1.06); border-color:var(--accent); }
+        .cal-day.empty { opacity:0.25; cursor:default; background:transparent; border-color:transparent; }
+        .cal-day.empty:hover { transform:none; border-color:transparent; }
+        .cal-day.today { border-color:var(--accent); border-width:2px; }
+        .cal-day .day-num { font-weight:500; }
+        .cal-day .day-w { font-size:0.55rem; font-weight:600; }
+        .cal-day.up .day-w { color:var(--red); }
+        .cal-day.down .day-w { color:var(--accent-light); }
+
+        /* Achievements */
+        .ach-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); gap:10px; }
+        .ach-card { background:var(--bg-tertiary); border:1px solid var(--border); border-radius:var(--radius-sm); padding:14px; text-align:center; transition:all var(--transition-fast); opacity:0.5; }
+        .ach-card.unlocked { opacity:1; border-color:var(--accent); box-shadow:0 0 16px var(--accent-glow); }
+        .ach-card .ach-icon { font-size:2rem; display:block; margin-bottom:6px; }
+        .ach-card .ach-name { font-weight:600; font-size:0.75rem; }
+        .ach-card .ach-desc { font-size:0.62rem; color:var(--text-muted); margin-top:2px; }
 
         /* Responsive */
-        @media (min-width: 768px) {
-            .main-content {
-                padding: 24px;
-                padding-bottom: 24px;
-            }
-            .bottom-nav {
-                display: none;
-            }
-            .side-menu {
-                position: static;
-                pointer-events: auto;
-            }
-            .side-menu-overlay {
-                display: none;
-            }
-            .side-menu-content {
-                transform: none;
-                position: static;
-                width: 240px;
-                border-right: 1px solid var(--border-color);
-            }
-            .app-shell {
-                flex-direction: row;
-            }
-            .main-content {
-                flex: 1;
-            }
+        @media(min-width:768px) {
+            .main { padding:24px; padding-bottom:24px; }
+            .bottom-nav { display:none; }
+            .side-menu { position:static; pointer-events:auto; }
+            .side-overlay { display:none; }
+            .side-content { transform:none; position:static; width:240px; border-right:1px solid var(--border); }
+            .app { flex-direction:row; }
+            .main { flex:1; }
+            .modal { border-radius:var(--radius-lg); }
+        }
+        @media(max-width:400px) {
+            .recipe-grid { grid-template-columns:repeat(auto-fill, minmax(130px,1fr)); max-height:320px; }
+            .grid-4 { grid-template-columns:1fr 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Splash Screen -->
-    <div id="splash" class="splash-screen">
+    <!-- Splash -->
+    <div id="splash" class="splash">
         <div class="splash-logo">
             <svg width="80" height="80" viewBox="0 0 100 100">
                 <defs>
-                    <linearGradient id="splashGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#0070D1"/>
-                        <stop offset="100%" style="stop-color:#00A3FF"/>
+                    <linearGradient id="sg" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#1a7a64"/>
+                        <stop offset="100%" style="stop-color:#2ecc71"/>
                     </linearGradient>
                 </defs>
-                <circle cx="50" cy="50" r="45" fill="none" stroke="url(#splashGrad)" stroke-width="6"/>
-                <path d="M30 50 L45 65 L70 35" fill="none" stroke="url(#splashGrad)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="50" cy="50" r="46" fill="none" stroke="url(#sg)" stroke-width="5"/>
+                <path d="M28 50 L44 66 L72 36" fill="none" stroke="url(#sg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
             <h1>FitPlan</h1>
-            <span class="splash-subtitle">PS Edition</span>
+            <span class="splash-subtitle">конструктор питания</span>
         </div>
-        <div class="splash-loader">
-            <div class="splash-loader-bar"></div>
-        </div>
+        <div class="splash-loader"><div class="splash-loader-bar"></div></div>
     </div>
 
     <!-- App Shell -->
-    <div id="app" class="app-shell hidden">
-        <!-- Header -->
-        <header class="app-header" id="appHeader">
-            <div class="header-left">
+    <div id="app" class="app hidden">
+        <header class="header">
+            <div class="header-l">
                 <button class="icon-btn" id="menuBtn" aria-label="Меню">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                        <line x1="3" y1="6" x2="21" y2="6"/>
-                        <line x1="3" y1="12" x2="21" y2="12"/>
-                        <line x1="3" y1="18" x2="21" y2="18"/>
-                    </svg>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
                 </button>
                 <div class="header-title" id="headerTitle">FitPlan</div>
             </div>
-            <div class="header-right">
-                <div class="user-level" id="userLevelBadge">
-                    <span class="level-icon">🏆</span>
-                    <span class="level-text" id="userLevel">1</span>
-                </div>
-                <button class="icon-btn" id="notificationsBtn" aria-label="Уведомления">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                    </svg>
-                    <span class="notification-dot hidden" id="notificationDot"></span>
-                </button>
+            <div class="header-r">
+                <div class="badge-lvl">🏆 <span class="lvl-num" id="userLevel">1</span></div>
+                <button class="icon-btn" id="notifBtn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span class="notif-dot hidden" id="notifDot"></span></button>
             </div>
         </header>
 
-        <!-- Side Menu -->
         <aside class="side-menu" id="sideMenu">
-            <div class="side-menu-overlay" id="sideMenuOverlay"></div>
-            <nav class="side-menu-content">
-                <div class="side-menu-header">
-                    <div class="user-avatar" id="userAvatar"><span>FP</span></div>
-                    <div class="user-info">
-                        <strong>FitPlan User</strong>
-                        <span class="text-muted">Уровень <span id="menuLevel">1</span></span>
-                    </div>
+            <div class="side-overlay" id="sideOverlay"></div>
+            <nav class="side-content">
+                <div class="side-head">
+                    <div class="avatar">FP</div>
+                    <div class="info"><strong>FitPlan User</strong><span class="muted">Уровень <span id="menuLevel">1</span></span></div>
                 </div>
-                <div class="side-menu-items">
-                    <a href="#" class="side-menu-item active" data-page="dashboard">
-                        <span class="menu-icon">📊</span> Дашборд
-                    </a>
-                    <a href="#" class="side-menu-item" data-page="calculator">
-                        <span class="menu-icon">🧮</span> Калькулятор
-                    </a>
-                    <a href="#" class="side-menu-item" data-page="recipes">
-                        <span class="menu-icon">🍽️</span> Рецепты
-                    </a>
-                    <a href="#" class="side-menu-item" data-page="mealplan">
-                        <span class="menu-icon">📅</span> План питания
-                    </a>
-                    <a href="#" class="side-menu-item" data-page="progress">
-                        <span class="menu-icon">📈</span> Прогресс
-                    </a>
-                    <a href="#" class="side-menu-item" data-page="achievements">
-                        <span class="menu-icon">🏅</span> Достижения
-                    </a>
+                <div class="side-items">
+                    <a href="#" class="side-item active" data-page="dashboard"><span class="side-icon">📊</span> Дашборд</a>
+                    <a href="#" class="side-item" data-page="calculator"><span class="side-icon">🧮</span> Калькулятор</a>
+                    <a href="#" class="side-item" data-page="recipes"><span class="side-icon">🍽️</span> Рецепты</a>
+                    <a href="#" class="side-item" data-page="mealplan"><span class="side-icon">📅</span> План питания</a>
+                    <a href="#" class="side-item" data-page="progress"><span class="side-icon">📈</span> Прогресс</a>
+                    <a href="#" class="side-item" data-page="achievements"><span class="side-icon">🏅</span> Достижения</a>
                 </div>
-                <div class="side-menu-footer">
-                    <button class="side-menu-item" id="settingsBtn">
-                        <span class="menu-icon">⚙️</span> Настройки
-                    </button>
+                <div class="side-foot">
+                    <button class="side-item" id="settingsBtn"><span class="side-icon">⚙️</span> Настройки</button>
                 </div>
             </nav>
         </aside>
 
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <!-- Dashboard Page -->
+        <main class="main" id="mainContent">
+            <!-- Dashboard -->
             <div class="page active" id="page-dashboard">
-                <div class="card" style="background: linear-gradient(135deg, #12122a 0%, #1a1a35 50%, #0a0a1a 100%); border-color: rgba(0,112,209,0.2);">
-                    <div class="card-header">
-                        <div>
-                            <div class="card-title">🎯 Дневной прогресс</div>
-                            <div class="card-subtitle" id="dashboardDate">Сегодня</div>
-                        </div>
-                        <div class="user-level">
-                            <span>🔥 Дней подряд: </span>
-                            <strong id="streakCount">0</strong>
-                        </div>
+                <div class="card" style="background:linear-gradient(135deg, #0d1a16 0%, #111a18 50%, #080c0a 100%); border-color:rgba(26,122,100,0.2);">
+                    <div class="card-head">
+                        <div><div class="card-title">🎯 Дневной прогресс</div><div class="card-sub" id="dashDate">Сегодня</div></div>
+                        <div class="badge-lvl">🔥 <span id="streakCount">0</span> дн. подряд</div>
                     </div>
-                    <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-                        <div id="dashboardRing" style="position:relative; width:110px; height:110px; flex-shrink:0;">
-                            <svg width="110" height="110" viewBox="0 0 110 110" style="transform:rotate(-90deg);">
-                                <circle cx="55" cy="55" r="48" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="8"/>
-                                <circle id="dashRingProgress" cx="55" cy="55" r="48" fill="none" stroke="url(#ringGradient)" stroke-width="8" stroke-linecap="round" stroke-dasharray="301.59" stroke-dashoffset="301.59" style="transition: stroke-dashoffset 1s ease;"/>
-                                <defs>
-                                    <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" style="stop-color:#0070D1"/>
-                                        <stop offset="100%" style="stop-color:#00A3FF"/>
-                                    </linearGradient>
-                                </defs>
+                    <div class="ring-wrap">
+                        <div class="ring">
+                            <svg width="105" height="105" viewBox="0 0 105 105">
+                                <defs><linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#1a7a64"/><stop offset="100%" style="stop-color:#2ecc71"/></linearGradient></defs>
+                                <circle class="bg" cx="52.5" cy="52.5" r="46"/>
+                                <circle class="fg" id="dashRing" cx="52.5" cy="52.5" r="46" stroke-dasharray="289.03" stroke-dashoffset="289.03"/>
                             </svg>
-                            <div style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;">
-                                <span id="dashRingPercent" style="font-size:1.5rem; font-weight:800;">0%</span>
-                                <span style="font-size:0.65rem; color:var(--text-muted);">от цели</span>
-                            </div>
+                            <div class="ring-center"><span class="big" id="dashPercent">0%</span><span class="small">от цели</span></div>
                         </div>
-                        <div style="flex:1; min-width:140px;">
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-                                <div style="background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:12px; text-align:center;">
-                                    <div style="font-size:1.3rem; font-weight:700; color:var(--accent-blue-light);" id="dashKcal">0</div>
-                                    <div style="font-size:0.65rem; color:var(--text-muted);">ккал / день</div>
-                                </div>
-                                <div style="background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:12px; text-align:center;">
-                                    <div style="font-size:1.3rem; font-weight:700; color:var(--accent-green);" id="dashProtein">0</div>
-                                    <div style="font-size:0.65rem; color:var(--text-muted);">белки, г</div>
-                                </div>
-                                <div style="background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:12px; text-align:center;">
-                                    <div style="font-size:1.3rem; font-weight:700; color:var(--accent-orange);" id="dashFat">0</div>
-                                    <div style="font-size:0.65rem; color:var(--text-muted);">жиры, г</div>
-                                </div>
-                                <div style="background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:12px; text-align:center;">
-                                    <div style="font-size:1.3rem; font-weight:700; color:var(--accent-purple);" id="dashCarbs">0</div>
-                                    <div style="font-size:0.65rem; color:var(--text-muted);">углеводы, г</div>
-                                </div>
+                        <div style="flex:1;min-width:140px;">
+                            <div class="grid-2 gap-1">
+                                <div class="stat-box"><div class="stat-num text-accent" id="dashKcal">0</div><div class="stat-label">ккал/день</div></div>
+                                <div class="stat-box"><div class="stat-num text-accent" id="dashProtein">0</div><div class="stat-label">белки, г</div></div>
+                                <div class="stat-box"><div class="stat-num text-orange" id="dashFat">0</div><div class="stat-label">жиры, г</div></div>
+                                <div class="stat-box"><div class="stat-num text-blue" id="dashCarbs">0</div><div class="stat-label">углеводы, г</div></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">💧 Водный баланс</div>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:16px;">
-                        <div style="flex:1;">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                                <span style="font-size:0.8rem;" id="waterText">0 / 2000 мл</span>
-                                <span style="font-size:0.8rem; color:var(--accent-blue-light);" id="waterPercent">0%</span>
-                            </div>
-                            <div style="height:8px; background:var(--bg-tertiary); border-radius:10px; overflow:hidden;">
-                                <div id="waterBar" style="height:100%; width:0%; background:linear-gradient(90deg, var(--accent-blue), var(--accent-blue-light)); border-radius:10px; transition: width 0.5s ease;"></div>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary btn-sm" id="addWaterBtn" title="Добавить 250 мл">+💧</button>
-                    </div>
+                    <div class="card-head"><div class="card-title">💧 Водный баланс</div></div>
+                    <div class="flex-between mb-1"><span id="waterText" style="font-size:0.8rem;">0 / 2000 мл</span><span style="font-size:0.8rem;color:var(--accent-light);" id="waterPct">0%</span></div>
+                    <div style="height:8px;background:var(--bg-tertiary);border-radius:10px;overflow:hidden;margin-bottom:10px;"><div id="waterBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent-light));border-radius:10px;transition:width 0.5s ease;"></div></div>
+                    <div class="flex-wrap gap-1"><button class="btn btn-primary btn-sm" id="addWaterBtn">+250 мл 💧</button><button class="btn btn-secondary btn-sm" id="resetWaterBtn">Сбросить</button></div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">⚡ Быстрые действия</div>
-                    </div>
-                    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px,1fr)); gap:10px;">
+                    <div class="card-head"><div class="card-title">⚡ Быстрые действия</div></div>
+                    <div class="grid-auto gap-1">
                         <button class="btn btn-secondary btn-sm" onclick="navigateTo('calculator')">🧮 Калькулятор</button>
                         <button class="btn btn-secondary btn-sm" onclick="navigateTo('recipes')">🍽️ Рецепты</button>
                         <button class="btn btn-secondary btn-sm" onclick="navigateTo('mealplan')">📅 План</button>
-                        <button class="btn btn-secondary btn-sm" id="quickLogWeight">⚖️ Вес</button>
+                        <button class="btn btn-accent btn-sm" id="quickWeight">⚖️ Записать вес</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Calculator Page -->
+            <!-- Calculator -->
             <div class="page" id="page-calculator">
                 <div class="card">
-                    <div class="card-header">
-                        <div class="card-title">🧮 Калькулятор КБЖУ</div>
-                        <div class="card-subtitle">Формула Миффлина-Сан Жеора (2024)</div>
+                    <div class="card-head"><div class="card-title">🧮 Калькулятор КБЖУ</div><div class="card-sub">Формула Миффлина-Сан Жеора</div></div>
+                    <div class="mb-2"><label style="font-weight:500;font-size:0.82rem;display:block;margin-bottom:6px;color:var(--text-secondary);">Пол</label>
+                        <div class="flex-wrap gap-1"><button class="chip gender-btn active" data-gender="male">👨 Мужской</button><button class="chip gender-btn" data-gender="female">👩 Женский</button></div>
                     </div>
-
-                    <div style="margin-bottom:16px;">
-                        <label style="font-weight:500; font-size:0.85rem; display:block; margin-bottom:6px; color:var(--text-secondary);">Пол</label>
-                        <div style="display:flex; gap:10px;">
-                            <button class="btn btn-secondary btn-sm gender-btn active" data-gender="male">👨 Мужской</button>
-                            <button class="btn btn-secondary btn-sm gender-btn" data-gender="female">👩 Женский</button>
-                        </div>
+                    <div class="mb-2"><div class="flex-between"><label style="font-weight:500;font-size:0.82rem;color:var(--text-secondary);">Возраст</label><span style="font-weight:700;color:var(--accent-light);" id="ageVal">30 лет</span></div><input type="range" id="ageSlider" min="10" max="90" value="30"></div>
+                    <div class="mb-2"><div class="flex-between"><label style="font-weight:500;font-size:0.82rem;color:var(--text-secondary);">Рост</label><span style="font-weight:700;color:var(--accent-light);" id="heightVal">170 см</span></div><input type="range" id="heightSlider" min="120" max="220" value="170"></div>
+                    <div class="mb-2"><div class="flex-between"><label style="font-weight:500;font-size:0.82rem;color:var(--text-secondary);">Вес</label><span style="font-weight:700;color:var(--accent-light);" id="weightVal">70 кг</span></div><input type="range" id="weightSlider" min="30" max="200" value="70"></div>
+                    <div class="mb-2"><div class="flex-between"><label style="font-weight:500;font-size:0.82rem;color:var(--text-secondary);">🎯 Целевой вес</label><span style="font-weight:700;color:var(--accent-light);" id="goalWeightVal">65 кг</span></div><input type="range" id="goalWeightSlider" min="30" max="200" value="65"></div>
+                    <div class="mb-2"><label style="font-weight:500;font-size:0.82rem;display:block;margin-bottom:6px;color:var(--text-secondary);">Активность</label>
+                        <select id="activitySelect"><option value="1.2">🪑 Сидячий</option><option value="1.375" selected>🚶 Лёгкая (1-3 тр/нед)</option><option value="1.55">🏃 Умеренная (3-5)</option><option value="1.725">🏋️ Высокая (6-7)</option><option value="1.9">🔥 Экстрим (2×день)</option></select>
                     </div>
-
-                    <div class="slider-group" style="margin-bottom:16px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <label style="font-weight:500; font-size:0.85rem; color:var(--text-secondary);">Возраст</label>
-                            <span style="font-weight:700; color:var(--accent-blue-light);" id="ageValue">30 лет</span>
-                        </div>
-                        <input type="range" id="ageSlider" min="10" max="90" value="30" style="width:100%; margin-top:6px; accent-color:var(--accent-blue);">
+                    <div class="mb-2"><label style="font-weight:500;font-size:0.82rem;display:block;margin-bottom:6px;color:var(--text-secondary);">🎯 Цель</label>
+                        <div class="grid-2 gap-1"><button class="chip goal-btn active" data-goal="fatloss">🔥 Жиросжигание</button><button class="chip goal-btn" data-goal="moderate">⚖️ Умеренное</button><button class="chip goal-btn" data-goal="maintain">🛡️ Поддержание</button><button class="chip goal-btn" data-goal="bulk">💪 Набор массы</button></div>
                     </div>
-
-                    <div class="slider-group" style="margin-bottom:16px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <label style="font-weight:500; font-size:0.85rem; color:var(--text-secondary);">Рост</label>
-                            <span style="font-weight:700; color:var(--accent-blue-light);" id="heightValue">170 см</span>
-                        </div>
-                        <input type="range" id="heightSlider" min="120" max="220" value="170" style="width:100%; margin-top:6px; accent-color:var(--accent-blue);">
+                    <div class="bju-bar mb-2"><div class="seg seg-p" id="bjuP" style="width:33%"></div><div class="seg seg-f" id="bjuF" style="width:33%"></div><div class="seg seg-c" id="bjuC" style="width:34%"></div></div>
+                    <div class="flex-wrap gap-2 mb-2" style="font-size:0.7rem;color:var(--text-muted);"><span>🟢 Белки</span><span>🟠 Жиры</span><span>🔵 Углеводы</span></div>
+                    <div class="grid-2 gap-1 mb-2">
+                        <div class="stat-box"><div class="stat-num text-accent" id="resKcal">—</div><div class="stat-label">ккал/день</div></div>
+                        <div class="stat-box"><div class="stat-num text-accent" id="resProtein">—</div><div class="stat-label">белки, г</div></div>
+                        <div class="stat-box"><div class="stat-num text-orange" id="resFat">—</div><div class="stat-label">жиры, г</div></div>
+                        <div class="stat-box"><div class="stat-num text-blue" id="resCarbs">—</div><div class="stat-label">углеводы, г</div></div>
                     </div>
-
-                    <div class="slider-group" style="margin-bottom:16px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <label style="font-weight:500; font-size:0.85rem; color:var(--text-secondary);">Вес</label>
-                            <span style="font-weight:700; color:var(--accent-blue-light);" id="weightValue">70 кг</span>
-                        </div>
-                        <input type="range" id="weightSlider" min="30" max="200" value="70" style="width:100%; margin-top:6px; accent-color:var(--accent-blue);">
-                    </div>
-
-                    <div class="slider-group" style="margin-bottom:16px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <label style="font-weight:500; font-size:0.85rem; color:var(--text-secondary);">🎯 Целевой вес</label>
-                            <span style="font-weight:700; color:var(--accent-blue-light);" id="goalWeightValue">65 кг</span>
-                        </div>
-                        <input type="range" id="goalWeightSlider" min="30" max="200" value="65" style="width:100%; margin-top:6px; accent-color:var(--accent-blue);">
-                    </div>
-
-                    <div style="margin-bottom:16px;">
-                        <label style="font-weight:500; font-size:0.85rem; display:block; margin-bottom:6px; color:var(--text-secondary);">Активность</label>
-                        <select id="activitySelect" style="width:100%; padding:10px 16px; border-radius:var(--radius-sm); background:var(--bg-tertiary); border:1px solid var(--border-color-strong); color:var(--text-primary); font-family:var(--font-family); font-size:0.85rem;">
-                            <option value="1.2">🪑 Сидячий образ жизни</option>
-                            <option value="1.375" selected>🚶 Лёгкая активность (1-3 тр/нед)</option>
-                            <option value="1.55">🏃 Умеренная (3-5 тр/нед)</option>
-                            <option value="1.725">🏋️ Высокая (6-7 тр/нед)</option>
-                            <option value="1.9">🔥 Экстремальная (2 раза в день)</option>
-                        </select>
-                    </div>
-
-                    <div style="margin-bottom:16px;">
-                        <label style="font-weight:500; font-size:0.85rem; display:block; margin-bottom:6px; color:var(--text-secondary);">🎯 Цель</label>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-                            <button class="btn btn-secondary btn-sm goal-btn active" data-goal="fatloss">🔥 Жиросжигание (-25%)</button>
-                            <button class="btn btn-secondary btn-sm goal-btn" data-goal="moderate">⚖️ Умеренное (-15%)</button>
-                            <button class="btn btn-secondary btn-sm goal-btn" data-goal="maintain">🛡️ Поддержание</button>
-                            <button class="btn btn-secondary btn-sm goal-btn" data-goal="bulk">💪 Набор массы (+15%)</button>
-                        </div>
-                    </div>
-
-                    <div id="calcResults" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
-                        <div style="background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:16px; text-align:center;">
-                            <div style="font-size:1.6rem; font-weight:800; color:var(--accent-blue-light);" id="resKcal">—</div>
-                            <div style="font-size:0.7rem; color:var(--text-muted);">ккал / день</div>
-                        </div>
-                        <div style="background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:16px; text-align:center;">
-                            <div style="font-size:1.6rem; font-weight:800; color:var(--accent-green);" id="resProtein">—</div>
-                            <div style="font-size:0.7rem; color:var(--text-muted);">белки, г</div>
-                        </div>
-                        <div style="background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:16px; text-align:center;">
-                            <div style="font-size:1.6rem; font-weight:800; color:var(--accent-orange);" id="resFat">—</div>
-                            <div style="font-size:0.7rem; color:var(--text-muted);">жиры, г</div>
-                        </div>
-                        <div style="background:var(--bg-tertiary); border-radius:var(--radius-sm); padding:16px; text-align:center;">
-                            <div style="font-size:1.6rem; font-weight:800; color:var(--accent-purple);" id="resCarbs">—</div>
-                            <div style="font-size:0.7rem; color:var(--text-muted);">углеводы, г</div>
-                        </div>
-                    </div>
-
-                    <div id="calcExtra" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
-                        <div style="background:var(--bg-tertiary); border-radius:var(--radius-xs); padding:10px; text-align:center;">
-                            <div style="font-size:0.95rem; font-weight:700;" id="resBMI">—</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">ИМТ</div>
-                        </div>
-                        <div style="background:var(--bg-tertiary); border-radius:var(--radius-xs); padding:10px; text-align:center;">
-                            <div style="font-size:0.95rem; font-weight:700;" id="resDiff">—</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">разница</div>
-                        </div>
-                        <div style="background:var(--bg-tertiary); border-radius:var(--radius-xs); padding:10px; text-align:center;">
-                            <div style="font-size:0.95rem; font-weight:700;" id="resWeeks">—</div>
-                            <div style="font-size:0.6rem; color:var(--text-muted);">срок (нед)</div>
-                        </div>
+                    <div class="grid-3 gap-1">
+                        <div class="stat-box"><div class="stat-num" style="font-size:1rem;" id="resBMI">—</div><div class="stat-label">ИМТ</div></div>
+                        <div class="stat-box"><div class="stat-num" style="font-size:1rem;" id="resDiff">—</div><div class="stat-label">разница</div></div>
+                        <div class="stat-box"><div class="stat-num" style="font-size:1rem;" id="resWeeks">—</div><div class="stat-label">срок (нед)</div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Placeholder pages -->
-            <div class="page" id="page-recipes"><div class="card"><div class="card-title">🍽️ Рецепты</div><p class="card-subtitle">Загрузка...</p></div></div>
-            <div class="page" id="page-mealplan"><div class="card"><div class="card-title">📅 План питания</div><p class="card-subtitle">Загрузка...</p></div></div>
-            <div class="page" id="page-progress"><div class="card"><div class="card-title">📈 Прогресс</div><p class="card-subtitle">Загрузка...</p></div></div>
-            <div class="page" id="page-achievements"><div class="card"><div class="card-title">🏅 Достижения</div><p class="card-subtitle">Загрузка...</p></div></div>
+            <!-- Recipes -->
+            <div class="page" id="page-recipes">
+                <div class="card">
+                    <div class="card-head"><div class="card-title">🍽️ Рецепты</div><div class="card-sub">200+ блюд с точным КБЖУ</div></div>
+                    <div class="flex-wrap gap-1 mb-2"><input type="text" id="recipeSearch" placeholder="Поиск рецепта..." style="flex:1;min-width:140px;"><button class="btn btn-primary btn-sm" id="searchBtn">🔍</button><button class="btn btn-secondary btn-sm" id="clearSearch">✖</button></div>
+                    <div id="searchHistory" class="flex-wrap gap-1 mb-2"></div>
+                    <div class="flex-wrap gap-1 mb-2"><span class="chip active" data-cat="all">Все</span><span class="chip" data-cat="breakfast">🍳 Завтрак</span><span class="chip" data-cat="lunch">🥗 Обед</span><span class="chip" data-cat="dinner">🍲 Ужин</span><span class="chip" data-cat="snack">🍏 Перекус</span><span class="chip" data-cat="dessert">🍰 Десерт</span></div>
+                    <div id="recipeResults" class="recipe-grid"></div>
+                    <div id="recipeInfo" class="text-muted mt-1" style="font-size:0.72rem;">Введите запрос для поиска.</div>
+                </div>
+            </div>
+
+            <!-- Meal Plan -->
+            <div class="page" id="page-mealplan">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">📅 План питания</div>
+                        <div class="flex-wrap gap-1">
+                            <button class="btn btn-primary btn-sm" id="autoPlanBtn">🧠 Авто-сборка</button>
+                            <button class="btn btn-secondary btn-sm" id="shopListBtn">📋 Список покупок</button>
+                            <button class="btn btn-danger btn-sm" id="clearPlanBtn">🗑️ Очистить</button>
+                        </div>
+                    </div>
+                    <div id="mealPlanContainer"><div style="text-align:center;padding:30px;color:var(--text-muted);">🍽️ Рацион пуст. Добавь блюда из раздела «Рецепты».</div></div>
+                </div>
+            </div>
+
+            <!-- Progress -->
+            <div class="page" id="page-progress">
+                <div class="card">
+                    <div class="card-head"><div class="card-title">📈 Прогресс</div></div>
+                    <div class="ring-wrap mb-2">
+                        <div class="ring">
+                            <svg width="105" height="105" viewBox="0 0 105 105">
+                                <circle class="bg" cx="52.5" cy="52.5" r="46"/>
+                                <circle class="fg" id="progRing" cx="52.5" cy="52.5" r="46" stroke-dasharray="289.03" stroke-dashoffset="289.03"/>
+                            </svg>
+                            <div class="ring-center"><span class="big" id="progPercent">0%</span><span class="small">до цели</span></div>
+                        </div>
+                        <div><strong id="progDiff">0 кг</strong><span class="text-muted"> осталось</span><div><span class="text-muted">ИМТ: </span><strong id="progBMI">—</strong></div></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="cal-header">
+                        <div class="cal-nav"><button class="btn btn-secondary btn-sm" id="prevMonth">◀</button><strong id="calMonthYear">—</strong><button class="btn btn-secondary btn-sm" id="nextMonth">▶</button></div>
+                        <span id="monthChange" style="font-weight:600;">0 кг</span>
+                    </div>
+                    <div class="cal-grid" id="calGrid"><div class="cal-day-header">Пн</div><div class="cal-day-header">Вт</div><div class="cal-day-header">Ср</div><div class="cal-day-header">Чт</div><div class="cal-day-header">Пт</div><div class="cal-day-header">Сб</div><div class="cal-day-header">Вс</div></div>
+                    <div class="flex-wrap gap-2 mt-1" style="justify-content:center;font-size:0.65rem;color:var(--text-muted);"><span>🟢 Похудение</span><span>🔴 Набор</span><span>⚪ Нет данных</span></div>
+                </div>
+            </div>
+
+            <!-- Achievements -->
+            <div class="page" id="page-achievements">
+                <div class="card">
+                    <div class="card-head"><div class="card-title">🏅 Достижения</div><div class="card-sub" id="achCount">0 / 12</div></div>
+                    <div class="ach-grid" id="achGrid"></div>
+                </div>
+            </div>
         </main>
 
-        <!-- Bottom Navigation -->
-        <nav class="bottom-nav" id="bottomNav">
-            <button class="nav-item active" data-page="dashboard">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                    <rect x="3" y="3" width="7" height="7" rx="1"/>
-                    <rect x="14" y="3" width="7" height="7" rx="1"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1"/>
-                    <rect x="14" y="14" width="7" height="7" rx="1"/>
-                </svg>
-                <span>Главная</span>
-            </button>
-            <button class="nav-item" data-page="calculator">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                    <rect x="4" y="2" width="16" height="20" rx="2"/>
-                    <line x1="8" y1="6" x2="16" y2="6"/>
-                    <line x1="8" y1="10" x2="16" y2="10"/>
-                </svg>
-                <span>Кальк</span>
-            </button>
-            <button class="nav-item nav-item-center" data-page="recipes">
-                <div class="nav-center-btn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                        <circle cx="12" cy="12" r="10"/>
-                        <line x1="12" y1="8" x2="12" y2="16"/>
-                        <line x1="8" y1="12" x2="16" y2="12"/>
-                    </svg>
-                </div>
-                <span>Рецепты</span>
-            </button>
-            <button class="nav-item" data-page="mealplan">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                    <rect x="3" y="4" width="18" height="16" rx="2"/>
-                    <line x1="3" y1="10" x2="21" y2="10"/>
-                </svg>
-                <span>План</span>
-            </button>
-            <button class="nav-item" data-page="progress">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-                </svg>
-                <span>Прогресс</span>
-            </button>
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-page="dashboard"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Главная</span></button>
+            <button class="nav-item" data-page="calculator"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/></svg><span>Кальк</span></button>
+            <button class="nav-item nav-item-center" data-page="recipes"><div class="nav-center-btn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></div><span>Рецепты</span></button>
+            <button class="nav-item" data-page="mealplan"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>План</span></button>
+            <button class="nav-item" data-page="progress"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg><span>Прогресс</span></button>
         </nav>
     </div>
 
-    <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Modal Container -->
     <div class="modal-container" id="modalContainer"></div>
 
     <script>
         // ============================================================
-        // FITPLAN PS EDITION — MAIN APP
+        // FITPLAN — CORE ENGINE
         // ============================================================
-
-        // --- Storage ---
-        const Storage = {
-            get(k, d) { try { const v = localStorage.getItem('fp_' + k); return v ? JSON.parse(v) : d; } catch(e) { return d; } },
-            set(k, v) { try { localStorage.setItem('fp_' + k, JSON.stringify(v)); } catch(e) {} }
+        const S = {
+            get(k,d){try{const v=localStorage.getItem('fp_'+k);return v?JSON.parse(v):d}catch(e){return d}},
+            set(k,v){try{localStorage.setItem('fp_'+k,JSON.stringify(v))}catch(e){}}
         };
 
-        // --- State ---
         const state = {
-            currentPage: 'dashboard',
-            gender: Storage.get('gender', 'male'),
-            age: Storage.get('age', 30),
-            height: Storage.get('height', 170),
-            weight: Storage.get('weight', 70),
-            goalWeight: Storage.get('goalWeight', 65),
-            activity: Storage.get('activity', 1.375),
-            goal: Storage.get('goal', 'fatloss'),
-            water: Storage.get('water', 0),
-            streak: Storage.get('streak', 0),
-            lastWaterDate: Storage.get('lastWaterDate', ''),
-            userLevel: Storage.get('userLevel', 1),
-            userXP: Storage.get('userXP', 0),
-            achievements: Storage.get('achievements', []),
+            page:'dashboard', gender:S.get('gender','male'), age:S.get('age',30), height:S.get('height',170),
+            weight:S.get('weight',70), goalWeight:S.get('goalWeight',65), activity:S.get('activity',1.375),
+            goal:S.get('goal','fatloss'), water:S.get('water',0), streak:S.get('streak',0),
+            lastWaterDate:S.get('lastWaterDate',''), userLevel:S.get('userLevel',1), userXP:S.get('userXP',0),
+            achievements:S.get('achievements',[]), favorites:S.get('favorites',[]),
+            searchHistory:S.get('searchHistory',[]), weightHistory:S.get('weightHistory',[]),
+            customMeals:S.get('customMeals',{}), startWeight:S.get('startWeight',null)
         };
 
-        // --- Splash ---
-        setTimeout(() => {
-            document.getElementById('splash').classList.add('hidden');
-            document.getElementById('app').classList.remove('hidden');
-            initApp();
-        }, 2000);
+        // Splash
+        setTimeout(()=>{document.getElementById('splash').classList.add('hidden');document.getElementById('app').classList.remove('hidden');initApp();},1800);
 
-        // --- Toast ---
-        function showToast(msg, type = 'info') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
-            toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span> ${msg}`;
-            container.appendChild(toast);
-            requestAnimationFrame(() => toast.classList.add('show'));
-            setTimeout(() => {
-                toast.classList.remove('show');
-                setTimeout(() => toast.remove(), 400);
-            }, 3000);
+        // Toast
+        function toast(msg,type='i'){
+            const c=document.getElementById('toastContainer'), t=document.createElement('div');
+            t.className='toast toast-'+type;t.innerHTML='<span>'+(type==='s'?'✅':type==='e'?'❌':type==='w'?'⚠️':'ℹ️')+'</span> '+msg;
+            c.appendChild(t);requestAnimationFrame(()=>t.classList.add('show'));
+            setTimeout(()=>{t.classList.remove('show');setTimeout(()=>t.remove(),400);},2800);
         }
 
-        // --- Modal ---
-        function openModal(content) {
-            const container = document.getElementById('modalContainer');
-            container.innerHTML = `
-                <div class="modal-overlay" onclick="closeModal()"></div>
-                <div class="modal">
-                    <div class="modal-handle"></div>
-                    ${content}
-                </div>
-            `;
-            container.classList.add('active');
-        }
-        function closeModal() {
-            document.getElementById('modalContainer').classList.remove('active');
-            setTimeout(() => { document.getElementById('modalContainer').innerHTML = ''; }, 400);
-        }
+        // Modal
+        function openModal(h){const c=document.getElementById('modalContainer');c.innerHTML='<div class="modal-overlay" onclick="closeModal()"></div><div class="modal"><div class="modal-handle"></div>'+h+'</div>';c.classList.add('active');}
+        function closeModal(){document.getElementById('modalContainer').classList.remove('active');setTimeout(()=>{document.getElementById('modalContainer').innerHTML='';},400);}
 
-        // --- Navigation ---
-        function navigateTo(page) {
-            state.currentPage = page;
-            Storage.set('currentPage', page);
-
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const pageEl = document.getElementById('page-' + page);
-            if (pageEl) pageEl.classList.add('active');
-
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.page === page));
-            document.querySelectorAll('.side-menu-item[data-page]').forEach(n => n.classList.toggle('active', n.dataset.page === page));
-
-            document.getElementById('headerTitle').textContent = {
-                dashboard: 'FitPlan',
-                calculator: 'Калькулятор',
-                recipes: 'Рецепты',
-                mealplan: 'План питания',
-                progress: 'Прогресс',
-                achievements: 'Достижения'
-            }[page] || 'FitPlan';
-
-            if (page === 'dashboard') updateDashboard();
-            if (page === 'calculator') calculate();
-        }
-
-        // --- Calculator ---
-        function calculate() {
-            const g = state.gender;
-            const a = state.age;
-            const h = state.height;
-            const w = state.weight;
-            const gw = state.goalWeight;
-            const act = state.activity;
-            const goal = state.goal;
-
-            // Mifflin-St Jeor (2024 стандарт)
-            let bmr = g === 'female' ? 10 * w + 6.25 * h - 5 * a - 161 : 10 * w + 6.25 * h - 5 * a + 5;
-            let maintenance = Math.round(bmr * act);
-            let factors = { fatloss: 0.75, moderate: 0.85, maintain: 1.0, bulk: 1.15 };
-            let calories = Math.round(maintenance * (factors[goal] || 0.75));
-            if (calories < 1200) calories = 1200;
-            if (calories > 5000) calories = 5000;
-
-            // БЖУ
-            let proteinPerKg = { fatloss: 2.2, moderate: 2.0, maintain: 1.6, bulk: 1.8 };
-            let fatPerKg = { fatloss: 0.8, moderate: 0.9, maintain: 0.9, bulk: 1.0 };
-            let protein = Math.round(w * (proteinPerKg[goal] || 2.0));
-            let fat = Math.round(w * (fatPerKg[goal] || 0.9));
-            let carbs = Math.round((calories - protein * 4 - fat * 9) / 4);
-            if (carbs < 20) carbs = 20;
-
-            let bmi = (w / ((h / 100) ** 2)).toFixed(1);
-            let diff = w - gw;
-            let speeds = { fatloss: 0.9, moderate: 0.6, maintain: 0, bulk: 0.4 };
-            let speed = speeds[goal] || 0.5;
-            let weeks = speed > 0 ? Math.round(Math.abs(diff) / speed) : 0;
-
-            document.getElementById('resKcal').textContent = calories;
-            document.getElementById('resProtein').textContent = protein;
-            document.getElementById('resFat').textContent = fat;
-            document.getElementById('resCarbs').textContent = carbs;
-            document.getElementById('resBMI').textContent = bmi;
-            document.getElementById('resDiff').textContent = (diff >= 0 ? '+' : '') + diff.toFixed(1) + ' кг';
-            document.getElementById('resWeeks').textContent = weeks + ' нед';
-
-            // Обновить дашборд
-            document.getElementById('dashKcal').textContent = calories;
-            document.getElementById('dashProtein').textContent = protein;
-            document.getElementById('dashFat').textContent = fat;
-            document.getElementById('dashCarbs').textContent = carbs;
-
-            updateProgressRing();
-            updateDashboard();
-        }
-
-        function updateProgressRing() {
-            const w = state.weight;
-            const gw = state.goalWeight;
-            const startW = Storage.get('startWeight', w);
-            let progress = 0;
-            if (state.goal === 'fatloss' || state.goal === 'moderate') {
-                progress = Math.max(0, Math.min(100, ((startW - w) / (startW - gw)) * 100));
-            } else if (state.goal === 'bulk') {
-                progress = Math.max(0, Math.min(100, ((w - startW) / (gw - startW)) * 100));
-            }
-            progress = Math.round(progress);
-            const circumference = 301.59;
-            const offset = circumference - (progress / 100) * circumference;
-            const ring = document.getElementById('dashRingProgress');
-            if (ring) ring.style.strokeDashoffset = offset;
-            const percent = document.getElementById('dashRingPercent');
-            if (percent) percent.textContent = progress + '%';
-        }
-
-        function updateDashboard() {
-            document.getElementById('dashboardDate').textContent = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
-            document.getElementById('streakCount').textContent = state.streak;
-            document.getElementById('userLevel').textContent = state.userLevel;
-            document.getElementById('menuLevel').textContent = state.userLevel;
-            updateWaterUI();
-            updateProgressRing();
-        }
-
-        // --- Water ---
-        function updateWaterUI() {
-            const today = new Date().toDateString();
-            if (state.lastWaterDate !== today) {
-                state.water = 0;
-                state.lastWaterDate = today;
-                Storage.set('water', 0);
-                Storage.set('lastWaterDate', today);
-            }
-            const max = 2000;
-            const pct = Math.round((state.water / max) * 100);
-            document.getElementById('waterText').textContent = state.water + ' / ' + max + ' мл';
-            document.getElementById('waterPercent').textContent = pct + '%';
-            document.getElementById('waterBar').style.width = Math.min(pct, 100) + '%';
-        }
-
-        document.getElementById('addWaterBtn').addEventListener('click', () => {
-            state.water = Math.min(state.water + 250, 3000);
-            state.lastWaterDate = new Date().toDateString();
-            Storage.set('water', state.water);
-            Storage.set('lastWaterDate', state.lastWaterDate);
-            updateWaterUI();
-            if (state.water >= 2000 && !state.achievements.includes('water_king')) {
-                state.achievements.push('water_king');
-                state.userXP += 50;
-                Storage.set('achievements', state.achievements);
-                Storage.set('userXP', state.userXP);
-                showToast('🏆 Достижение: Водный король! +50 XP', 'success');
-                checkLevelUp();
-            }
-            showToast('+250 мл воды 💧', 'info');
-        });
-
-        // --- Level System ---
-        function checkLevelUp() {
-            const newLevel = Math.floor(state.userXP / 100) + 1;
-            if (newLevel > state.userLevel) {
-                state.userLevel = newLevel;
-                Storage.set('userLevel', newLevel);
-                document.getElementById('userLevel').textContent = newLevel;
-                document.getElementById('menuLevel').textContent = newLevel;
-                showToast('🎉 Новый уровень: ' + newLevel + '!', 'success');
-            }
-        }
-
-        // --- Quick Log Weight ---
-        document.getElementById('quickLogWeight').addEventListener('click', () => {
-            const w = prompt('Введите ваш вес (кг):', state.weight);
-            if (w !== null && !isNaN(w) && w > 20 && w < 300) {
-                state.weight = parseInt(w);
-                Storage.set('weight', state.weight);
-                document.getElementById('weightSlider').value = state.weight;
-                document.getElementById('weightValue').textContent = state.weight + ' кг';
-                if (!Storage.get('startWeight', null)) Storage.set('startWeight', state.weight);
-                calculate();
-                showToast('✅ Вес обновлён: ' + state.weight + ' кг', 'success');
-                state.userXP += 10;
-                Storage.set('userXP', state.userXP);
-                checkLevelUp();
-            } else if (w !== null) {
-                showToast('⚠️ Введите корректный вес (20-300 кг)', 'error');
-            }
-        });
-
-        // --- Event Listeners ---
-        document.getElementById('menuBtn').addEventListener('click', () => {
-            document.getElementById('sideMenu').classList.toggle('active');
-        });
-        document.getElementById('sideMenuOverlay').addEventListener('click', () => {
+        // Navigation
+        function navigateTo(p){
+            state.page=p;S.set('currentPage',p);
+            document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+            const pe=document.getElementById('page-'+p);if(pe)pe.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(e=>e.classList.toggle('active',e.dataset.page===p));
+            document.querySelectorAll('.side-item[data-page]').forEach(e=>e.classList.toggle('active',e.dataset.page===p));
+            document.getElementById('headerTitle').textContent={dashboard:'FitPlan',calculator:'Калькулятор',recipes:'Рецепты',mealplan:'План питания',progress:'Прогресс',achievements:'Достижения'}[p]||'FitPlan';
+            if(p==='dashboard')updateDashboard();
+            if(p==='calculator')calculate();
+            if(p==='recipes')renderRecipes();
+            if(p==='mealplan')renderMealPlan();
+            if(p==='progress')buildCalendar();
+            if(p==='achievements')renderAchievements();
             document.getElementById('sideMenu').classList.remove('active');
-        });
-
-        document.querySelectorAll('.nav-item').forEach(btn => {
-            btn.addEventListener('click', () => {
-                navigateTo(btn.dataset.page);
-                document.getElementById('sideMenu').classList.remove('active');
-            });
-        });
-        document.querySelectorAll('.side-menu-item[data-page]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.preventDefault();
-                navigateTo(btn.dataset.page);
-                document.getElementById('sideMenu').classList.remove('active');
-            });
-        });
-
-        // Gender buttons
-        document.querySelectorAll('.gender-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                state.gender = this.dataset.gender;
-                Storage.set('gender', state.gender);
-                calculate();
-            });
-        });
-
-        // Goal buttons
-        document.querySelectorAll('.goal-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.goal-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                state.goal = this.dataset.goal;
-                Storage.set('goal', state.goal);
-                calculate();
-            });
-        });
-
-        // Sliders
-        function bindSlider(id, stateKey, valueId, suffix = '') {
-            const slider = document.getElementById(id);
-            const valueEl = document.getElementById(valueId);
-            slider.addEventListener('input', () => {
-                state[stateKey] = parseInt(slider.value);
-                Storage.set(stateKey, state[stateKey]);
-                valueEl.textContent = state[stateKey] + suffix;
-                calculate();
-            });
-            // Init
-            slider.value = state[stateKey];
-            valueEl.textContent = state[stateKey] + suffix;
         }
-        bindSlider('ageSlider', 'age', 'ageValue', ' лет');
-        bindSlider('heightSlider', 'height', 'heightValue', ' см');
-        bindSlider('weightSlider', 'weight', 'weightValue', ' кг');
-        bindSlider('goalWeightSlider', 'goalWeight', 'goalWeightValue', ' кг');
 
-        document.getElementById('activitySelect').addEventListener('change', function() {
-            state.activity = parseFloat(this.value);
-            Storage.set('activity', state.activity);
-            calculate();
-        });
-        document.getElementById('activitySelect').value = state.activity;
+        // Level system
+        function addXP(xp){state.userXP+=xp;S.set('userXP',state.userXP);const nl=Math.floor(state.userXP/100)+1;if(nl>state.userLevel){state.userLevel=nl;S.set('userLevel',nl);document.getElementById('userLevel').textContent=nl;document.getElementById('menuLevel').textContent=nl;toast('🎉 Новый уровень: '+nl+'!','s');}}
 
-        // Init active goal button
-        document.querySelectorAll('.goal-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.goal === state.goal);
-        });
-        document.querySelectorAll('.gender-btn').forEach(b => {
-            b.classList.toggle('active', b.dataset.gender === state.gender);
-        });
+        // Calculator
+        function calculate(){
+            const g=state.gender,a=state.age,h=state.height,w=state.weight,gw=state.goalWeight,act=state.activity,goal=state.goal;
+            let bmr=g==='female'?10*w+6.25*h-5*a-161:10*w+6.25*h-5*a+5;
+            let maint=Math.round(bmr*act);
+            let factors={fatloss:0.75,moderate:0.85,maintain:1.0,bulk:1.15};
+            let cal=Math.round(maint*(factors[goal]||0.75));
+            if(cal<1200)cal=1200;if(cal>5000)cal=5000;
+            let pKg={fatloss:2.2,moderate:2.0,maintain:1.6,bulk:1.8},fKg={fatloss:0.8,moderate:0.9,maintain:0.9,bulk:1.0};
+            let prot=Math.round(w*(pKg[goal]||2.0)),fat=Math.round(w*(fKg[goal]||0.9));
+            let carbs=Math.round((cal-prot*4-fat*9)/4);if(carbs<20)carbs=20;
+            let bmi=(w/((h/100)**2)).toFixed(1),diff=w-gw;
+            let speeds={fatloss:0.9,moderate:0.6,maintain:0,bulk:0.4},speed=speeds[goal]||0.5;
+            let weeks=speed>0?Math.round(Math.abs(diff)/speed):0;
+            document.getElementById('resKcal').textContent=cal;document.getElementById('resProtein').textContent=prot;
+            document.getElementById('resFat').textContent=fat;document.getElementById('resCarbs').textContent=carbs;
+            document.getElementById('resBMI').textContent=bmi;document.getElementById('resDiff').textContent=(diff>=0?'+':'')+diff.toFixed(1)+' кг';
+            document.getElementById('resWeeks').textContent=weeks+' нед';
+            const tot=prot*4+fat*9+carbs*4;if(tot>0){document.getElementById('bjuP').style.width=((prot*4)/tot*100)+'%';document.getElementById('bjuF').style.width=((fat*9)/tot*100)+'%';document.getElementById('bjuC').style.width=((carbs*4)/tot*100)+'%';}
+            document.getElementById('dashKcal').textContent=cal;document.getElementById('dashProtein').textContent=prot;
+            document.getElementById('dashFat').textContent=fat;document.getElementById('dashCarbs').textContent=carbs;
+            updateRings();updateDashboard();
+        }
 
-        // --- Init App ---
-        function initApp() {
-            const savedPage = Storage.get('currentPage', 'dashboard');
-            navigateTo(savedPage);
-            calculate();
+        function updateRings(){
+            const w=state.weight,gw=state.goalWeight,sw=state.startWeight||w;let p=0;
+            if(state.goal==='fatloss'||state.goal==='moderate')p=Math.max(0,Math.min(100,((sw-w)/(sw-gw))*100));
+            else if(state.goal==='bulk')p=Math.max(0,Math.min(100,((w-sw)/(gw-sw))*100));
+            p=Math.round(p);const circ=289.03,off=circ-(p/100)*circ;
+            const dr=document.getElementById('dashRing');if(dr)dr.style.strokeDashoffset=off;
+            const pr=document.getElementById('progRing');if(pr)pr.style.strokeDashoffset=off;
+            const dp=document.getElementById('dashPercent');if(dp)dp.textContent=p+'%';
+            const pp=document.getElementById('progPercent');if(pp)pp.textContent=p+'%';
+            const pd=document.getElementById('progDiff');if(pd)pd.textContent=(w>gw?'−':'+')+Math.abs(w-gw).toFixed(1)+' кг';
+            const pb=document.getElementById('progBMI');if(pb)pb.textContent=(w/((state.height/100)**2)).toFixed(1);
+        }
+
+        function updateDashboard(){
+            document.getElementById('dashDate').textContent=new Date().toLocaleDateString('ru-RU',{weekday:'long',day:'numeric',month:'long'});
+            document.getElementById('streakCount').textContent=state.streak;
+            document.getElementById('userLevel').textContent=state.userLevel;
+            document.getElementById('menuLevel').textContent=state.userLevel;
             updateWaterUI();
-            updateDashboard();
-
-            // Check streak
-            const today = new Date().toDateString();
-            const lastLogin = Storage.get('lastLogin', '');
-            if (lastLogin === '') {
-                state.streak = 1;
-            } else if (lastLogin === today) {
-                // already logged today
-            } else {
-                const yesterday = new Date(Date.now() - 86400000).toDateString();
-                state.streak = lastLogin === yesterday ? state.streak + 1 : 1;
-            }
-            Storage.set('streak', state.streak);
-            Storage.set('lastLogin', today);
-            document.getElementById('streakCount').textContent = state.streak;
-
-            if (state.streak >= 7 && !state.achievements.includes('streak_7')) {
-                state.achievements.push('streak_7');
-                state.userXP += 100;
-                Storage.set('achievements', state.achievements);
-                Storage.set('userXP', state.userXP);
-                setTimeout(() => showToast('🏆 Достижение: 7 дней подряд! +100 XP', 'success'), 1000);
-                checkLevelUp();
-            }
         }
 
-        // Keyboard shortcut
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.getElementById('sideMenu').classList.remove('active');
-                closeModal();
-            }
-        });
+        function updateWaterUI(){
+            const today=new Date().toDateString();
+            if(state.lastWaterDate!==today){state.water=0;state.lastWaterDate=today;S.set('water',0);S.set('lastWaterDate',today);}
+            const max=2000,pct=Math.round((state.water/max)*100);
+            document.getElementById('waterText').textContent=state.water+' / '+max+' мл';
+            document.getElementById('waterPct').textContent=pct+'%';
+            document.getElementById('waterBar').style.width=Math.min(pct,100)+'%';
+        }
 
-        console.log('🚀 FitPlan PS Edition loaded successfully!');
-        console.log('📊 Dashboard | 🧮 Calculator | 🍽️ Recipes | 📅 Meal Plan | 📈 Progress | 🏅 Achievements');
+        // ... (продолжение в следующем сообщении)
     </script>
 </body>
 </html>
