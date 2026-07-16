@@ -3,7 +3,7 @@
 // ============================================================
 import { Storage } from './storage.js';
 import { calculate, initCalculator } from './calculator.js';
-import { renderRecipes, initRecipes } from './recipes.js';
+import { initRecipes } from './recipes.js';
 import { renderMeals, initMealPlan } from './mealplan.js';
 import { buildCalendar, updateProgress } from './calendar.js';
 
@@ -62,7 +62,7 @@ export function switchTab(id) {
   closeSheet();
 }
 
-// Делаем switchTab глобальной для кнопок в HTML
+// Делаем switchTab глобальной для HTML-кнопок
 window.switchTab = switchTab;
 
 document.querySelectorAll('.tab-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
@@ -152,10 +152,9 @@ window.onload = async function() {
   initCalculator();
   
   // Инициализация рецептов (загрузка JSON)
-  await initRecipes();
+  const db = await initRecipes();
   
   // Инициализация рациона
-  const db = await import('./recipes.js').then(m => m.getRecipeDB());
   initMealPlan(db);
   
   // Календарь и прогресс
