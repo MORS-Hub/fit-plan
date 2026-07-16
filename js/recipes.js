@@ -223,4 +223,6 @@ export async function initRecipes() {
       }
     });
   });
+  
+  return recipeDB;
 }
