@@ -1,348 +1,59 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  
-  <!-- SEO -->
-  <title>FitPlan — конструктор питания</title>
-  <meta name="description" content="Персональный конструктор питания с реальными рецептами, калькулятором калорий и планом на неделю.">
-  <meta name="keywords" content="fitplan, питание, рецепты, кбжу, калории, похудение, рацион">
-  <link rel="canonical" href="https://mors-hub.github.io/fit-plan/">
-  
-  <!-- Open Graph -->
-  <meta property="og:title" content="FitPlan — конструктор питания">
-  <meta property="og:description" content="Персональный конструктор питания с реальными рецептами, калькулятором калорий и планом на неделю.">
-  <meta property="og:url" content="https://mors-hub.github.io/fit-plan/">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://mors-hub.github.io/fit-plan/images/og-image.png">
-  
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1a7a64">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  
-  <!-- CSS -->
-  <link rel="stylesheet" href="css/style.css">
+    <title>Fit Plan</title>
+    <meta name="description" content="Современный фитнес-планировщик">
+
+    <meta name="theme-color" content="#4F46E5">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/icons/icon-192.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/themes.css">
 </head>
+
 <body>
 
-  <header class="header">
-    <h1>🥗 FitPlan <span>PRO</span></h1>
-    <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">🌙 Тёмная</button>
-  </header>
+<div id="app">
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <div class="overlay" id="sheetOverlay"></div>
+    <header id="header"></header>
 
-  <!-- BOTTOM SHEET -->
-  <div class="bottom-sheet" id="bottomSheet">
-    <div class="sheet-handle" id="sheetHandle"></div>
-    <h3 id="sheetTitle">🍽️ Добавить в рацион</h3>
-    <p id="sheetRecipeName" style="font-weight:500; font-size:0.9rem; margin-bottom:8px;"></p>
-    <label for="sheetDay">День недели</label>
-    <select id="sheetDay">
-      <option value="Понедельник">Понедельник</option>
-      <option value="Вторник">Вторник</option>
-      <option value="Среда">Среда</option>
-      <option value="Четверг">Четверг</option>
-      <option value="Пятница">Пятница</option>
-      <option value="Суббота">Суббота</option>
-      <option value="Воскресенье">Воскресенье</option>
-    </select>
-    <label for="sheetMealType">Приём пищи</label>
-    <select id="sheetMealType">
-      <option value="Завтрак">🍳 Завтрак</option>
-      <option value="Обед">🥗 Обед</option>
-      <option value="Ужин">🍲 Ужин</option>
-      <option value="Перекус">🍏 Перекус</option>
-    </select>
-    <div class="btn-row">
-      <button class="btn btn-outline" id="sheetCancel">Отмена</button>
-      <button class="btn" id="sheetConfirm">✅ Добавить</button>
-    </div>
-  </div>
+    <main id="main-content">
 
-  <!-- FAB -->
-  <button class="fab" id="fabBtn" aria-label="Добавить рецепт">➕</button>
+        <section id="dashboard"></section>
 
-  <!-- REPLACE MODAL -->
-  <div class="modal-overlay" id="replaceModal" role="dialog" aria-modal="true">
-    <div class="modal">
-      <h3>🔄 Заменить блюдо</h3>
-      <p id="replaceInfo" style="font-size:0.9rem; margin-bottom:8px;">Выбери альтернативу:</p>
-      <div id="replaceOptions" class="replace-grid"></div>
-      <div class="btn-row">
-        <button class="btn btn-outline" id="replaceCancel">Отмена</button>
-      </div>
-    </div>
-  </div>
+        <section id="nutrition"></section>
 
-  <main class="container">
+        <section id="workout"></section>
 
-    <!-- PAGE 1: HOME -->
-    <section class="page active" id="page-home" role="tabpanel" aria-label="Главная">
-      <div class="hero">
-        <h2>🏆 Твой идеальный рацион</h2>
-        <p>За 60 секунд получи персональный план питания с реальными рецептами и точным КБЖУ.</p>
-        <button class="btn" id="heroStartBtn">🚀 Начать</button>
-      </div>
+        <section id="calendar"></section>
 
-      <div class="card">
-        <h2>🎯 Прогресс к цели</h2>
-        <div class="progress-ring-wrap">
-          <div class="progress-ring" id="homeProgressRing" role="img" aria-label="Прогресс к цели">
-            <svg width="80" height="80" viewBox="0 0 80 80">
-              <circle class="bg-circle" cx="40" cy="40" r="36"/>
-              <circle class="progress-circle" id="homeProgressCircle" cx="40" cy="40" r="36" stroke-dasharray="226.2" stroke-dashoffset="226.2"/>
-            </svg>
-            <span class="center-text" id="homeProgressPercent">0%</span>
-          </div>
-          <div class="progress-stats">
-            <strong id="homeProgressDiff">0 кг</strong>
-            <span class="text-muted"> осталось до цели</span>
-            <div><span class="text-muted">ИМТ: </span><strong id="homeBMI">—</strong></div>
-          </div>
-        </div>
-      </div>
+        <section id="progress"></section>
 
-      <div class="card">
-        <h2>📊 Сегодня</h2>
-        <div class="stats-grid">
-          <div class="stat-item"><span class="value" id="homeKcal">—</span><span class="label">ккал</span></div>
-          <div class="stat-item"><span class="value" id="homeProtein">—</span><span class="label">белки, г</span></div>
-          <div class="stat-item"><span class="value" id="homeFat">—</span><span class="label">жиры, г</span></div>
-          <div class="stat-item"><span class="value" id="homeCarbs">—</span><span class="label">углеводы, г</span></div>
-        </div>
-      </div>
-    </section>
+        <section id="settings"></section>
 
-    <!-- PAGE 2: CALCULATOR -->
-    <section class="page" id="page-calc" role="tabpanel" aria-label="Калькулятор">
-      <div class="card">
-        <h2>🧮 Калькулятор нормы</h2>
-        <p class="text-muted" style="margin-bottom:12px;">Введи свои параметры и получи точную дневную норму.</p>
+    </main>
 
-        <div style="margin-bottom:12px;">
-          <label style="font-weight:500; font-size:0.8rem; display:block; margin-bottom:4px;">Пол</label>
-          <select class="calc-select" id="gender">
-            <option value="female">Женский</option>
-            <option value="male">Мужской</option>
-          </select>
-        </div>
+    <nav id="bottom-nav"></nav>
 
-        <div class="slider-group">
-          <label><span>Возраст</span><span class="value" id="ageValue">30</span></label>
-          <input type="range" id="ageSlider" min="10" max="120" value="30">
-        </div>
+</div>
 
-        <div class="slider-group">
-          <label><span>Рост (см)</span><span class="value" id="heightValue">170</span></label>
-          <input type="range" id="heightSlider" min="100" max="250" value="170">
-        </div>
+<script type="module" src="js/app.js"></script>
 
-        <div class="slider-group">
-          <label><span>Вес (кг)</span><span class="value" id="weightValue">70</span></label>
-          <input type="range" id="weightSlider" min="30" max="300" value="70">
-        </div>
-
-        <div class="slider-group">
-          <label><span>🎯 Желаемый вес</span><span class="value" id="goalWeightValue">65</span></label>
-          <input type="range" id="goalWeightSlider" min="30" max="300" value="65">
-        </div>
-
-        <div style="margin-bottom:12px;">
-          <label style="font-weight:500; font-size:0.8rem; display:block; margin-bottom:4px;">Активность</label>
-          <select class="calc-select" id="activity">
-            <option value="1.2">🪑 Сидячий</option>
-            <option value="1.375" selected>🚶 Лёгкая (1–3 тренировки)</option>
-            <option value="1.55">🏃 Умеренная (3–5)</option>
-            <option value="1.725">🏋️ Высокая (6–7)</option>
-          </select>
-        </div>
-
-        <div>
-          <label style="font-weight:500; font-size:0.8rem; display:block; margin-bottom:4px;">🎯 Цель</label>
-          <div class="goal-btns">
-            <button class="goal-btn active" data-factor="0.75" data-plan="fatloss">🔥 Жиросжигание</button>
-            <button class="goal-btn" data-factor="0.85" data-plan="moderate">⚖️ Умеренное</button>
-            <button class="goal-btn" data-factor="1.0" data-plan="maintain">🛡️ Поддержание</button>
-            <button class="goal-btn" data-factor="1.15" data-plan="bulk">💪 Набор массы</button>
-          </div>
-          <div id="goalDesc" style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">Интенсивный дефицит 25% — до 1 кг в неделю</div>
-        </div>
-
-        <div class="bju-chart" id="bjuChart">
-          <div class="segment segment-protein" id="bjuProtein" style="width:33%"></div>
-          <div class="segment segment-fat" id="bjuFat" style="width:33%"></div>
-          <div class="segment segment-carbs" id="bjuCarbs" style="width:34%"></div>
-        </div>
-        <div class="bju-legend">
-          <span><span class="dot dot-protein"></span> Белки</span>
-          <span><span class="dot dot-fat"></span> Жиры</span>
-          <span><span class="dot dot-carbs"></span> Углеводы</span>
-        </div>
-
-        <div class="calc-grid">
-          <div class="result-card"><span class="number" id="resKcal">—</span><span class="label">ккал/день</span></div>
-          <div class="result-card"><span class="number" id="resProtein">—</span><span class="label">белки, г</span></div>
-          <div class="result-card"><span class="number" id="resFat">—</span><span class="label">жиры, г</span></div>
-          <div class="result-card"><span class="number" id="resCarbs">—</span><span class="label">углеводы, г</span></div>
-        </div>
-
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-top:6px;">
-          <div class="result-card" style="padding:8px 6px;"><span class="number" id="resDiff" style="font-size:1rem;">—</span><span class="label">разница</span></div>
-          <div class="result-card" style="padding:8px 6px;"><span class="number" id="resWeeks" style="font-size:1rem;">—</span><span class="label">срок, нед</span></div>
-          <div class="result-card" style="padding:8px 6px;"><span class="number" id="resSpeed" style="font-size:1rem;">—</span><span class="label">скорость</span></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- PAGE 3: RECIPES -->
-    <section class="page" id="page-recipes" role="tabpanel" aria-label="Рецепты">
-      <div class="card">
-        <h2>🔍 Поиск рецептов</h2>
-        <p class="text-muted">Реальные блюда с точным КБЖУ.</p>
-
-        <div class="search-box">
-          <input type="text" id="recipeSearch" placeholder="Например: курица, омлет, каша" autocomplete="off">
-          <button class="btn" id="searchBtn">🔍</button>
-          <button class="btn btn-outline" id="clearSearchBtn">✖</button>
-        </div>
-
-        <div class="search-history" id="searchHistory"></div>
-
-        <div class="filter-group" id="categoryFilterGroup">
-          <span class="filter-label">📂 Категория</span>
-          <button class="filter-btn active" data-filter="all">Все</button>
-          <button class="filter-btn" data-filter="breakfast">🍳 Завтрак</button>
-          <button class="filter-btn" data-filter="lunch">🥗 Обед</button>
-          <button class="filter-btn" data-filter="dinner">🍲 Ужин</button>
-          <button class="filter-btn" data-filter="snack">🍏 Перекус</button>
-          <button class="filter-btn" data-filter="dessert">🍰 Десерт</button>
-          <button class="filter-btn" data-filter="favorites">❤️ Избранное</button>
-        </div>
-
-        <div class="filter-group" id="dietFilterGroup">
-          <span class="filter-label">🍽️ Диета</span>
-          <button class="filter-btn active" data-filter="all">Все</button>
-          <button class="filter-btn" data-filter="vegetarian">🌱 Вегетарианское</button>
-          <button class="filter-btn" data-filter="lowcarb">🥑 Низкоуглеводное</button>
-        </div>
-
-        <div class="filter-group">
-          <span class="filter-label">⏱️ Время</span>
-          <button class="filter-btn active" data-filter="all">Все</button>
-          <button class="filter-btn" data-filter="fast">⚡ До 20 мин</button>
-          <button class="filter-btn" data-filter="medium">⏱️ До 40 мин</button>
-          <button class="filter-btn" data-filter="long">🐢 40+ мин</button>
-        </div>
-
-        <div id="recipeResults" class="recipe-grid"></div>
-        <div id="recipeInfo" style="font-size:0.7rem; color:var(--text-muted); margin-top:8px;">Введите запрос для поиска рецептов.</div>
-      </div>
-    </section>
-
-    <!-- PAGE 4: MEAL PLAN -->
-    <section class="page" id="page-mealplan" role="tabpanel" aria-label="Мой рацион">
-      <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
-          <h2 style="margin:0;">📅 Мой рацион</h2>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn btn-sm" id="autoPlanBtn">🧠 Собрать</button>
-            <button class="btn btn-outline btn-sm" id="exportShopListBtn">📋 Список</button>
-            <button class="btn btn-sm btn-danger" id="clearPlanBtn">🗑️ Очистить</button>
-          </div>
-        </div>
-        <p class="text-muted" id="planDesc">Добавь блюда из раздела «Рецепты» или нажми «Собрать».</p>
-        <div id="mealPlanContainer">
-          <div class="empty-msg">
-            <span class="big-icon">🍽️</span>
-            <p>Рацион пуст. Начни с поиска рецептов!</p>
-            <button class="btn btn-sm" id="emptyPlanBtn">🍽️ Перейти к рецептам</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- PAGE 5: PROGRESS -->
-    <section class="page" id="page-progress" role="tabpanel" aria-label="Прогресс">
-      <div class="card">
-        <h2>📈 Прогресс к цели</h2>
-        <div class="progress-ring-wrap">
-          <div class="progress-ring" id="progressRing" role="img" aria-label="Прогресс к цели">
-            <svg width="80" height="80" viewBox="0 0 80 80">
-              <circle class="bg-circle" cx="40" cy="40" r="36"/>
-              <circle class="progress-circle" id="progressCircle" cx="40" cy="40" r="36" stroke-dasharray="226.2" stroke-dashoffset="226.2"/>
-            </svg>
-            <span class="center-text" id="progressPercent">0%</span>
-          </div>
-          <div class="progress-stats">
-            <strong id="progressWeightDiff">0 кг</strong>
-            <span class="text-muted"> осталось до цели</span>
-            <div><span class="text-muted">ИМТ: </span><strong id="progressBMI">—</strong></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>📅 Календарь веса</h2>
-        <div class="calendar-header">
-          <div class="month-nav">
-            <button class="btn btn-sm btn-outline" id="prevMonthBtn">◀</button>
-            <strong id="calendarMonthYear">Апрель 2025</strong>
-            <button class="btn btn-sm btn-outline" id="nextMonthBtn">▶</button>
-          </div>
-          <div class="month-change" id="monthChange">0 кг</div>
-        </div>
-        <div class="calendar-grid" id="calendarGrid">
-          <div class="day-header">Пн</div>
-          <div class="day-header">Вт</div>
-          <div class="day-header">Ср</div>
-          <div class="day-header">Чт</div>
-          <div class="day-header">Пт</div>
-          <div class="day-header">Сб</div>
-          <div class="day-header">Вс</div>
-        </div>
-        <div class="calendar-legend">
-          <span><span class="dot dot-low"></span> Похудение</span>
-          <span><span class="dot dot-high"></span> Набор</span>
-          <span><span class="dot dot-empty"></span> Нет данных</span>
-        </div>
-        <p class="text-muted" style="margin-top:8px; font-size:0.7rem;">Нажми на день, чтобы добавить или изменить вес.</p>
-      </div>
-
-      <div class="card">
-        <h2>📋 Статистика</h2>
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(90px,1fr)); gap:10px;">
-          <div><span class="text-muted">Старт</span><br><strong id="statStart">—</strong> кг</div>
-          <div><span class="text-muted">Текущий</span><br><strong id="statCurrent">—</strong> кг</div>
-          <div><span class="text-muted">Потеряно</span><br><strong id="statLost">—</strong> кг</div>
-          <div><span class="text-muted">Скорость</span><br><strong id="statSpeed">—</strong> кг/нед</div>
-          <div><span class="text-muted">ИМТ</span><br><strong id="statBMI">—</strong></div>
-          <div><span class="text-muted">Цель</span><br><strong id="statGoal">—</strong> кг</div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- BOTTOM NAVIGATION -->
-  <nav class="bottom-nav" role="navigation" aria-label="Основная навигация">
-    <button class="tab-btn active" data-tab="home"><span class="icon">🏠</span>Главная</button>
-    <button class="tab-btn" data-tab="calc"><span class="icon">🧮</span>Кальк</button>
-    <button class="tab-btn" data-tab="recipes"><span class="icon">🍽️</span>Рецепты</button>
-    <button class="tab-btn" data-tab="mealplan"><span class="icon">📅</span>Рацион</button>
-    <button class="tab-btn" data-tab="progress"><span class="icon">📊</span>Прогресс</button>
-  </nav>
-
-  <!-- JavaScript -->
-  <script type="module" src="js/app.js"></script>
 </body>
 </html>
