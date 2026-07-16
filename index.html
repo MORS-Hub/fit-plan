@@ -1340,7 +1340,6 @@
           </select>
         </div>
 
-        <!-- ПЕРЕКЛЮЧАТЕЛЬ ТРЕНИРОВОК -->
         <div style="margin-bottom:12px; display:flex; align-items:center; gap:12px;">
           <label style="font-weight:500; font-size:0.8rem; display:flex; align-items:center; gap:8px; cursor:pointer;">
             <input type="checkbox" id="trainingToggle" style="width:18px; height:18px; accent-color:var(--primary);">
@@ -1526,23 +1525,19 @@
 
   <script>
     // ============================================================
-    // ВЕСЬ JAVASCRIPT ВСТРОЕН ПРЯМО ЗДЕСЬ (рабочая версия)
+    // ИСПРАВЛЕННАЯ ВЕРСИЯ – все баги устранены
     // ============================================================
-    
+
     // 1. STORAGE
     const Storage = {
       save(key, value) {
-        try {
-          localStorage.setItem('fp_' + key, JSON.stringify(value));
-        } catch (e) {}
+        try { localStorage.setItem('fp_' + key, JSON.stringify(value)); } catch (e) {}
       },
       load(key, fallback) {
         try {
           const v = localStorage.getItem('fp_' + key);
           return v ? JSON.parse(v) : fallback;
-        } catch (e) {
-          return fallback;
-        }
+        } catch (e) { return fallback; }
       }
     };
 
@@ -1651,6 +1646,41 @@
     });
 
     // 6. CALCULATOR
+    // ---- Вспомогательная функция для работы с датами ----
+    function getTodayStr() {
+      const d = new Date();
+      return String(d.getDate()).padStart(2, '0') + '.' +
+             String(d.getMonth() + 1).padStart(2, '0') + '.' +
+             d.getFullYear();
+    }
+
+    function formatDate(day, month, year) {
+      return String(day).padStart(2, '0') + '.' +
+             String(month + 1).padStart(2, '0') + '.' +
+             year;
+    }
+
+    // ---- Сохранение веса в историю с проверкой дублей ----
+    function addWeightEntry(weight, dateStr) {
+      const history = Storage.load('weightHistory', []);
+      // Если дата не указана – используем сегодня
+      if (!dateStr) dateStr = getTodayStr();
+      // Ищем существующую запись на эту дату
+      const idx = history.findIndex(item => item.date === dateStr);
+      if (idx !== -1) {
+        history[idx].weight = weight;
+      } else {
+        history.push({ date: dateStr, weight: weight });
+      }
+      // Сортируем по дате (от старых к новым)
+      history.sort((a, b) => {
+        const da = a.date.split('.').reverse().join('');
+        const db = b.date.split('.').reverse().join('');
+        return da.localeCompare(db);
+      });
+      Storage.save('weightHistory', history);
+    }
+
     function calculate() {
       const gender = document.getElementById('gender').value;
       const age = parseInt(document.getElementById('ageSlider').value) || 30;
@@ -1659,23 +1689,15 @@
       const goalWeight = parseInt(document.getElementById('goalWeightSlider').value) || 65;
       const activity = parseFloat(document.getElementById('activity').value) || 1.375;
       const activeGoal = document.querySelector('.goal-btn.active');
+      if (!activeGoal) return;
       const factor = parseFloat(activeGoal.dataset.factor);
       const plan = activeGoal.dataset.plan;
       const hasTraining = document.getElementById('trainingToggle').checked;
 
       // Валидация
-      if (weight < 40 || weight > 250) {
-        showToast('⚠️ Введите корректный вес (40–250 кг)');
-        return;
-      }
-      if (height < 130 || height > 220) {
-        showToast('⚠️ Введите корректный рост (130–220 см)');
-        return;
-      }
-      if (age < 14 || age > 90) {
-        showToast('⚠️ Введите корректный возраст (14–90 лет)');
-        return;
-      }
+      if (weight < 40 || weight > 250) { showToast('⚠️ Введите корректный вес (40–250 кг)'); return; }
+      if (height < 130 || height > 220) { showToast('⚠️ Введите корректный рост (130–220 см)'); return; }
+      if (age < 14 || age > 90) { showToast('⚠️ Введите корректный возраст (14–90 лет)'); return; }
       if (plan === 'fatloss' && goalWeight >= weight) {
         showToast('⚠️ Для похудения цель должна быть меньше текущего веса');
         return;
@@ -1689,8 +1711,6 @@
       const bmr = gender === 'female' ? 10 * weight + 6.25 * height - 5 * age - 161 : 10 * weight + 6.25 * height - 5 * age + 5;
       const maintenance = Math.round(bmr * activity);
       let finalCal = Math.round(maintenance * factor);
-
-      // Минимальный порог
       const minCal = gender === 'female' ? 1200 : 1500;
       if (finalCal < minCal) {
         finalCal = minCal;
@@ -1715,8 +1735,6 @@
 
       // Углеводы
       let carbs = Math.round((finalCal - (protein * 4) - (fat * 9)) / 4);
-
-      // Если углеводы < 50 г — пересчитываем
       if (carbs < 50) {
         const minProtein = Math.round(weight * 1.6);
         if (protein > minProtein) protein = minProtein;
@@ -1735,7 +1753,7 @@
       document.getElementById('resFat').textContent = fat;
       document.getElementById('resCarbs').textContent = carbs >= 0 ? carbs : 0;
 
-      // БЖУ в %
+      // БЖУ %
       const total = protein * 4 + fat * 9 + carbs * 4;
       if (total > 0) {
         document.getElementById('bjuProtein').style.width = ((protein * 4) / total * 100) + '%';
@@ -1743,7 +1761,7 @@
         document.getElementById('bjuCarbs').style.width = ((carbs * 4) / total * 100) + '%';
       }
 
-      // Разница веса (исправлено)
+      // Разница веса
       const diff = goalWeight - weight;
       const speed = factor === 0.75 ? 0.9 : factor === 0.85 ? 0.6 : factor === 1.0 ? 0.0 : 0.4;
       const weeks = speed > 0 ? Math.round(Math.abs(diff) / speed) : 0;
@@ -1754,10 +1772,20 @@
       // ИМТ
       const bmi = (weight / ((height / 100) ** 2)).toFixed(1);
       document.getElementById('homeBMI').textContent = bmi;
+      document.getElementById('progressBMI').textContent = bmi;
 
-      // Прогресс
+      // Прогресс к цели (универсальный)
       const startWeight = Storage.load('startWeight', weight);
-      const progress = diff < 0 ? Math.min(100, ((startWeight - weight) / (startWeight - goalWeight)) * 100) : 0;
+      let progress = 0;
+      if (diff < 0) { // похудение
+        progress = Math.min(100, ((startWeight - weight) / (startWeight - goalWeight)) * 100);
+      } else if (diff > 0) { // набор
+        progress = Math.min(100, ((weight - startWeight) / (goalWeight - startWeight)) * 100);
+      } else {
+        progress = (weight === goalWeight) ? 100 : 0;
+      }
+      if (progress < 0) progress = 0;
+      if (progress > 100) progress = 100;
       const circumference = 226.2;
       const offset = circumference - (progress / 100) * circumference;
 
@@ -1767,63 +1795,87 @@
       document.getElementById('progressPercent').textContent = Math.round(progress) + '%';
       document.getElementById('homeProgressDiff').textContent = (diff < 0 ? '−' : '+') + Math.abs(diff).toFixed(1) + ' кг';
       document.getElementById('progressWeightDiff').textContent = (diff < 0 ? '−' : '+') + Math.abs(diff).toFixed(1) + ' кг';
-      document.getElementById('progressBMI').textContent = bmi;
 
       document.getElementById('homeKcal').textContent = finalCal;
       document.getElementById('homeProtein').textContent = protein;
       document.getElementById('homeFat').textContent = fat;
       document.getElementById('homeCarbs').textContent = carbs >= 0 ? carbs : 0;
-
-      // Сохраняем историю веса
-      const history = Storage.load('weightHistory', []);
-      if (history.length === 0 || history[history.length - 1].weight !== weight) {
-        history.push({ date: new Date().toLocaleDateString(), weight: weight });
-        Storage.save('weightHistory', history);
-      }
-      updateProgress();
     }
 
-    // События для калькулятора
+    // ---- Обработчик изменения слайдера веса (сохраняет историю) ----
+    document.getElementById('weightSlider').addEventListener('input', function() {
+      const w = parseInt(this.value);
+      document.getElementById('weightValue').textContent = w;
+      // Сохраняем вес в Storage для слайдера
+      Storage.save('weightSlider', w);
+      // Добавляем запись в историю с сегодняшней датой (если ещё нет)
+      const today = getTodayStr();
+      const history = Storage.load('weightHistory', []);
+      const exists = history.some(item => item.date === today);
+      if (!exists) {
+        addWeightEntry(w, today);
+      } else {
+        // Обновляем существующую запись за сегодня
+        const idx = history.findIndex(item => item.date === today);
+        if (idx !== -1) {
+          history[idx].weight = w;
+          Storage.save('weightHistory', history);
+        }
+      }
+      // Если нет стартового веса – установим
+      if (!Storage.load('startWeight', null)) {
+        Storage.save('startWeight', w);
+      }
+      calculate();
+    });
+
+    // Остальные обработчики
     document.getElementById('ageSlider').addEventListener('input', function() {
       document.getElementById('ageValue').textContent = this.value;
+      Storage.save('ageSlider', this.value);
       calculate();
     });
     document.getElementById('heightSlider').addEventListener('input', function() {
       document.getElementById('heightValue').textContent = this.value;
-      calculate();
-    });
-    document.getElementById('weightSlider').addEventListener('input', function() {
-      document.getElementById('weightValue').textContent = this.value;
-      if (!Storage.load('startWeight', null)) Storage.save('startWeight', parseInt(this.value));
+      Storage.save('heightSlider', this.value);
       calculate();
     });
     document.getElementById('goalWeightSlider').addEventListener('input', function() {
       document.getElementById('goalWeightValue').textContent = this.value;
+      Storage.save('goalWeightSlider', this.value);
       calculate();
     });
-    document.getElementById('gender').addEventListener('change', calculate);
-    document.getElementById('activity').addEventListener('change', calculate);
+    document.getElementById('gender').addEventListener('change', function() {
+      Storage.save('gender', this.value);
+      calculate();
+    });
+    document.getElementById('activity').addEventListener('change', function() {
+      Storage.save('activity', this.value);
+      calculate();
+    });
     document.getElementById('trainingToggle').addEventListener('change', calculate);
 
-    // Кнопки целей
+    // Кнопки целей с сохранением
     document.querySelectorAll('.goal-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('.goal-btn').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
         const factor = parseFloat(this.dataset.factor);
+        const plan = this.dataset.plan;
+        Storage.save('currentPlan', plan);
         const desc = factor === 0.75 ? 'Интенсивный дефицит 25% — до 1 кг в неделю' :
-          factor === 0.85 ? 'Комфортный дефицит 15% — ~0,5–0,7 кг в неделю' :
-          factor === 1.0 ? 'Баланс калорий — вес стабилен' :
-          'Профицит 15% — качественный рост мышц';
+                     factor === 0.85 ? 'Комфортный дефицит 15% — ~0,5–0,7 кг в неделю' :
+                     factor === 1.0 ? 'Баланс калорий — вес стабилен' :
+                     'Профицит 15% — качественный рост мышц';
         document.getElementById('goalDesc').textContent = desc;
         calculate();
       });
     });
 
     // Восстановление сохранённой цели
-    const savedGoal = Storage.load('currentPlan', 'fatloss');
+    const savedPlan = Storage.load('currentPlan', 'fatloss');
     document.querySelectorAll('.goal-btn').forEach(btn => {
-      if (btn.dataset.plan === savedGoal) {
+      if (btn.dataset.plan === savedPlan) {
         btn.classList.add('active');
         document.querySelectorAll('.goal-btn').forEach(b => { if (b !== btn) b.classList.remove('active'); });
         const factor = parseFloat(btn.dataset.factor);
@@ -1834,7 +1886,7 @@
       }
     });
 
-    // 7. RECIPES
+    // 7. RECIPES – расширенная база с полем diet
     const recipeDB = [{
         id: 1,
         name: 'Белковый омлет с овощами и сыром',
@@ -1844,6 +1896,7 @@
         protein: 38,
         fat: 24,
         carbs: 12,
+        diet: 'all',
         ingredients: ['Яйца 2 шт', 'Белки яичные 100г', 'Помидор 120г', 'Шпинат 50г', 'Сыр лёгкий 30г'],
         instructions: 'Взбить яйца с белками. Обжарить шпинат и помидор. Залить яйцами. Добавить сыр и готовить под крышкой 5–7 минут.'
       },
@@ -1856,6 +1909,7 @@
         protein: 35,
         fat: 12,
         carbs: 58,
+        diet: 'vegetarian',
         ingredients: ['Овсяные хлопья 60г', 'Молоко 1,5% 200мл', 'Банан 100г', 'Протеин 25г', 'Орехи грецкие 10г'],
         instructions: 'Варить овсянку на молоке 5 минут. Добавить протеин после снятия с огня. Добавить банан и орехи.'
       },
@@ -1868,6 +1922,7 @@
         protein: 42,
         fat: 12,
         carbs: 32,
+        diet: 'vegetarian',
         ingredients: ['Творог 5% 250г', 'Яйцо 1 шт', 'Манка 20г', 'Йогурт натуральный 50г', 'Ягоды 80г'],
         instructions: 'Смешать творог, яйцо, манку и йогурт. Добавить ягоды. Запекать 35 минут при 180°C.'
       },
@@ -1880,6 +1935,7 @@
         protein: 27,
         fat: 25,
         carbs: 52,
+        diet: 'vegetarian',
         ingredients: ['Гречка сухая 70г', 'Яйца 2 шт', 'Авокадо 70г', 'Огурец 100г', 'Зелень'],
         instructions: 'Отварить гречку. Приготовить яйца. Добавить авокадо и овощи.'
       },
@@ -1892,6 +1948,7 @@
         protein: 32,
         fat: 10,
         carbs: 42,
+        diet: 'vegetarian',
         ingredients: ['Греческий йогурт 2% 300г', 'Ягоды 100г', 'Овсяные хлопья 30г', 'Чиа 10г', 'Мёд 5г'],
         instructions: 'Выложить йогурт в миску. Добавить ягоды, овсянку и семена. Оставить на 10 минут.'
       },
@@ -1904,6 +1961,7 @@
         protein: 45,
         fat: 15,
         carbs: 50,
+        diet: 'all',
         ingredients: ['Лаваш цельнозерновой 60г', 'Куриная грудка 150г', 'Огурец 80г', 'Помидор 100г', 'Йогурт натуральный 50г'],
         instructions: 'Приготовить курицу. Нарезать овощи. Завернуть всё в лаваш.'
       },
@@ -1916,6 +1974,7 @@
         protein: 45,
         fat: 14,
         carbs: 34,
+        diet: 'vegetarian',
         ingredients: ['Творог 5% 250г', 'Яйцо 1 шт', 'Рисовая мука 30г', 'Протеин ванильный 20г', 'Ягоды 50г'],
         instructions: 'Смешать массу. Сформировать сырники. Запечь или приготовить на сухой сковороде.'
       },
@@ -1928,6 +1987,7 @@
         protein: 32,
         fat: 22,
         carbs: 35,
+        diet: 'all',
         ingredients: ['Хлеб цельнозерновой 80г', 'Лосось слабосолёный 70г', 'Творожный сыр лёгкий 40г', 'Огурец 80г', 'Зелень'],
         instructions: 'Поджарить хлеб. Намазать сыр. Выложить лосось и овощи.'
       },
@@ -1940,6 +2000,7 @@
         protein: 43,
         fat: 20,
         carbs: 42,
+        diet: 'all',
         ingredients: ['Овсянка 50г', 'Яйца 2 шт', 'Молоко 50мл', 'Куриная грудка 120г', 'Сыр 20г', 'Овощи 100г'],
         instructions: 'Сделать блин из овсянки, яйца и молока. Добавить начинку. Обжарить с двух сторон.'
       },
@@ -1952,6 +2013,7 @@
         protein: 35,
         fat: 10,
         carbs: 65,
+        diet: 'vegetarian',
         ingredients: ['Рис сухой 60г', 'Молоко 1,5% 200мл', 'Творог 5% 150г', 'Ягоды 80г', 'Корица'],
         instructions: 'Сварить рисовую кашу. Добавить творог. Сверху ягоды.'
       },
@@ -1964,6 +2026,7 @@
         protein: 35,
         fat: 21,
         carbs: 11,
+        diet: 'vegetarian',
         ingredients: ['Яйца 3 шт', 'Шпинат 100г', 'Сыр лёгкий 30г', 'Оливковое масло 5г'],
         instructions: 'Взбить яйца. Обжарить шпинат. Залить яйцами. Посыпать сыром и накрыть крышкой на 2 минуты.'
       },
@@ -1976,6 +2039,7 @@
         protein: 17,
         fat: 10,
         carbs: 68,
+        diet: 'vegetarian',
         ingredients: ['Овсяные хлопья 60г', 'Молоко 1,5% 200мл', 'Банан 100г', 'Мёд 5г', 'Корица'],
         instructions: 'Варить овсянку на молоке 5 минут. Добавить банан. Посыпать корицей и полить мёдом.'
       }
@@ -1994,12 +2058,22 @@
         const q = query.trim().toLowerCase();
         res = res.filter(r => r.name.toLowerCase().includes(q) || r.ingredients.some(i => i.toLowerCase().includes(q)));
       }
-      if (currentCategory !== 'all') res = res.filter(r => r.category === currentCategory);
-      if (currentDiet !== 'all') res = res.filter(r => r.diet === currentDiet || r.diet === 'all' || !r.diet);
+      // Категория (но если выбран фильтр "избранное", игнорируем категорию)
+      if (currentFilter === 'favorites') {
+        res = res.filter(r => favorites.includes(r.name));
+      } else {
+        if (currentCategory !== 'all') {
+          res = res.filter(r => r.category === currentCategory);
+        }
+      }
+      // Диета
+      if (currentDiet !== 'all') {
+        res = res.filter(r => r.diet === currentDiet || r.diet === 'all');
+      }
+      // Время
       if (currentTime === 'fast') res = res.filter(r => r.time <= 20);
       else if (currentTime === 'medium') res = res.filter(r => r.time > 20 && r.time <= 40);
       else if (currentTime === 'long') res = res.filter(r => r.time > 40);
-      if (currentFilter === 'favorites') res = res.filter(r => favorites.includes(r.name));
       return res;
     }
 
@@ -2068,7 +2142,7 @@
       });
     }
 
-    // Поиск рецептов
+    // Поиск
     document.getElementById('searchBtn').addEventListener('click', function() {
       const q = document.getElementById('recipeSearch').value;
       if (!q || q.trim().length < 1) { showToast('⚠️ Введите запрос'); return; }
@@ -2095,13 +2169,19 @@
       renderRecipes('');
     });
 
+    // Фильтры
     document.querySelectorAll('#categoryFilterGroup .filter-btn').forEach(btn => {
       btn.addEventListener('click', function() {
         document.querySelectorAll('#categoryFilterGroup .filter-btn').forEach(b => b.classList.remove('active'));
         this.classList.add('active');
-        currentCategory = this.dataset.filter;
-        if (currentCategory === 'favorites') currentFilter = 'favorites';
-        else currentFilter = 'all';
+        const val = this.dataset.filter;
+        if (val === 'favorites') {
+          currentFilter = 'favorites';
+          currentCategory = 'all'; // сбрасываем категорию
+        } else {
+          currentCategory = val;
+          currentFilter = 'all';
+        }
         renderRecipes(document.getElementById('recipeSearch').value);
       });
     });
@@ -2219,7 +2299,9 @@
       else if (meal.name.includes('Обед')) cat = 'lunch';
       else if (meal.name.includes('Ужин')) cat = 'dinner';
       else if (meal.name.includes('Перекус')) cat = 'snack';
-      let alts = recipeDB.filter(r => r.category === cat && r.name !== meal.recipe);
+      // Ищем альтернативы: по категории и не совпадающие с текущим рецептом
+      const currentRecipeName = meal.recipe || meal.name.replace(/^.*?: /, '');
+      let alts = recipeDB.filter(r => r.category === cat && r.name !== currentRecipeName);
       if (alts.length > 8) alts = alts.slice(0, 8);
       const container = document.getElementById('replaceOptions');
       container.innerHTML = '';
@@ -2299,7 +2381,12 @@
       }
     });
 
+    // Экспорт списка покупок (удаляем старую карточку)
     document.getElementById('exportShopListBtn').addEventListener('click', () => {
+      // Удаляем предыдущую карточку, если есть
+      const oldCard = document.querySelector('.shop-card');
+      if (oldCard) oldCard.remove();
+
       const meals = Storage.load('customMeals', {});
       const map = {};
       for (const day in meals) {
@@ -2310,11 +2397,11 @@
         });
       }
       if (!Object.keys(map).length) { showToast('📭 Рацион пуст'); return; }
-      let list = '<div class="card"><h2>🛍️ Список покупок</h2><ul class="shop-list" style="list-style:none;padding:0;columns:2 160px;column-gap:16px;">';
+      let list = '<div class="card shop-card"><h2>🛍️ Список покупок</h2><ul class="shop-list" style="list-style:none;padding:0;columns:2 160px;column-gap:16px;">';
       for (const [name, count] of Object.entries(map)) {
         list += `<li style="padding:4px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;break-inside:avoid;font-size:0.8rem;"><span>${name}</span> <span style="font-weight:500;color:var(--primary);">×${count}</span></li>`;
       }
-      list += '</ul><button class="btn btn-sm" onclick="this.closest(\'.card\').style.display=\'none\'">✖ Закрыть</button></div>';
+      list += '</ul><button class="btn btn-sm" onclick="this.closest(\'.card\').remove()">✖ Закрыть</button></div>';
       const div = document.createElement('div');
       div.innerHTML = list;
       document.querySelector('.container').appendChild(div.firstElementChild);
@@ -2361,8 +2448,8 @@
         change < 0 ? `${change.toFixed(1)} кг ↓` :
         '0 кг —';
       document.getElementById('monthChange').textContent = changeText;
-      document.getElementById('monthChange').style.color = change > 0 ? 'var(--danger)' :
-        change < 0 ? 'var(--primary)' :
+      document.getElementById('monthChange').style.color = change > 0 ? '#e74c3c' :
+        change < 0 ? '#1a7a64' :
         'var(--text-muted)';
       for (let i = 0; i < startOffset; i++) {
         const empty = document.createElement('div');
@@ -2407,20 +2494,26 @@
             `Введите вес на ${dNum}.${mNum+1}.${yNum}:`;
           const input = prompt(msg);
           if (input === null) return;
-          const newW = parseFloat(input.trim());
+          const trimmed = input.trim();
+          if (trimmed === '') { showToast('⚠️ Вес не может быть пустым'); return; }
+          const newW = parseFloat(trimmed);
           if (isNaN(newW) || newW < 20 || newW > 300) {
             showToast('⚠️ Введите корректный вес (20–300 кг)');
             return;
           }
-          const h2 = Storage.load('weightHistory', []);
-          const dateStr = `${String(dNum).padStart(2, '0')}.${String(mNum+1).padStart(2, '0')}.${yNum}`;
-          const idx = h2.findIndex(item => item.date === dateStr);
-          if (idx > -1) h2[idx].weight = newW;
-          else h2.push({ date: dateStr, weight: newW });
-          Storage.save('weightHistory', h2);
-          document.getElementById('weightSlider').value = newW;
-          document.getElementById('weightValue').textContent = newW;
-          if (!Storage.load('startWeight', null)) Storage.save('startWeight', newW);
+          const dateStr = formatDate(dNum, mNum, yNum);
+          addWeightEntry(newW, dateStr);
+          // Обновляем слайдер веса, если это текущий день или мы хотим синхронизировать
+          // Лучше просто пересчитать и обновить слайдер на последний вес
+          const allHistory = Storage.load('weightHistory', []);
+          if (allHistory.length) {
+            const last = allHistory[allHistory.length - 1];
+            document.getElementById('weightSlider').value = last.weight;
+            document.getElementById('weightValue').textContent = last.weight;
+            Storage.save('weightSlider', last.weight);
+            // Обновим стартовый вес, если его нет
+            if (!Storage.load('startWeight', null)) Storage.save('startWeight', last.weight);
+          }
           buildCalendar(yNum, mNum);
           calculate();
           showToast('✅ Вес сохранён!');
@@ -2438,12 +2531,17 @@
       const bmi = (current / ((height / 100) ** 2)).toFixed(1);
       document.getElementById('statStart').textContent = start.toFixed(1) + ' кг';
       document.getElementById('statCurrent').textContent = current.toFixed(1) + ' кг';
-      document.getElementById('statLost').textContent = (start - current).toFixed(1) + ' кг';
+      const lost = start - current;
+      document.getElementById('statLost').textContent = (lost >= 0 ? '' : '+') + lost.toFixed(1) + ' кг';
       document.getElementById('statBMI').textContent = bmi;
       document.getElementById('statGoal').textContent = goal + ' кг';
-      const factor = parseFloat(document.querySelector('.goal-btn.active').dataset.factor);
-      document.getElementById('statSpeed').textContent = (factor === 0.75 ? 0.9 : factor === 0.85 ? 0.6 : factor === 1.0 ? 0.0 :
-        0.4).toFixed(1) + ' кг/нед';
+      const activeGoal = document.querySelector('.goal-btn.active');
+      let speed = 0;
+      if (activeGoal) {
+        const factor = parseFloat(activeGoal.dataset.factor);
+        speed = factor === 0.75 ? 0.9 : factor === 0.85 ? 0.6 : factor === 1.0 ? 0.0 : 0.4;
+      }
+      document.getElementById('statSpeed').textContent = speed.toFixed(1) + ' кг/нед';
     }
 
     document.getElementById('prevMonthBtn').addEventListener('click', function() {
@@ -2459,31 +2557,58 @@
     function updateHome() {
       const w = parseInt(document.getElementById('weightSlider').value) || 70;
       const g = parseInt(document.getElementById('goalWeightSlider').value) || 65;
-      const d = w - g;
+      const diff = g - w;
       const start = Storage.load('startWeight', w);
-      const progress = d > 0 ? Math.min(100, ((start - w) / (start - g)) * 100) : 0;
+      let progress = 0;
+      if (diff < 0) {
+        progress = Math.min(100, ((start - w) / (start - g)) * 100);
+      } else if (diff > 0) {
+        progress = Math.min(100, ((w - start) / (g - start)) * 100);
+      } else {
+        progress = (w === g) ? 100 : 0;
+      }
+      if (progress < 0) progress = 0;
+      if (progress > 100) progress = 100;
       const circ = 226.2;
       document.getElementById('homeProgressCircle').style.strokeDashoffset = circ - (progress / 100) * circ;
       document.getElementById('homeProgressPercent').textContent = Math.round(progress) + '%';
-      document.getElementById('homeProgressDiff').textContent = (d > 0 ? '−' : '+') + Math.abs(d).toFixed(1) + ' кг';
+      document.getElementById('homeProgressDiff').textContent = (diff < 0 ? '−' : '+') + Math.abs(diff).toFixed(1) + ' кг';
     }
 
-    // 11. SAVE STATE
-    ['gender', 'ageSlider', 'heightSlider', 'weightSlider', 'goalWeightSlider', 'activity'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
+    // 11. INIT – синхронизация слайдера с историей, загрузка сохранённых значений
+    (function init() {
+      // Восстанавливаем значения слайдеров и селектов
+      const fields = ['gender', 'ageSlider', 'heightSlider', 'weightSlider', 'goalWeightSlider', 'activity'];
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
         const saved = Storage.load(id, null);
         if (saved !== null) {
           if (el.type === 'range' || el.type === 'number') el.value = saved;
           else if (el.tagName === 'SELECT') el.value = saved;
         }
-        el.addEventListener('change', () => Storage.save(id, el.value));
-        el.addEventListener('input', () => { if (el.type === 'range') Storage.save(id, el.value); });
-      }
-    });
+        // Обновляем отображаемые значения
+        if (el.type === 'range') {
+          const displayId = id.replace('Slider', 'Value');
+          const display = document.getElementById(displayId);
+          if (display) display.textContent = el.value;
+        }
+      });
 
-    // 12. INIT
-    window.onload = function() {
+      // Если есть история веса, берём последний вес для слайдера
+      const history = Storage.load('weightHistory', []);
+      if (history.length) {
+        const last = history[history.length - 1].weight;
+        const weightSlider = document.getElementById('weightSlider');
+        weightSlider.value = last;
+        document.getElementById('weightValue').textContent = last;
+        Storage.save('weightSlider', last);
+        if (!Storage.load('startWeight', null)) {
+          Storage.save('startWeight', history[0].weight);
+        }
+      }
+
+      // Запускаем расчёт и отрисовку
       const now = new Date();
       calculate();
       renderMeals();
@@ -2491,11 +2616,10 @@
       updateProgress();
       updateHome();
       renderRecipes('');
-      if (!Storage.load('startWeight', null)) {
-        const w = parseInt(document.getElementById('weightSlider').value) || 70;
-        Storage.save('startWeight', w);
-      }
-    };
+    })();
+
+    // 12. Дополнительно: при изменении веса через календарь уже вызывается calculate,
+    //     а при загрузке страницы всё инициализируется.
   </script>
 </body>
 </html>
