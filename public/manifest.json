@@ -1,0 +1,8 @@
+{
+  "name": "FitPlan",
+  "short_name": "FitPlan",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F2F2F7",
+  "theme_color": "#1A73E8"
+}
