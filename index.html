@@ -2417,5 +2417,93 @@
         console.log('⏰ Напоминаний:', reminders.filter(r => r.enabled).length, 'активных');
     </script>
 
-</body>
+</body>// ================================================================
+// ДОБАВЛЯЕМ ПОДДЕРЖКУ СВАЙПОВ ДЛЯ ШТОРКИ
+// ================================================================
+
+(function() {
+    // Находим элементы шторки (они уже есть в коде)
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const burgerBtn = document.getElementById('burgerBtn');
+
+    // Зона свайпа — только левый край (40 пикселей)
+    const SWIPE_ZONE = 40;
+    const SWIPE_THRESHOLD = 80;
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isSwiping = false;
+    let isSidebarOpen = false;
+
+    // Функции открытия/закрытия (дублируем существующие)
+    function openSidebar() {
+        sidebar.classList.add('open');
+        overlay.classList.add('open');
+        burgerBtn.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        isSidebarOpen = true;
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+        burgerBtn.classList.remove('active');
+        document.body.style.overflow = '';
+        isSidebarOpen = false;
+    }
+
+    // --- Обработка касаний ---
+    document.addEventListener('touchstart', function(e) {
+        const touch = e.touches[0];
+        // Запоминаем позицию только если коснулись левого края
+        if (touch.clientX < SWIPE_ZONE) {
+            touchStartX = touch.clientX;
+            touchStartY = touch.clientY;
+            isSwiping = true;
+        }
+    }, { passive: true });
+
+    document.addEventListener('touchmove', function(e) {
+        if (!isSwiping) return;
+
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+
+        // Если движение больше вверх/вниз — это скролл, отменяем свайп
+        if (Math.abs(deltaY) > Math.abs(deltaX)) {
+            isSwiping = false;
+            return;
+        }
+
+        // Если свайп вправо и шторка закрыта
+        if (deltaX > SWIPE_THRESHOLD && !sidebar.classList.contains('open')) {
+            openSidebar();
+            isSwiping = false;
+        }
+
+        // Если свайп влево и шторка открыта
+        if (deltaX < -SWIPE_THRESHOLD && sidebar.classList.contains('open')) {
+            closeSidebar();
+            isSwiping = false;
+        }
+    }, { passive: true });
+
+    document.addEventListener('touchend', function() {
+        isSwiping = false;
+    }, { passive: true });
+
+    // Отслеживаем состояние шторки через оверлей (на случай, если открыли/закрыли через кнопку)
+    // Используем MutationObserver, чтобы синхронизировать isSidebarOpen
+    const observer = new MutationObserver(function() {
+        isSidebarOpen = sidebar.classList.contains('open');
+    });
+    observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
+
+    // Принудительно обновляем состояние при загрузке
+    isSidebarOpen = sidebar.classList.contains('open');
+
+    console.log('✅ Свайпы для шторки активированы!');
+})();
 </html>
