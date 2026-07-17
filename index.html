@@ -2,10 +2,12 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ShapeUp — Умный помощник</title>
     <style>
-        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
+        /* ============================================================
+           ГЛОБАЛЬНЫЕ СТИЛИ
+           ============================================================ */
         * {
             margin: 0;
             padding: 0;
@@ -19,7 +21,9 @@
             overflow-x: hidden;
         }
 
-        /* ===== ШАПКА ===== */
+        /* ============================================================
+           ШАПКА
+           ============================================================ */
         .header {
             display: flex;
             align-items: center;
@@ -27,6 +31,7 @@
             padding: 16px 24px;
             background: rgba(11, 11, 26, 0.7);
             backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             position: sticky;
             top: 0;
@@ -46,6 +51,7 @@
             flex-direction: column;
             gap: 5px;
             transition: transform 0.25s ease;
+            z-index: 10;
         }
         .burger:hover {
             transform: scale(1.05);
@@ -85,12 +91,15 @@
             flex-shrink: 0;
         }
 
-        /* ===== ШТОРКА ===== */
+        /* ============================================================
+           ШТОРКА (САЙДБАР)
+           ============================================================ */
         .overlay {
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             z-index: 200;
             opacity: 0;
             visibility: hidden;
@@ -108,6 +117,7 @@
             width: 290px;
             background: rgba(18, 18, 40, 0.94);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-right: 1px solid rgba(255, 255, 255, 0.06);
             z-index: 300;
             transform: translateX(-100%);
@@ -135,6 +145,7 @@
             font-size: 1.8rem;
             cursor: pointer;
             transition: color 0.2s;
+            padding: 0 6px;
         }
         .sidebar-close:hover {
             color: #fff;
@@ -174,17 +185,22 @@
             text-align: center;
         }
 
-        /* ===== КОНТЕЙНЕР ===== */
+        /* ============================================================
+           КОНТЕЙНЕР
+           ============================================================ */
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 20px 22px 60px;
         }
 
-        /* ===== КАРТОЧКИ ===== */
+        /* ============================================================
+           КАРТОЧКИ
+           ============================================================ */
         .card {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-radius: 24px;
             padding: 22px 26px;
             margin-bottom: 22px;
@@ -221,7 +237,9 @@
             gap: 10px;
         }
 
-        /* ===== ВКЛАДКИ ===== */
+        /* ============================================================
+           ВКЛАДКИ
+           ============================================================ */
         .tab-content {
             display: none;
             animation: fadeSlide 0.4s ease;
@@ -240,7 +258,9 @@
             }
         }
 
-        /* ===== КНОПКИ ===== */
+        /* ============================================================
+           КНОПКИ
+           ============================================================ */
         .btn-group {
             display: flex;
             flex-wrap: wrap;
@@ -309,8 +329,17 @@
         .btn-secondary.btn-success:hover {
             background: rgba(107, 203, 119, 0.12);
         }
+        .btn-secondary.btn-danger {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+        .btn-secondary.btn-danger:hover {
+            background: rgba(255, 107, 107, 0.1);
+        }
 
-        /* ===== ЧАТ-БОТ ===== */
+        /* ============================================================
+           ЧАТ-БОТ
+           ============================================================ */
         .chat-container {
             display: flex;
             flex-direction: column;
@@ -398,7 +427,9 @@
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
         }
 
-        /* ===== ВСПЛЫВАЮЩЕЕ ОКНО ПРИВЕТСТВИЯ ===== */
+        /* ============================================================
+           ВСПЛЫВАЮЩЕЕ ОКНО ПРИВЕТСТВИЯ
+           ============================================================ */
         .welcome-popup {
             position: fixed;
             bottom: 30px;
@@ -408,6 +439,7 @@
             width: 90%;
             background: rgba(18, 18, 40, 0.94);
             backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
             padding: 24px 26px;
@@ -493,7 +525,9 @@
             display: none;
         }
 
-        /* ===== ОСТАЛЬНЫЕ СТИЛИ (совместимость) ===== */
+        /* ============================================================
+           ОСТАЛЬНЫЕ СТИЛИ
+           ============================================================ */
         .input-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -526,6 +560,9 @@
             background: #00d4ff;
             cursor: pointer;
             box-shadow: 0 0 24px rgba(0, 212, 255, 0.35);
+        }
+        .input-group input[type="range"]::-webkit-slider-thumb:hover {
+            box-shadow: 0 0 36px rgba(0, 212, 255, 0.55);
         }
         .input-group .value-display {
             font-size: 1.2rem;
@@ -804,11 +841,110 @@
             color: #889;
             cursor: pointer;
             font-size: 0.8rem;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
         }
         .filter-btn:hover {
             border-color: #00d4ff;
             color: #fff;
+        }
+        .filter-btn.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+            color: #fff;
+        }
+
+        .water-glasses {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .glass {
+            width: 40px;
+            height: 50px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 6px 6px 14px 14px;
+            background: rgba(0, 212, 255, 0.04);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #556;
+            user-select: none;
+        }
+        .glass.filled {
+            background: rgba(0, 212, 255, 0.20);
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.12);
+            color: #00d4ff;
+        }
+        .glass:hover {
+            transform: scale(1.06);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff, #a855f7);
+            border-radius: 20px;
+            transition: width 0.6s ease;
+            width: 0%;
+        }
+
+        .reminder-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            background: rgba(0, 0, 0, 0.14);
+            border-radius: 14px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .reminder-item .rem-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .reminder-item input[type="time"] {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        .reminder-item input[type="checkbox"] {
+            accent-color: #00d4ff;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .chart-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            padding: 6px 0;
+        }
+        #weightChart {
+            width: 100%;
+            max-width: 780px;
+            height: 260px;
+            background: rgba(0, 0, 0, 0.18);
+            border-radius: 16px;
+            display: block;
+            margin: 0 auto;
         }
 
         .hidden {
@@ -827,13 +963,19 @@
             flex-wrap: wrap;
         }
 
-        /* ===== АДАПТИВ ===== */
+        /* ============================================================
+           АДАПТИВ
+           ============================================================ */
         @media (max-width: 600px) {
             .header {
                 padding: 12px 16px;
             }
             .logo {
                 font-size: 1.3rem;
+            }
+            .logo svg {
+                width: 26px;
+                height: 26px;
             }
             .container {
                 padding: 14px 14px 40px;
@@ -866,6 +1008,11 @@
             .chat-container {
                 height: 340px;
             }
+            .glass {
+                width: 34px;
+                height: 44px;
+                font-size: 0.6rem;
+            }
         }
         ::-webkit-scrollbar {
             width: 4px;
@@ -881,7 +1028,9 @@
 </head>
 <body>
 
-    <!-- ===== ШАПКА ===== -->
+    <!-- ============================================================
+    ШАПКА
+    ============================================================ -->
     <header class="header">
         <div class="header-left">
             <button class="burger" id="burgerBtn" aria-label="Меню">
@@ -904,7 +1053,9 @@
         </div>
     </header>
 
-    <!-- ===== ШТОРКА ===== -->
+    <!-- ============================================================
+    ШТОРКА
+    ============================================================ -->
     <div class="overlay" id="overlay"></div>
     <nav class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -923,7 +1074,9 @@
         </ul>
     </nav>
 
-    <!-- ===== ОСНОВНОЙ КОНТЕЙНЕР ===== -->
+    <!-- ============================================================
+    ОСНОВНОЙ КОНТЕЙНЕР
+    ============================================================ -->
     <div class="container">
 
         <!-- ==========================================================
@@ -1070,12 +1223,12 @@
                                 <span id="waterDrank">0</span>
                                 <span id="waterPercent">0%</span>
                             </div>
-                            <div class="progress-bar" style="width:100%;height:8px;background:rgba(255,255,255,0.06);border-radius:20px;overflow:hidden;margin-top:6px;">
-                                <div class="progress-fill" id="waterFill" style="width:0%;height:100%;background:linear-gradient(90deg,#00d4ff,#a855f7);border-radius:20px;transition:width 0.6s ease;"></div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="waterFill" style="width:0%;"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="water-glasses" id="waterGlasses" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;"></div>
+                    <div class="water-glasses" id="waterGlasses"></div>
                     <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
                         <button class="btn-secondary" id="resetWaterBtn">🔄 Сбросить воду</button>
                         <button class="btn-secondary btn-success" id="waterReminderBtn">💧 Напомнить о воде</button>
@@ -1124,8 +1277,8 @@
             </div>
             <div class="card">
                 <div class="card-title">📉 График изменения веса</div>
-                <div style="width:100%;overflow-x:auto;padding:6px 0;">
-                    <canvas id="weightChart" style="width:100%;max-width:780px;height:260px;background:rgba(0,0,0,0.18);border-radius:16px;display:block;margin:0 auto;"></canvas>
+                <div class="chart-wrapper">
+                    <canvas id="weightChart"></canvas>
                 </div>
             </div>
             <div class="card">
@@ -1197,7 +1350,9 @@
 
     </div>
 
-    <!-- ===== ВСПЛЫВАЮЩЕЕ ОКНО ПРИВЕТСТВИЯ ===== -->
+    <!-- ============================================================
+    ВСПЛЫВАЮЩЕЕ ОКНО ПРИВЕТСТВИЯ
+    ============================================================ -->
     <div class="welcome-popup" id="welcomePopup">
         <div class="popup-title">💬 Нужна помощь?</div>
         <div class="popup-text">
@@ -1300,7 +1455,7 @@
         ];
 
         // ================================================================
-        // 2. СОСТОЯНИЕ
+        // 2. СОСТОЯНИЕ (загрузка/сохранение)
         // ================================================================
         function loadState(key, defaultVal) {
             try {
@@ -1487,12 +1642,10 @@
                 'я устал': '🧘 Отдых — тоже часть пути. Возьми паузу, выпей воды, прогуляйся. А завтра продолжай с новыми силами. Я с тобой!'
             };
 
-            // 1. Команды
             for (const key in commands) {
                 if (msg.includes(key)) return commands[key];
             }
 
-            // 2. Калории
             if (msg.includes('калории') || msg.includes('норма') || msg.includes('ккал')) {
                 const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user
                 .deficit);
@@ -1501,7 +1654,6 @@
                 return `🔥 Твоя норма на день: ${result.dailyCal} ккал (дефицит ${Math.round((1 - user.deficit) * 100)}%). Осталось: ${remain > 0 ? remain : 0} ккал.`;
             }
 
-            // 3. Вода
             if (msg.includes('вода') || msg.includes('пить') || msg.includes('напомни')) {
                 const goal = user.weight * 30;
                 const percent = Math.round(waterDrank / goal * 100);
@@ -1509,7 +1661,6 @@
                 return `💧 Норма воды: ${goal} мл. Ты выпил: ${waterDrank} мл (${percent}%).${advice}`;
             }
 
-            // 4. Вес
             if (msg.includes('вес') || msg.includes('похудел') || msg.includes('килограмм')) {
                 const last = weightHistory[weightHistory.length - 1];
                 const first = weightHistory[0];
@@ -1517,7 +1668,6 @@
                 return `⚖️ Твой текущий вес: ${last.weight} кг. С начала: ${diff > 0 ? 'сбросил ' + diff.toFixed(1) : 'прибавил ' + Math.abs(diff).toFixed(1)} кг.`;
             }
 
-            // 5. Рецепты
             if (msg.includes('рецепт') || msg.includes('есть') || msg.includes('поесть') || msg.includes('приготовить')) {
                 const recipes = getAllRecipes();
                 let filtered = recipes;
@@ -1539,7 +1689,6 @@
                 return `🍳 ${random.name} (${random.cal} ккал). ${random.desc}`;
             }
 
-            // 6. План
             if (msg.includes('план') || msg.includes('сегодня')) {
                 if (currentPlan) {
                     const todayIdx = new Date().getDay();
@@ -1552,7 +1701,6 @@
                 return '📅 Сначала сгенерируй план на неделю на вкладке "План питания".';
             }
 
-            // 7. Прогресс
             if (msg.includes('прогресс') || msg.includes('статистика')) {
                 const lastWeek = weightHistory.slice(-7);
                 const avg = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
@@ -1560,7 +1708,6 @@
                 return `📊 Твой прогресс: текущий вес ${user.weight} кг, средний за неделю ${avg.toFixed(1)} кг. Записей в дневнике: ${totalDays}. Держи курс!`;
             }
 
-            // 8. Мои рецепты
             if (msg.includes('мой рецепт') || msg.includes('свой рецепт')) {
                 if (customRecipes.length === 0) {
                     return '📝 У тебя пока нет своих рецептов. Добавь их на вкладке "Рецепты" — я буду их использовать в планах и советах!';
@@ -1569,7 +1716,6 @@
                 return `🍳 Твой рецепт: ${random.name} (${random.cal} ккал). ${random.desc}`;
             }
 
-            // 9. Если не понял
             return '🤔 Я ещё учусь. Попробуй спросить про калории, воду, рецепты или вес. Либо напиши "помощь" для списка команд.';
         }
 
@@ -1625,7 +1771,7 @@
             const filledCount = Math.floor(waterDrank / WATER_PER_GLASS);
             for (let i = 0; i < totalGlasses; i++) {
                 const filled = i < filledCount ? 'filled' : '';
-                html += `<div class="glass ${filled}" onclick="toggleGlass(${i})" style="width:40px;height:50px;border:2px solid rgba(0,212,255,0.3);border-radius:6px 6px 14px 14px;background:${filled ? 'rgba(0,212,255,0.20)' : 'rgba(0,212,255,0.04)'};cursor:pointer;transition:all 0.25s ease;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:${filled ? '#00d4ff' : '#556'};box-shadow:${filled ? '0 0 20px rgba(0,212,255,0.12)' : 'none'};">${i+1}</div>`;
+                html += `<div class="glass ${filled}" onclick="toggleGlass(${i})">${i+1}</div>`;
             }
             glassesContainer.innerHTML = html;
         }
@@ -1744,15 +1890,15 @@
             let html = '';
             reminders.forEach((rem, idx) => {
                 html += `
-                    <div class="reminder-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(0,0,0,0.14);border-radius:14px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.04);flex-wrap:wrap;gap:10px;">
-                        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-                            <input type="checkbox" ${rem.enabled ? 'checked' : ''} onchange="toggleReminder(${idx})" style="accent-color:#00d4ff;width:18px;height:18px;cursor:pointer;">
+                    <div class="reminder-item">
+                        <div class="rem-info">
+                            <input type="checkbox" ${rem.enabled ? 'checked' : ''} onchange="toggleReminder(${idx})">
                             <span style="font-weight:500;">${rem.label}</span>
                         </div>
                         <div style="display:flex;gap:8px;align-items:center;">
                             ${rem.interval ? `<span style="color:#889;font-size:0.8rem;">каждые ${rem.interval} ч</span>` :
-                                `<input type="time" value="${rem.time}" onchange="updateReminderTime(${idx}, this.value)" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#fff;padding:6px 12px;border-radius:10px;font-size:0.9rem;">`}
-                            <button class="btn-secondary btn-danger" style="padding:4px 10px;font-size:0.7rem;border-radius:40px;border:1.5px solid #ff6b6b;color:#ff6b6b;background:transparent;cursor:pointer;" onclick="removeReminder(${idx})">✕</button>
+                                `<input type="time" value="${rem.time}" onchange="updateReminderTime(${idx}, this.value)">`}
+                            <button class="btn-secondary btn-danger" style="padding:4px 10px;font-size:0.7rem;" onclick="removeReminder(${idx})">✕</button>
                         </div>
                     </div>
                 `;
@@ -1761,7 +1907,7 @@
                 <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
                     <input type="text" id="newRemLabel" placeholder="Название" style="flex:1;padding:8px 14px;border-radius:12px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
                     <input type="time" id="newRemTime" value="12:00" style="padding:8px 14px;border-radius:12px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
-                    <button class="btn-secondary btn-success" onclick="addReminder()" style="padding:8px 18px;border-radius:40px;border:1.5px solid #6bcb77;color:#6bcb77;background:transparent;cursor:pointer;transition:all 0.25s ease;font-weight:500;font-size:0.85rem;">➕ Добавить</button>
+                    <button class="btn-secondary btn-success" onclick="addReminder()">➕ Добавить</button>
                 </div>
             `;
             container.innerHTML = html;
@@ -2146,13 +2292,11 @@
         // --- Рецепты ---
         document.querySelectorAll('#recipeFilters .filter-btn').forEach(btn => {
             btn.addEventListener('click', function() {
-                document.querySelectorAll('#recipeFilters .filter-btn').forEach(b => b.style.background =
-                    'transparent');
-                this.style.background = 'rgba(0,212,255,0.1)';
+                document.querySelectorAll('#recipeFilters .filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
                 renderRecipes(this.dataset.filter);
             });
         });
-        document.querySelector('#recipeFilters .filter-btn[data-filter="all"]').style.background = 'rgba(0,212,255,0.1)';
 
         document.getElementById('addRecipeBtn').addEventListener('click', () => {
             const name = prompt('Название блюда:');
@@ -2337,11 +2481,9 @@
         const popupOkBtn = document.getElementById('popupOkBtn');
         const popupLaterBtn = document.getElementById('popupLaterBtn');
 
-        // Проверяем, показывали ли уже
         const hasSeenPopup = loadState('hasSeenPopup', false);
 
         if (!hasSeenPopup) {
-            // Показываем через 3 секунды
             setTimeout(() => {
                 welcomePopup.classList.remove('hidden');
                 welcomePopup.style.animation = 'popUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards';
@@ -2355,7 +2497,6 @@
 
         popupOkBtn.addEventListener('click', () => {
             closePopup();
-            // Переключаем на вкладку чата
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById('tabBot').classList.add('active');
             document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
@@ -2365,7 +2506,6 @@
 
         popupLaterBtn.addEventListener('click', () => {
             welcomePopup.classList.add('hidden');
-            // Не сохраняем, покажем через 30 минут
             setTimeout(() => {
                 if (!loadState('hasSeenPopup', false)) {
                     welcomePopup.classList.remove('hidden');
@@ -2375,7 +2515,57 @@
         });
 
         // ================================================================
-        // 12. ВОССТАНОВЛЕНИЕ UI
+        // 12. ПОДДЕРЖКА СВАЙПОВ (НОВАЯ ФУНКЦИЯ)
+        // ================================================================
+        (function() {
+            const SWIPE_ZONE = 40;
+            const SWIPE_THRESHOLD = 80;
+
+            let touchStartX = 0;
+            let touchStartY = 0;
+            let isSwiping = false;
+
+            document.addEventListener('touchstart', function(e) {
+                const touch = e.touches[0];
+                if (touch.clientX < SWIPE_ZONE) {
+                    touchStartX = touch.clientX;
+                    touchStartY = touch.clientY;
+                    isSwiping = true;
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', function(e) {
+                if (!isSwiping) return;
+
+                const touch = e.touches[0];
+                const deltaX = touch.clientX - touchStartX;
+                const deltaY = touch.clientY - touchStartY;
+
+                if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                    isSwiping = false;
+                    return;
+                }
+
+                if (deltaX > SWIPE_THRESHOLD && !sidebar.classList.contains('open')) {
+                    openSidebar();
+                    isSwiping = false;
+                }
+
+                if (deltaX < -SWIPE_THRESHOLD && sidebar.classList.contains('open')) {
+                    closeSidebar();
+                    isSwiping = false;
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchend', function() {
+                isSwiping = false;
+            }, { passive: true });
+
+            console.log('✅ Свайпы для шторки активированы!');
+        })();
+
+        // ================================================================
+        // 13. ВОССТАНОВЛЕНИЕ UI
         // ================================================================
         function restoreUI() {
             if (user.gender === 'female') document.getElementById('genderFemale').click();
@@ -2403,107 +2593,19 @@
         }
 
         // ================================================================
-        // 13. ЗАПУСК
+        // 14. ЗАПУСК
         // ================================================================
         restoreUI();
         renderAll();
         setTimeout(scheduleReminders, 2000);
 
         console.log('✅ ShapeUp v3.0 загружен!');
-        console.log('🤖 Чат-бот и всплывающая подсказка активны');
+        console.log('🤖 Чат-бот и свайпы активны');
         console.log('👤', user.gender === 'male' ? 'Мужчина' : 'Женщина', user.age, 'лет,', user.weight, 'кг');
         console.log('📊 Записей веса:', weightHistory.length);
         console.log('📝 Своих рецептов:', customRecipes.length);
         console.log('⏰ Напоминаний:', reminders.filter(r => r.enabled).length, 'активных');
     </script>
- ================================================================
-// ДОБАВЛЯЕМ ПОДДЕРЖКУ СВАЙПОВ ДЛЯ ШТОРКИ
-// ================================================================
 
-(function() {
-    // Находим элементы шторки (они уже есть в коде)
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const burgerBtn = document.getElementById('burgerBtn');
-
-    // Зона свайпа — только левый край (40 пикселей)
-    const SWIPE_ZONE = 40;
-    const SWIPE_THRESHOLD = 80;
-
-    let touchStartX = 0;
-    let touchStartY = 0;
-    let isSwiping = false;
-    let isSidebarOpen = false;
-
-    // Функции открытия/закрытия (дублируем существующие)
-    function openSidebar() {
-        sidebar.classList.add('open');
-        overlay.classList.add('open');
-        burgerBtn.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        isSidebarOpen = true;
-    }
-
-    function closeSidebar() {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('open');
-        burgerBtn.classList.remove('active');
-        document.body.style.overflow = '';
-        isSidebarOpen = false;
-    }
-
-    // --- Обработка касаний ---
-    document.addEventListener('touchstart', function(e) {
-        const touch = e.touches[0];
-        // Запоминаем позицию только если коснулись левого края
-        if (touch.clientX < SWIPE_ZONE) {
-            touchStartX = touch.clientX;
-            touchStartY = touch.clientY;
-            isSwiping = true;
-        }
-    }, { passive: true });
-
-    document.addEventListener('touchmove', function(e) {
-        if (!isSwiping) return;
-
-        const touch = e.touches[0];
-        const deltaX = touch.clientX - touchStartX;
-        const deltaY = touch.clientY - touchStartY;
-
-        // Если движение больше вверх/вниз — это скролл, отменяем свайп
-        if (Math.abs(deltaY) > Math.abs(deltaX)) {
-            isSwiping = false;
-            return;
-        }
-
-        // Если свайп вправо и шторка закрыта
-        if (deltaX > SWIPE_THRESHOLD && !sidebar.classList.contains('open')) {
-            openSidebar();
-            isSwiping = false;
-        }
-
-        // Если свайп влево и шторка открыта
-        if (deltaX < -SWIPE_THRESHOLD && sidebar.classList.contains('open')) {
-            closeSidebar();
-            isSwiping = false;
-        }
-    }, { passive: true });
-
-    document.addEventListener('touchend', function() {
-        isSwiping = false;
-    }, { passive: true });
-
-    // Отслеживаем состояние шторки через оверлей (на случай, если открыли/закрыли через кнопку)
-    // Используем MutationObserver, чтобы синхронизировать isSidebarOpen
-    const observer = new MutationObserver(function() {
-        isSidebarOpen = sidebar.classList.contains('open');
-    });
-    observer.observe(sidebar, { attributes: true, attributeFilter: ['class'] });
-
-    // Принудительно обновляем состояние при загрузке
-    isSidebarOpen = sidebar.classList.contains('open');
-
-    console.log('✅ Свайпы для шторки активированы!');
-})();
 </body>
 </html>
