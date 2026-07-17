@@ -390,10 +390,15 @@
         }
         .chat-input-area {
             display: flex;
+            flex-direction: column;
             gap: 10px;
             padding: 12px 16px;
             background: rgba(0, 0, 0, 0.25);
             border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .chat-input-row {
+            display: flex;
+            gap: 10px;
         }
         .chat-input-area input {
             flex: 1;
@@ -425,6 +430,26 @@
         .chat-input-area button:hover {
             transform: scale(1.04);
             box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+        .chat-quick-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .chat-quick-buttons button {
+            padding: 4px 14px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: #aaa;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .chat-quick-buttons button:hover {
+            border-color: #00d4ff;
+            color: #fff;
+            background: rgba(0, 212, 255, 0.08);
         }
 
         /* ============================================================
@@ -1145,6 +1170,7 @@
                         <button class="btn active" data-activity="1.375">Средний</button>
                         <button class="btn" data-activity="1.55">Активный</button>
                         <button class="btn" data-activity="1.725">Очень активный</button>
+                        <button class="btn" data-activity="1.9">🔥 Очень активный (спорт)</button>
                     </div>
                 </div>
             </div>
@@ -1371,8 +1397,17 @@
                         <div class="chat-message bot">👋 Привет! Я твой персональный помощник. Спрашивай меня о чём угодно: еда, вода, калории, вес, мотивация. Напиши "помощь" для списка команд.</div>
                     </div>
                     <div class="chat-input-area">
-                        <input type="text" id="chatInput" placeholder="Спроси меня..." autofocus>
-                        <button id="chatSendBtn">Отправить</button>
+                        <div class="chat-input-row">
+                            <input type="text" id="chatInput" placeholder="Спроси меня..." autofocus>
+                            <button id="chatSendBtn">Отправить</button>
+                        </div>
+                        <div class="chat-quick-buttons" id="quickButtons">
+                            <button data-msg="Что съесть?">🍽 Что съесть?</button>
+                            <button data-msg="Моя норма">🔥 Моя норма</button>
+                            <button data-msg="Вода">💧 Вода</button>
+                            <button data-msg="Прогресс">📊 Прогресс</button>
+                            <button data-msg="/отчёт">📋 Отчёт</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1657,6 +1692,9 @@
         let lastResult = loadState('lastResult', null);
         let currentPlan = loadState('currentPlan', null);
 
+        // ---- ИМЯ ПОЛЬЗОВАТЕЛЯ (для чат-бота) ----
+        let userName = loadState('userName', '');
+
         function getAllRecipes() {
             return [...BASE_RECIPES, ...customRecipes];
         }
@@ -1839,6 +1877,14 @@
             const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user.deficit);
             lastResult = result;
             saveState('lastResult', result);
+
+            // ПРОВЕРКА НА МИНИМАЛЬНУЮ КАЛОРИЙНОСТЬ
+            const minCal = user.gender === 'male' ? 1500 : 1200;
+            if (result.dailyCal < minCal) {
+                setTimeout(() => {
+                    alert(`⚠️ Ваша норма калорий (${result.dailyCal} ккал) ниже рекомендуемой для ${user.gender === 'male' ? 'мужчин' : 'женщин'} (${minCal} ккал). Рекомендуем не опускаться ниже этой границы без наблюдения врача.`);
+                }, 500);
+            }
 
             document.getElementById('resultNumbers').innerHTML = `
                 <div class="result-item"><span class="number">${result.dailyCal}</span><div class="desc">Калорий в день</div></div>
@@ -2276,19 +2322,57 @@
         }
 
         // ================================================================
-        // 9. ЧАТ-БОТ
+        // 9. УЛУЧШЕННЫЙ ЧАТ-БОТ (контекст, рекомендации, кнопки)
         // ================================================================
+
+        // --- Контекст (последние 3 сообщения) ---
+        let chatContext = [];
+
         function getBotReply(message) {
             const msg = message.toLowerCase().trim();
+
+            // --- ЗАПОМИНАНИЕ ИМЕНИ ---
+            if (msg.startsWith('меня зовут')) {
+                const name = message.replace(/меня зовут/i, '').trim();
+                if (name) {
+                    userName = name;
+                    saveState('userName', userName);
+                    return `👋 Приятно познакомиться, ${userName}! Я запомнил твоё имя. Теперь я буду обращаться к тебе по имени. Чем могу помочь?`;
+                }
+            }
+
+            // --- КОМАНДА /ОТЧЁТ ---
+            if (msg === '/отчёт') {
+                const lastWeek = weightHistory.slice(-7);
+                const avg = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
+                const first = weightHistory[0];
+                const last = weightHistory[weightHistory.length - 1];
+                const diff = first.weight - last.weight;
+                const goal = user.weight * 30;
+                const waterPercent = Math.round(waterDrank / goal * 100);
+                const cal = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user.deficit);
+                return `
+📋 *Отчёт за неделю*
+
+⚖️ Вес: ${last.weight} кг (${diff > 0 ? 'сбросил ' + diff.toFixed(1) : 'прибавил ' + Math.abs(diff).toFixed(1)} кг)
+📊 Средний вес: ${avg.toFixed(1)} кг
+💧 Вода: ${waterDrank} мл из ${goal} мл (${waterPercent}%)
+🔥 Калорийность: ${cal.dailyCal} ккал/день
+📝 Записей в дневнике: ${foodLog.length}
+
+${diff > 0 ? '💪 Отличный прогресс! Так держать!' : '🧘 Не сдавайся! Каждый день — это шаг к цели.'}
+                `;
+            }
+
+            // --- ОСНОВНЫЕ КОМАНДЫ ---
             const commands = {
-                'привет': '👋 Привет! Я твой помощник. Задавай любые вопросы про питание, воду или просто попроси мотивации!',
+                'привет': `👋 Привет${userName ? ', ' + userName : ''}! Я твой помощник. Задавай любые вопросы про питание, воду или просто попроси мотивации!`,
                 'помощь': `
 📌 *Список команд ShapeUp:*
 
 🍳 *Еда и рецепты*
 • "Что съесть на завтрак/обед/ужин?"
 • "Дай рецепт на 300 ккал"
-• "Веганские блюда"
 • "Мой рецепт"
 
 💧 *Вода*
@@ -2301,25 +2385,26 @@
 
 📊 *Прогресс*
 • "Мой прогресс"
-• "Статистика за неделю"
+• "/отчёт" — сводка за неделю
 
 😊 *Мотивация*
 • "Мотивация"
 • "Я устал"
 
 ℹ️ *Общее*
-• "Помощь" — показать этот список
-• "О сайте" — что такое ShapeUp
+• "Помощь" — этот список
+• "Меня зовут ..." — запомню имя
                 `,
                 'о сайте': '🌿 ShapeUp — это твой персональный помощник в питании. Мы помогаем рассчитать калории, составить план, следить за водой и мотивируем тебя каждый день!',
-                'мотивация': '💪 Ты уже сделал первый шаг! Каждый день — это прогресс. Даже маленький шаг приближает тебя к цели. Ты справишься!',
-                'я устал': '🧘 Отдых — тоже часть пути. Возьми паузу, выпей воды, прогуляйся. А завтра продолжай с новыми силами. Я с тобой!'
+                'мотивация': `💪 ${userName ? userName + ', т' : 'Т'}ы уже сделал первый шаг! Каждый день — это прогресс. Даже маленький шаг приближает тебя к цели. Ты справишься!`,
+                'я устал': `🧘 ${userName ? userName + ', о' : 'О'}тдых — тоже часть пути. Возьми паузу, выпей воды, прогуляйся. А завтра продолжай с новыми силами. Я с тобой!`
             };
 
             for (const key in commands) {
                 if (msg.includes(key)) return commands[key];
             }
 
+            // --- КАЛОРИИ ---
             if (msg.includes('калории') || msg.includes('норма') || msg.includes('ккал')) {
                 const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user
                 .deficit);
@@ -2328,6 +2413,7 @@
                 return `🔥 Твоя норма на день: ${result.dailyCal} ккал (дефицит ${Math.round((1 - user.deficit) * 100)}%). Осталось: ${remain > 0 ? remain : 0} ккал.`;
             }
 
+            // --- ВОДА ---
             if (msg.includes('вода') || msg.includes('пить') || msg.includes('напомни')) {
                 const goal = user.weight * 30;
                 const percent = Math.round(waterDrank / goal * 100);
@@ -2335,6 +2421,7 @@
                 return `💧 Норма воды: ${goal} мл. Ты выпил: ${waterDrank} мл (${percent}%).${advice}`;
             }
 
+            // --- ВЕС ---
             if (msg.includes('вес') || msg.includes('похудел') || msg.includes('килограмм')) {
                 const last = weightHistory[weightHistory.length - 1];
                 const first = weightHistory[0];
@@ -2342,6 +2429,7 @@
                 return `⚖️ Твой текущий вес: ${last.weight} кг. С начала: ${diff > 0 ? 'сбросил ' + diff.toFixed(1) : 'прибавил ' + Math.abs(diff).toFixed(1)} кг.`;
             }
 
+            // --- РЕЦЕПТЫ ---
             if (msg.includes('рецепт') || msg.includes('есть') || msg.includes('поесть') || msg.includes('приготовить')) {
                 const recipes = getAllRecipes();
                 let filtered = recipes;
@@ -2361,6 +2449,7 @@
                 return `🍳 ${random.name} (${random.cal} ккал). ${random.desc}`;
             }
 
+            // --- ПЛАН ---
             if (msg.includes('план') || msg.includes('сегодня')) {
                 if (currentPlan) {
                     const todayIdx = new Date().getDay();
@@ -2373,6 +2462,7 @@
                 return '📅 Сначала сгенерируй план на неделю на вкладке "План питания".';
             }
 
+            // --- ПРОГРЕСС ---
             if (msg.includes('прогресс') || msg.includes('статистика')) {
                 const lastWeek = weightHistory.slice(-7);
                 const avg = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
@@ -2380,12 +2470,34 @@
                 return `📊 Твой прогресс: текущий вес ${user.weight} кг, средний за неделю ${avg.toFixed(1)} кг. Записей в дневнике: ${totalDays}. Держи курс!`;
             }
 
+            // --- МОЙ РЕЦЕПТ ---
             if (msg.includes('мой рецепт') || msg.includes('свой рецепт')) {
                 if (customRecipes.length === 0) {
                     return '📝 У тебя пока нет своих рецептов. Добавь их на вкладке "Рецепты" — я буду их использовать в планах и советах!';
                 }
                 const random = customRecipes[Math.floor(Math.random() * customRecipes.length)];
                 return `🍳 Твой рецепт: ${random.name} (${random.cal} ккал). ${random.desc}`;
+            }
+
+            // --- РЕКОМЕНДАЦИЯ НА ОСНОВЕ ДАННЫХ ---
+            // Если мало воды
+            const goal = user.weight * 30;
+            if (waterDrank < goal * 0.5) {
+                return `💧 Я заметил, что сегодня ты выпил всего ${waterDrank} мл воды. Норма — ${goal} мл. Давай пополним баланс? 💪`;
+            }
+
+            // Если не доел норму калорий
+            const calResult = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user.deficit);
+            const todayCal = getTodayCalories();
+            if (todayCal > 0 && todayCal < calResult.dailyCal * 0.7) {
+                return `🍽 Ты сегодня съел ${todayCal} ккал, а норма — ${calResult.dailyCal}. Может, добавим перекус? Я могу подобрать рецепт.`;
+            }
+
+            // Если давно не было записи веса
+            const lastWeight = weightHistory[weightHistory.length - 1];
+            const daysSinceWeight = Math.floor((new Date() - new Date(lastWeight.date)) / (1000 * 60 * 60 * 24));
+            if (daysSinceWeight > 5) {
+                return `⚖️ Давно не записывал вес (${daysSinceWeight} дней). Может, обновим данные? Это поможет точнее считать калории.`;
             }
 
             return '🤔 Я ещё учусь. Попробуй спросить про калории, воду, рецепты или вес. Либо напиши "помощь" для списка команд.';
@@ -2552,7 +2664,7 @@
                 renderFoodLog(); }
         });
 
-        // --- Вес (АДАПТИВНАЯ КАЛОРИЙНОСТЬ) ---
+        // --- Вес ---
         document.getElementById('addWeightBtn').addEventListener('click', () => {
             const input = document.getElementById('newWeightInput');
             const weight = parseFloat(input.value);
@@ -2619,7 +2731,7 @@
             renderFoodSelect();
         };
 
-        // --- План питания (УМНЫЙ СПИСОК ПОКУПОК) ---
+        // --- План питания ---
         let currentMode = 'smart';
 
         document.getElementById('modeSmart').addEventListener('click', function() {
@@ -2674,6 +2786,7 @@
                 foodLog,
                 customRecipes,
                 reminders,
+                userName,
                 shoppingChecked: loadState('shoppingChecked', [])
             };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -2710,6 +2823,8 @@
                         saveState('customRecipes', customRecipes); }
                     if (data.reminders) { reminders = data.reminders;
                         saveState('reminders', reminders); }
+                    if (data.userName) { userName = data.userName;
+                        saveState('userName', userName); }
                     if (data.shoppingChecked) saveState('shoppingChecked', data.shoppingChecked);
                     restoreUI();
                     renderAll();
@@ -2748,7 +2863,7 @@
             saveState('shoppingChecked', checkedItems);
         };
 
-        // --- Чат-бот ---
+        // --- Чат-бот (обработка сообщений + быстрые кнопки) ---
         const chatInput = document.getElementById('chatInput');
         const chatSendBtn = document.getElementById('chatSendBtn');
         const chatMessages = document.getElementById('chatMessages');
@@ -2775,6 +2890,15 @@
         chatSendBtn.addEventListener('click', handleChatSend);
         chatInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') handleChatSend();
+        });
+
+        // --- Быстрые кнопки ---
+        document.querySelectorAll('#quickButtons button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const msg = this.dataset.msg;
+                chatInput.value = msg;
+                handleChatSend();
+            });
         });
 
         // --- Всплывающее окно ---
@@ -2898,8 +3022,8 @@
         renderAll();
         setTimeout(scheduleReminders, 2000);
 
-        console.log('✅ ShapeUp загружен!');
-        console.log('🍳 Ваши 60 рецептов активны');
+        console.log('✅ ShapeUp v3.0 загружен!');
+        console.log('🧠 Улучшенный чат-бот, коэффициент 1.9 и проверка калорий активны!');
         console.log('👤', user.gender === 'male' ? 'Мужчина' : 'Женщина', user.age, 'лет,', user.weight, 'кг');
         console.log('📊 Записей веса:', weightHistory.length);
         console.log('📝 Своих рецептов:', customRecipes.length);
