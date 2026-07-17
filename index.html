@@ -3,29 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShapeUp — Твой трекер питания</title>
+    <title>ShapeUp — Умный план питания</title>
     <style>
-        /* ============================================================
-           ГЛОБАЛЬНЫЕ СТИЛИ
-           ============================================================ */
+        /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #0b0b1a;
             color: #e8e8f0;
             min-height: 100vh;
             overflow-x: hidden;
-            transition: background 0.3s;
         }
 
-        /* ============================================================
-           ШАПКА
-           ============================================================ */
+        /* ===== ШАПКА ===== */
         .header {
             display: flex;
             align-items: center;
@@ -33,19 +27,16 @@
             padding: 16px 24px;
             background: rgba(11, 11, 26, 0.7);
             backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             position: sticky;
             top: 0;
             z-index: 100;
         }
-
         .header-left {
             display: flex;
             align-items: center;
             gap: 16px;
         }
-
         .burger {
             background: none;
             border: none;
@@ -76,14 +67,12 @@
         .burger.active span:nth-child(3) {
             transform: rotate(-45deg) translate(5px, -5px);
         }
-
         .logo {
             display: flex;
             align-items: center;
             gap: 10px;
             font-size: 1.6rem;
             font-weight: 800;
-            letter-spacing: -0.5px;
             background: linear-gradient(135deg, #00d4ff, #a855f7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -96,15 +85,12 @@
             flex-shrink: 0;
         }
 
-        /* ============================================================
-           БОКОВАЯ ШТОРКА
-           ============================================================ */
+        /* ===== ШТОРКА ===== */
         .overlay {
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(6px);
-            -webkit-backdrop-filter: blur(6px);
             z-index: 200;
             opacity: 0;
             visibility: hidden;
@@ -114,7 +100,6 @@
             opacity: 1;
             visibility: visible;
         }
-
         .sidebar {
             position: fixed;
             top: 0;
@@ -123,7 +108,6 @@
             width: 290px;
             background: rgba(18, 18, 40, 0.94);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border-right: 1px solid rgba(255, 255, 255, 0.06);
             z-index: 300;
             transform: translateX(-100%);
@@ -136,7 +120,6 @@
         .sidebar.open {
             transform: translateX(0);
         }
-
         .sidebar-header {
             display: flex;
             align-items: center;
@@ -145,22 +128,17 @@
             padding-bottom: 16px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
-        .sidebar-header .logo {
-            font-size: 1.5rem;
-        }
         .sidebar-close {
             background: none;
             border: none;
             color: #a0a0b8;
             font-size: 1.8rem;
             cursor: pointer;
-            padding: 0 6px;
             transition: color 0.2s;
         }
         .sidebar-close:hover {
             color: #fff;
         }
-
         .nav-list {
             list-style: none;
             display: flex;
@@ -195,31 +173,18 @@
             width: 28px;
             text-align: center;
         }
-        .nav-list li a .badge {
-            margin-left: auto;
-            background: rgba(255, 255, 255, 0.06);
-            padding: 2px 12px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            color: #888;
-        }
 
-        /* ============================================================
-           ОСНОВНОЙ КОНТЕЙНЕР
-           ============================================================ */
+        /* ===== КОНТЕЙНЕР ===== */
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 20px 22px 60px;
         }
 
-        /* ============================================================
-           КАРТОЧКИ (glassmorphism + анимация)
-           ============================================================ */
+        /* ===== КАРТОЧКИ ===== */
         .card {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             border-radius: 24px;
             padding: 22px 26px;
             margin-bottom: 22px;
@@ -234,19 +199,18 @@
             border-color: rgba(0, 212, 255, 0.15);
             transform: translateY(-2px);
         }
-        .card:nth-child(2) { animation-delay: 0.06s; }
-        .card:nth-child(3) { animation-delay: 0.12s; }
-        .card:nth-child(4) { animation-delay: 0.18s; }
-        .card:nth-child(5) { animation-delay: 0.24s; }
-        .card:nth-child(6) { animation-delay: 0.30s; }
-
+        .card:nth-child(2) {
+            animation-delay: 0.06s;
+        }
+        .card:nth-child(3) {
+            animation-delay: 0.12s;
+        }
         @keyframes cardIn {
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
             }
         }
-
         .card-title {
             font-size: 1.2rem;
             font-weight: 600;
@@ -257,9 +221,7 @@
             gap: 10px;
         }
 
-        /* ============================================================
-           ВКЛАДКИ (контент)
-           ============================================================ */
+        /* ===== ВКЛАДКИ ===== */
         .tab-content {
             display: none;
             animation: fadeSlide 0.4s ease;
@@ -267,15 +229,18 @@
         .tab-content.active {
             display: block;
         }
-
         @keyframes fadeSlide {
-            0% { opacity: 0; transform: translateY(14px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* ============================================================
-           ПОЛЗУНКИ
-           ============================================================ */
+        /* ===== ПОЛЗУНКИ ===== */
         .input-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -308,10 +273,6 @@
             background: #00d4ff;
             cursor: pointer;
             box-shadow: 0 0 24px rgba(0, 212, 255, 0.35);
-            transition: box-shadow 0.2s;
-        }
-        .input-group input[type="range"]::-webkit-slider-thumb:hover {
-            box-shadow: 0 0 36px rgba(0, 212, 255, 0.55);
         }
         .input-group .value-display {
             font-size: 1.2rem;
@@ -319,9 +280,7 @@
             color: #fff;
         }
 
-        /* ============================================================
-           КНОПКИ
-           ============================================================ */
+        /* ===== КНОПКИ ===== */
         .btn-group {
             display: flex;
             flex-wrap: wrap;
@@ -349,7 +308,6 @@
             color: #fff;
             box-shadow: 0 0 24px rgba(0, 212, 255, 0.08);
         }
-
         .btn-primary {
             width: 100%;
             padding: 15px;
@@ -368,7 +326,6 @@
             transform: scale(1.02);
             box-shadow: 0 8px 44px rgba(0, 212, 255, 0.3);
         }
-
         .btn-secondary {
             padding: 8px 18px;
             border-radius: 40px;
@@ -392,17 +349,94 @@
         .btn-secondary.btn-success:hover {
             background: rgba(107, 203, 119, 0.12);
         }
-        .btn-secondary.btn-danger {
-            border-color: #ff6b6b;
-            color: #ff6b6b;
+
+        /* ===== ПЛАН НЕДЕЛИ (сетка) ===== */
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 14px;
         }
-        .btn-secondary.btn-danger:hover {
-            background: rgba(255, 107, 107, 0.10);
+        .day-card {
+            background: rgba(0, 0, 0, 0.18);
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .day-card .day-name {
+            font-weight: 700;
+            color: #00d4ff;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        .day-card .meal-row {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .day-card .meal-row .meal-type {
+            color: #889;
+        }
+        .day-card .meal-row .meal-cal {
+            color: #889;
+            float: right;
+        }
+        .day-card .day-total {
+            margin-top: 8px;
+            color: #00d4ff;
+            font-weight: 700;
+            text-align: right;
         }
 
-        /* ============================================================
-           РЕЗУЛЬТАТЫ
-           ============================================================ */
+        /* ===== ФИЛЬТРЫ ДЛЯ УМНОГО ПОДБОРА ===== */
+        .pref-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+        .pref-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .pref-group label {
+            font-size: 0.85rem;
+            color: #aab;
+            font-weight: 500;
+        }
+        .pref-group select,
+        .pref-group input[type="text"] {
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.9rem;
+        }
+        .pref-group select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        .pref-group .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .pref-group .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .pref-group .checkbox-group input[type="checkbox"] {
+            accent-color: #00d4ff;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        /* ===== РЕЗУЛЬТАТЫ ===== */
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -420,14 +454,12 @@
             font-weight: 800;
             color: #00d4ff;
             display: block;
-            transition: all 0.1s;
         }
         .result-item .desc {
             font-size: 0.8rem;
             color: #889;
             margin-top: 2px;
         }
-
         .bju-row {
             display: flex;
             justify-content: center;
@@ -442,813 +474,901 @@
             font-size: 1.5rem;
             font-weight: 700;
         }
-        .bju-item.protein .bju-value { color: #ff6b6b; }
-        .bju-item.fat .bju-value { color: #ffd93d; }
-        .bju-item.carbs .bju-value { color: #6bcb77; }
+        .bju-item.protein .bju-value {
+            color: #ff6b6b;
+        }
+        .bju-item.fat .bju-value {
+            color: #ffd93d;
+        }
+        .bju-item.carbs .bju-value {
+            color: #6bcb77;
+        }
         .bju-item .bju-label {
             font-size: 0.75rem;
             color: #889;
         }
 
-        /* ============================================================
-           ВОДА
-           ============================================================ */
-        .water-tracker {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            flex-wrap: wrap;
+        /* ===== ОСТАЛЬНОЕ ===== */
+        .hidden {
+            display: none !important;
         }
-        .water-glasses {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
+        .mt-10 {
+            margin-top: 10px;
         }
-        .glass {
-            width: 40px;
-            height: 50px;
-            border: 2px solid rgba(0, 212, 255, 0.3);
-            border-radius: 6px 6px 14px 14px;
-            background: rgba(0, 212, 255, 0.04);
-            cursor: pointer;
-            transition: all 0.25s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            color: #556;
+        .mb-10 {
+            margin-bottom: 10px;
         }
-        .glass.filled {
-            background: rgba(0, 212, 255, 0.20);
-            border-color: #00d4ff;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.12);
-            color: #00d4ff;
-        }
-        .glass:hover {
-            transform: scale(1.06);
-        }
-        .water-progress {
-            flex: 1;
-            min-width: 140px;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
-            overflow: hidden;
-            margin-top: 6px;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #00d4ff, #a855f7);
-            border-radius: 20px;
-            transition: width 0.6s ease;
-            width: 0%;
-        }
-
-        /* ============================================================
-           РЕЦЕПТЫ
-           ============================================================ */
-        .recipe-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 14px;
-            max-height: 620px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-        .recipe-card {
-            background: rgba(0, 0, 0, 0.20);
-            border-radius: 16px;
-            padding: 14px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            transition: all 0.25s ease;
-        }
-        .recipe-card:hover {
-            border-color: rgba(123, 47, 252, 0.25);
-            transform: translateY(-3px);
-        }
-        .recipe-card .recipe-name {
-            font-weight: 600;
-            color: #fff;
-            font-size: 0.95rem;
-        }
-        .recipe-card .recipe-info {
-            font-size: 0.75rem;
-            color: #889;
-        }
-        .recipe-card .recipe-cal {
-            color: #00d4ff;
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-        .recipe-card .recipe-tags {
-            display: flex;
-            gap: 4px;
-            flex-wrap: wrap;
-            margin-top: 5px;
-        }
-        .recipe-card .recipe-tags .tag {
-            font-size: 0.6rem;
-            padding: 2px 12px;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.05);
-            color: #889;
-        }
-
-        /* ============================================================
-           СТАТИСТИКА
-           ============================================================ */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 12px;
-            margin-bottom: 16px;
-        }
-        .stats-card {
-            background: rgba(0, 0, 0, 0.20);
-            border-radius: 14px;
-            padding: 14px 10px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .stats-card .stat-number {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #00d4ff;
-        }
-        .stats-card .stat-label {
-            font-size: 0.7rem;
-            color: #889;
-        }
-
-        .weight-history {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            max-height: 180px;
-            overflow-y: auto;
-        }
-        .weight-entry {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 14px;
-            background: rgba(0, 0, 0, 0.12);
-            border-radius: 10px;
-            font-size: 0.9rem;
-        }
-        .weight-entry .date {
-            color: #889;
-        }
-        .weight-entry .weight {
-            font-weight: 600;
-            color: #fff;
-        }
-
-        /* ============================================================
-           ДНЕВНИК
-           ============================================================ */
-        .food-log {
-            max-height: 260px;
-            overflow-y: auto;
-        }
-        .food-log .log-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 14px;
-            background: rgba(0, 0, 0, 0.14);
-            border-radius: 12px;
-            margin-bottom: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .food-log .log-item .log-name {
-            font-weight: 500;
-        }
-        .food-log .log-item .log-cal {
-            color: #889;
-            font-size: 0.85rem;
-        }
-        .food-log .log-item .log-del {
-            color: #ff6b6b;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-size: 1.1rem;
-        }
-
-        /* ============================================================
-           НАПОМИНАНИЯ
-           ============================================================ */
-        .reminder-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 16px;
-            background: rgba(0, 0, 0, 0.14);
-            border-radius: 14px;
-            margin-bottom: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .reminder-item .rem-info {
+        .flex-center {
             display: flex;
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
         }
-        .reminder-item input[type="time"] {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #fff;
-            padding: 6px 12px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-        }
-        .reminder-item input[type="checkbox"] {
-            accent-color: #00d4ff;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
 
-        /* ============================================================
-           УТИЛИТЫ
-           ============================================================ */
-        .hidden { display: none !important; }
-        .mt-10 { margin-top: 10px; }
-        .mb-10 { margin-bottom: 10px; }
-        .flex-center { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-
-        /* ============================================================
-           ГРАФИК ВЕСА
-           ============================================================ */
-        .chart-wrapper {
-            width: 100%;
-            overflow-x: auto;
-            padding: 6px 0;
-        }
-        #weightChart {
-            width: 100%;
-            max-width: 780px;
-            height: 260px;
-            background: rgba(0, 0, 0, 0.18);
-            border-radius: 16px;
-            display: block;
-            margin: 0 auto;
-        }
-
-        /* ============================================================
-           АДАПТИВ
-           ============================================================ */
+        /* ===== АДАПТИВ ===== */
         @media (max-width: 600px) {
-            .header { padding: 12px 16px; }
-            .logo { font-size: 1.3rem; }
-            .logo svg { width: 26px; height: 26px; }
-            .container { padding: 14px 14px 40px; }
-            .card { padding: 16px 16px; }
-            .sidebar { width: 260px; padding: 18px 14px; }
-            .input-grid { grid-template-columns: 1fr; }
-            .result-grid { grid-template-columns: 1fr 1fr; }
-            .water-tracker { flex-direction: column; align-items: stretch; }
-            .reminder-item { flex-direction: column; align-items: stretch; }
+            .header {
+                padding: 12px 16px;
+            }
+            .logo {
+                font-size: 1.3rem;
+            }
+            .container {
+                padding: 14px 14px 40px;
+            }
+            .card {
+                padding: 16px 16px;
+            }
+            .sidebar {
+                width: 260px;
+                padding: 18px 14px;
+            }
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            .pref-grid {
+                grid-template-columns: 1fr;
+            }
+            .result-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
         }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #1a1a2e; }
-        ::-webkit-scrollbar-thumb { background: #7b2ffc; border-radius: 20px; }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #7b2ffc;
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
 
-<!-- ============================================================
-ШАПКА
-============================================================ -->
-<header class="header">
-    <div class="header-left">
-        <button class="burger" id="burgerBtn" aria-label="Меню">
-            <span></span><span></span><span></span>
-        </button>
-        <div class="logo">
-            <svg viewBox="0 0 32 32" fill="none">
-                <path d="M4 24 L12 12 L20 20 L28 6" stroke="url(#lg)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="12" cy="12" r="3" fill="#00d4ff" opacity="0.6"/>
-                <circle cx="20" cy="20" r="3" fill="#a855f7" opacity="0.6"/>
-                <defs>
-                    <linearGradient id="lg" x1="4" y1="24" x2="28" y2="6">
-                        <stop offset="0%" stop-color="#00d4ff"/>
-                        <stop offset="100%" stop-color="#a855f7"/>
-                    </linearGradient>
-                </defs>
-            </svg>
-            ShapeUp
-        </div>
-    </div>
-</header>
-
-<!-- ============================================================
-ШТОРКА (оверлей + сайдбар)
-============================================================ -->
-<div class="overlay" id="overlay"></div>
-
-<nav class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-        <div class="logo">
-            <svg viewBox="0 0 32 32" fill="none" width="28" height="28">
-                <path d="M4 24 L12 12 L20 20 L28 6" stroke="url(#lg2)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="12" cy="12" r="3" fill="#00d4ff" opacity="0.6"/>
-                <circle cx="20" cy="20" r="3" fill="#a855f7" opacity="0.6"/>
-                <defs>
-                    <linearGradient id="lg2" x1="4" y1="24" x2="28" y2="6">
-                        <stop offset="0%" stop-color="#00d4ff"/>
-                        <stop offset="100%" stop-color="#a855f7"/>
-                    </linearGradient>
-                </defs>
-            </svg>
-            ShapeUp
-        </div>
-        <button class="sidebar-close" id="sidebarClose" aria-label="Закрыть меню">✕</button>
-    </div>
-
-    <ul class="nav-list">
-        <li><a class="active" data-tab="tabCalc"><span class="icon">🏠</span> Главная</a></li>
-        <li><a data-tab="tabWeek"><span class="icon">📅</span> План недели</a></li>
-        <li><a data-tab="tabWater"><span class="icon">💧</span> Вода</a></li>
-        <li><a data-tab="tabTracker"><span class="icon">📝</span> Дневник</a></li>
-        <li><a data-tab="tabStats"><span class="icon">📈</span> Статистика</a></li>
-        <li><a data-tab="tabRecipes"><span class="icon">🍳</span> Рецепты</a></li>
-        <li><a data-tab="tabReminders"><span class="icon">⏰</span> Напоминания</a></li>
-    </ul>
-</nav>
-
-<!-- ============================================================
-ОСНОВНОЙ КОНТЕЙНЕР
-============================================================ -->
-<div class="container">
-
-    <!-- ==========================================================
-    ВКЛАДКА 1: КАЛЬКУЛЯТОР
-    ========================================================== -->
-    <div id="tabCalc" class="tab-content active">
-
-        <div class="card">
-            <div class="card-title">📊 Ваши параметры</div>
-            <div class="input-grid">
-                <div class="input-group">
-                    <label>Пол</label>
-                    <div style="display:flex;gap:8px;margin-top:4px;">
-                        <button class="btn active" id="genderMale">Мужской</button>
-                        <button class="btn" id="genderFemale">Женский</button>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Возраст: <span id="ageValue" class="value-display">31</span> лет</label>
-                    <input type="range" id="ageRange" min="10" max="80" value="31">
-                </div>
-                <div class="input-group">
-                    <label>Рост: <span id="heightValue" class="value-display">180</span> см</label>
-                    <input type="range" id="heightRange" min="100" max="250" value="180">
-                </div>
-                <div class="input-group">
-                    <label>Вес: <span id="weightValue" class="value-display">87</span> кг</label>
-                    <input type="range" id="weightRange" min="30" max="200" value="87">
-                </div>
-            </div>
-            <div style="margin-top:16px;">
-                <label style="color:#aab;font-size:0.85rem;">Уровень активности</label>
-                <div class="btn-group" id="activityGroup">
-                    <button class="btn" data-activity="1.2">Сидячий</button>
-                    <button class="btn active" data-activity="1.375">Средний</button>
-                    <button class="btn" data-activity="1.55">Активный</button>
-                    <button class="btn" data-activity="1.725">Очень активный</button>
-                </div>
+    <!-- ===== ШАПКА ===== -->
+    <header class="header">
+        <div class="header-left">
+            <button class="burger" id="burgerBtn" aria-label="Меню">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="logo">
+                <svg viewBox="0 0 32 32" fill="none">
+                    <path d="M4 24 L12 12 L20 20 L28 6" stroke="url(#lg)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="12" r="3" fill="#00d4ff" opacity="0.6"/>
+                    <circle cx="20" cy="20" r="3" fill="#a855f7" opacity="0.6"/>
+                    <defs>
+                        <linearGradient id="lg" x1="4" y1="24" x2="28" y2="6">
+                            <stop offset="0%" stop-color="#00d4ff"/>
+                            <stop offset="100%" stop-color="#a855f7"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                ShapeUp
             </div>
         </div>
+    </header>
 
-        <div class="card">
-            <div class="card-title">🎯 Цель</div>
-            <div class="btn-group" id="deficitGroup">
-                <button class="btn" data-deficit="0.9">🟢 Мягкий (-10%)</button>
-                <button class="btn active" data-deficit="0.85">🔵 Стандартный (-15%)</button>
-                <button class="btn" data-deficit="0.8">🔴 Быстрый (-20%)</button>
-            </div>
+    <!-- ===== ШТОРКА ===== -->
+    <div class="overlay" id="overlay"></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">ShapeUp</div>
+            <button class="sidebar-close" id="sidebarClose">✕</button>
         </div>
+        <ul class="nav-list">
+            <li><a class="active" data-tab="tabCalc"><span class="icon">🏠</span> Главная</a></li>
+            <li><a data-tab="tabPlan"><span class="icon">📅</span> План питания</a></li>
+            <li><a data-tab="tabWater"><span class="icon">💧</span> Вода</a></li>
+            <li><a data-tab="tabTracker"><span class="icon">📝</span> Дневник</a></li>
+            <li><a data-tab="tabStats"><span class="icon">📈</span> Статистика</a></li>
+            <li><a data-tab="tabRecipes"><span class="icon">🍳</span> Рецепты</a></li>
+            <li><a data-tab="tabReminders"><span class="icon">⏰</span> Напоминания</a></li>
+        </ul>
+    </nav>
 
-        <button class="btn-primary" id="calculateBtn">🔥 Рассчитать и обновить план</button>
+    <!-- ===== ОСНОВНОЙ КОНТЕЙНЕР ===== -->
+    <div class="container">
 
-        <div id="calcResults" class="hidden">
+        <!-- ==========================================================
+        ВКЛАДКА 1: КАЛЬКУЛЯТОР
+        ========================================================== -->
+        <div id="tabCalc" class="tab-content active">
             <div class="card">
-                <div class="card-title">📈 Ваша норма</div>
-                <div class="result-grid" id="resultNumbers"></div>
-                <div class="bju-row" id="bjuDisplay"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==========================================================
-    ВКЛАДКА 2: ПЛАН НЕДЕЛИ
-    ========================================================== -->
-    <div id="tabWeek" class="tab-content">
-        <div class="card">
-            <div class="card-title">📅 План питания на неделю</div>
-            <div id="weekPlanContainer"></div>
-        </div>
-        <div class="card">
-            <div class="card-title">🛒 Список покупок</div>
-            <div id="shoppingList"></div>
-        </div>
-    </div>
-
-    <!-- ==========================================================
-    ВКЛАДКА 3: ВОДА
-    ========================================================== -->
-    <div id="tabWater" class="tab-content">
-        <div class="card">
-            <div class="card-title">💧 Водный баланс</div>
-            <div id="waterDisplay">
-                <div class="water-tracker">
-                    <div>
-                        <div style="font-size:1.8rem;font-weight:700;color:#00d4ff;" id="waterGoalDisplay">2.6 Л</div>
-                        <div style="color:#889;font-size:0.8rem;">Норма на день</div>
-                    </div>
-                    <div class="water-progress">
-                        <div style="display:flex;justify-content:space-between;">
-                            <span id="waterDrank">0</span>
-                            <span id="waterPercent">0%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="waterFill" style="width:0%;"></div>
+                <div class="card-title">📊 Ваши параметры</div>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Пол</label>
+                        <div style="display:flex;gap:8px;margin-top:4px;">
+                            <button class="btn active" id="genderMale">Мужской</button>
+                            <button class="btn" id="genderFemale">Женский</button>
                         </div>
                     </div>
+                    <div class="input-group">
+                        <label>Возраст: <span id="ageValue" class="value-display">31</span> лет</label>
+                        <input type="range" id="ageRange" min="10" max="80" value="31">
+                    </div>
+                    <div class="input-group">
+                        <label>Рост: <span id="heightValue" class="value-display">180</span> см</label>
+                        <input type="range" id="heightRange" min="100" max="250" value="180">
+                    </div>
+                    <div class="input-group">
+                        <label>Вес: <span id="weightValue" class="value-display">87</span> кг</label>
+                        <input type="range" id="weightRange" min="30" max="200" value="87">
+                    </div>
                 </div>
-                <div class="water-glasses" id="waterGlasses"></div>
-                <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
-                    <button class="btn-secondary" id="resetWaterBtn">🔄 Сбросить воду</button>
-                    <button class="btn-secondary btn-success" id="waterReminderBtn">💧 Напомнить о воде</button>
+                <div style="margin-top:16px;">
+                    <label style="color:#aab;font-size:0.85rem;">Уровень активности</label>
+                    <div class="btn-group" id="activityGroup">
+                        <button class="btn" data-activity="1.2">Сидячий</button>
+                        <button class="btn active" data-activity="1.375">Средний</button>
+                        <button class="btn" data-activity="1.55">Активный</button>
+                        <button class="btn" data-activity="1.725">Очень активный</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎯 Цель</div>
+                <div class="btn-group" id="deficitGroup">
+                    <button class="btn" data-deficit="0.9">🟢 Мягкий (-10%)</button>
+                    <button class="btn active" data-deficit="0.85">🔵 Стандартный (-15%)</button>
+                    <button class="btn" data-deficit="0.8">🔴 Быстрый (-20%)</button>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="calculateBtn">🔥 Рассчитать и обновить план</button>
+
+            <div id="calcResults" class="hidden">
+                <div class="card">
+                    <div class="card-title">📈 Ваша норма</div>
+                    <div class="result-grid" id="resultNumbers"></div>
+                    <div class="bju-row" id="bjuDisplay"></div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- ==========================================================
-    ВКЛАДКА 4: ДНЕВНИК
-    ========================================================== -->
-    <div id="tabTracker" class="tab-content">
-        <div class="card">
-            <div class="card-title">📝 Дневник питания (сегодня)</div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-                <select id="foodSelect" style="flex:1;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
-                    <option value="">-- Выберите рецепт --</option>
-                </select>
-                <button class="btn-secondary" id="addFoodBtn">➕ Добавить</button>
-            </div>
-            <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;">
-                <span>🔥 <span id="todayCal">0</span> ккал</span>
-                <span style="color:#ff6b6b;">🥩 <span id="todayProtein">0</span>г</span>
-                <span style="color:#ffd93d;">🥑 <span id="todayFat">0</span>г</span>
-                <span style="color:#6bcb77;">🍞 <span id="todayCarbs">0</span>г</span>
-            </div>
-            <div class="food-log" id="foodLog"></div>
-            <button class="btn-secondary btn-danger" id="resetFoodBtn" style="margin-top:10px;">🗑 Очистить дневник</button>
-        </div>
-    </div>
+        <!-- ==========================================================
+        ВКЛАДКА 2: ПЛАН ПИТАНИЯ (УМНЫЙ + АВТО)
+        ========================================================== -->
+        <div id="tabPlan" class="tab-content">
+            <div class="card">
+                <div class="card-title">📅 План питания на неделю</div>
 
-    <!-- ==========================================================
-    ВКЛАДКА 5: СТАТИСТИКА
-    ========================================================== -->
-    <div id="tabStats" class="tab-content">
-        <div class="card">
-            <div class="card-title">📈 Статистика</div>
-            <div class="stats-grid" id="statsOverview"></div>
-            <div style="margin-top:14px;">
-                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
-                    <input type="number" id="newWeightInput" placeholder="Новый вес (кг)" style="flex:1;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
-                    <button class="btn-secondary" id="addWeightBtn">📌 Записать вес</button>
+                <!-- Переключатель режимов -->
+                <div style="display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
+                    <button class="btn-secondary btn-success" id="modeSmart" style="flex:1;text-align:center;">🧠 Умный подбор</button>
+                    <button class="btn-secondary" id="modeAuto" style="flex:1;text-align:center;">🎲 Авто-подбор</button>
                 </div>
-                <div class="weight-history" id="weightHistory"></div>
+
+                <!-- Блок умного подбора -->
+                <div id="smartBlock">
+                    <div class="pref-grid">
+                        <div class="pref-group">
+                            <label>Категории</label>
+                            <div class="checkbox-group" id="catFilter">
+                                <label><input type="checkbox" value="Завтрак" checked> Завтрак</label>
+                                <label><input type="checkbox" value="Обед" checked> Обед</label>
+                                <label><input type="checkbox" value="Ужин" checked> Ужин</label>
+                                <label><input type="checkbox" value="Перекус" checked> Перекус</label>
+                            </div>
+                        </div>
+                        <div class="pref-group">
+                            <label>Любимые продукты</label>
+                            <select id="favFood">
+                                <option value="all">Все</option>
+                                <option value="курица">Курица</option>
+                                <option value="рыба">Рыба</option>
+                                <option value="говядина">Говядина</option>
+                                <option value="крупы">Крупы</option>
+                                <option value="овощи">Овощи</option>
+                                <option value="фрукты">Фрукты</option>
+                                <option value="творог">Творог</option>
+                                <option value="яйца">Яйца</option>
+                            </select>
+                        </div>
+                        <div class="pref-group">
+                            <label>Исключить</label>
+                            <select id="excludeFood">
+                                <option value="none">Нет</option>
+                                <option value="глютен">Глютен</option>
+                                <option value="лактоза">Лактоза</option>
+                                <option value="орехи">Орехи</option>
+                            </select>
+                        </div>
+                        <div class="pref-group">
+                            <label>Калорийность</label>
+                            <select id="calLevel">
+                                <option value="low">🔥 Низкая (до 300 ккал)</option>
+                                <option value="medium" selected>🔥 Средняя (300–500 ккал)</option>
+                                <option value="high">🔥 Высокая (500+ ккал)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Блок авто-подбора -->
+                <div id="autoBlock" class="hidden">
+                    <div style="text-align:center;padding:12px 0;color:#889;">
+                        🎲 Нажмите кнопку ниже — получите случайный сбалансированный план без повторов
+                    </div>
+                </div>
+
+                <button class="btn-primary" id="generatePlanBtn" style="margin-top:16px;">🎲 Сгенерировать план</button>
+            </div>
+
+            <!-- Результат: план недели -->
+            <div class="card">
+                <div class="card-title">📋 Ваш план</div>
+                <div id="planResult">
+                    <div style="color:#556;text-align:center;padding:20px;">Нажмите «Сгенерировать план»</div>
+                </div>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-title">📉 График изменения веса</div>
-            <div class="chart-wrapper">
-                <canvas id="weightChart"></canvas>
+        <!-- ==========================================================
+        ВКЛАДКА 3: ВОДА
+        ========================================================== -->
+        <div id="tabWater" class="tab-content">
+            <div class="card">
+                <div class="card-title">💧 Водный баланс</div>
+                <div id="waterDisplay">
+                    <div class="water-tracker" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+                        <div>
+                            <div style="font-size:1.8rem;font-weight:700;color:#00d4ff;" id="waterGoalDisplay">2.6 Л</div>
+                            <div style="color:#889;font-size:0.8rem;">Норма на день</div>
+                        </div>
+                        <div style="flex:1;min-width:140px;">
+                            <div style="display:flex;justify-content:space-between;">
+                                <span id="waterDrank">0</span>
+                                <span id="waterPercent">0%</span>
+                            </div>
+                            <div class="progress-bar" style="width:100%;height:8px;background:rgba(255,255,255,0.06);border-radius:20px;overflow:hidden;margin-top:6px;">
+                                <div class="progress-fill" id="waterFill" style="width:0%;height:100%;background:linear-gradient(90deg,#00d4ff,#a855f7);border-radius:20px;transition:width 0.6s ease;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="water-glasses" id="waterGlasses" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;"></div>
+                    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
+                        <button class="btn-secondary" id="resetWaterBtn">🔄 Сбросить воду</button>
+                        <button class="btn-secondary btn-success" id="waterReminderBtn">💧 Напомнить о воде</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-title">💾 Резервное копирование</div>
-            <div style="display:flex;gap:12px;flex-wrap:wrap;">
-                <button class="btn-secondary btn-success" id="exportBtn">📤 Скачать бекап</button>
-                <button class="btn-secondary" id="importBtn" onclick="document.getElementById('importFile').click()">📥 Загрузить бекап</button>
-                <input type="file" id="importFile" accept=".json" style="display:none;">
+        <!-- ==========================================================
+        ВКЛАДКА 4: ДНЕВНИК
+        ========================================================== -->
+        <div id="tabTracker" class="tab-content">
+            <div class="card">
+                <div class="card-title">📝 Дневник питания (сегодня)</div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                    <select id="foodSelect" style="flex:1;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
+                        <option value="">-- Выберите рецепт --</option>
+                    </select>
+                    <button class="btn-secondary" id="addFoodBtn">➕ Добавить</button>
+                </div>
+                <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;">
+                    <span>🔥 <span id="todayCal">0</span> ккал</span>
+                    <span style="color:#ff6b6b;">🥩 <span id="todayProtein">0</span>г</span>
+                    <span style="color:#ffd93d;">🥑 <span id="todayFat">0</span>г</span>
+                    <span style="color:#6bcb77;">🍞 <span id="todayCarbs">0</span>г</span>
+                </div>
+                <div class="food-log" id="foodLog" style="max-height:260px;overflow-y:auto;"></div>
+                <button class="btn-secondary btn-danger" id="resetFoodBtn" style="margin-top:10px;">🗑 Очистить дневник</button>
             </div>
-            <div style="margin-top:10px;font-size:0.75rem;color:#556;">Бекап содержит все ваши данные</div>
         </div>
+
+        <!-- ==========================================================
+        ВКЛАДКА 5: СТАТИСТИКА
+        ========================================================== -->
+        <div id="tabStats" class="tab-content">
+            <div class="card">
+                <div class="card-title">📈 Статистика</div>
+                <div class="stats-grid" id="statsOverview" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px;"></div>
+                <div style="margin-top:14px;">
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+                        <input type="number" id="newWeightInput" placeholder="Новый вес (кг)" style="flex:1;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
+                        <button class="btn-secondary" id="addWeightBtn">📌 Записать вес</button>
+                    </div>
+                    <div class="weight-history" id="weightHistory" style="display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto;"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">📉 График изменения веса</div>
+                <div class="chart-wrapper" style="width:100%;overflow-x:auto;padding:6px 0;">
+                    <canvas id="weightChart" style="width:100%;max-width:780px;height:260px;background:rgba(0,0,0,0.18);border-radius:16px;display:block;margin:0 auto;"></canvas>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">💾 Резервное копирование</div>
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <button class="btn-secondary btn-success" id="exportBtn">📤 Скачать бекап</button>
+                    <button class="btn-secondary" id="importBtn" onclick="document.getElementById('importFile').click()">📥 Загрузить бекап</button>
+                    <input type="file" id="importFile" accept=".json" style="display:none;">
+                </div>
+                <div style="margin-top:10px;font-size:0.75rem;color:#556;">Бекап содержит все ваши данные</div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        ВКЛАДКА 6: РЕЦЕПТЫ
+        ========================================================== -->
+        <div id="tabRecipes" class="tab-content">
+            <div class="card">
+                <div class="card-title">🍳 Рецепты</div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                    <button class="btn-secondary btn-success" id="addRecipeBtn">➕ Добавить свой рецепт</button>
+                </div>
+                <div class="filter-buttons" id="recipeFilters" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+                    <button class="filter-btn active" data-filter="all" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">Все</button>
+                    <button class="filter-btn" data-filter="Мясные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🥩 Мясные</button>
+                    <button class="filter-btn" data-filter="Рыбные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🐟 Рыбные</button>
+                    <button class="filter-btn" data-filter="Яичные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🥚 Яичные</button>
+                    <button class="filter-btn" data-filter="Каши" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🌾 Каши</button>
+                    <button class="filter-btn" data-filter="Овощные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🥗 Овощные</button>
+                    <button class="filter-btn" data-filter="Веганские" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🌱 Веганские</button>
+                    <button class="filter-btn" data-filter="Свои" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">✏️ Мои</button>
+                </div>
+                <div class="recipe-grid" id="recipeGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;max-height:620px;overflow-y:auto;padding-right:4px;"></div>
+            </div>
+        </div>
+
+        <!-- ==========================================================
+        ВКЛАДКА 7: НАПОМИНАНИЯ
+        ========================================================== -->
+        <div id="tabReminders" class="tab-content">
+            <div class="card">
+                <div class="card-title">⏰ Настройка напоминаний</div>
+                <div id="remindersContainer"></div>
+                <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+                    <button class="btn-secondary btn-success" id="testReminderBtn">🔔 Проверить уведомление</button>
+                    <button class="btn-secondary" id="resetRemindersBtn">🔄 Сбросить настройки</button>
+                </div>
+                <div style="margin-top:10px;font-size:0.75rem;color:#556;">Уведомления работают, пока открыта страница</div>
+            </div>
+        </div>
+
     </div>
 
-    <!-- ==========================================================
-    ВКЛАДКА 6: РЕЦЕПТЫ
-    ========================================================== -->
-    <div id="tabRecipes" class="tab-content">
-        <div class="card">
-            <div class="card-title">🍳 Рецепты</div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
-                <button class="btn-secondary btn-success" id="addRecipeBtn">➕ Добавить свой рецепт</button>
-            </div>
-            <div class="filter-buttons" id="recipeFilters" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-                <button class="filter-btn active" data-filter="all" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">Все</button>
-                <button class="filter-btn" data-filter="Мясные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🥩 Мясные</button>
-                <button class="filter-btn" data-filter="Рыбные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🐟 Рыбные</button>
-                <button class="filter-btn" data-filter="Яичные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🥚 Яичные</button>
-                <button class="filter-btn" data-filter="Каши" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🌾 Каши</button>
-                <button class="filter-btn" data-filter="Овощные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🥗 Овощные</button>
-                <button class="filter-btn" data-filter="Веганские" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🌱 Веганские</button>
-                <button class="filter-btn" data-filter="Свои" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">✏️ Мои</button>
-            </div>
-            <div class="recipe-grid" id="recipeGrid"></div>
-        </div>
-    </div>
+    <!-- ============================================================
+    JAVASCRIPT
+    ============================================================ -->
+    <script>
+        // ================================================================
+        // 1. БАЗОВЫЕ РЕЦЕПТЫ (30 шт)
+        // ================================================================
+        const BASE_RECIPES = [
+            { id: 1, name: 'Овсянка на молоке с бананом', type: 'Завтрак', cal: 380, protein: 14, fat: 8, carbs: 62,
+                weight: '300г', desc: 'Овсяные хлопья 50г, молоко 200мл, банан 100г.', category: 'Каши', price: 'Низкая',
+                time: '10 мин' },
+            { id: 2, name: 'Яичница с овощами', type: 'Завтрак', cal: 320, protein: 22, fat: 20, carbs: 10, weight: '280г',
+                desc: '2 яйца, помидор, перец, лук, зелень.', category: 'Яичные', price: 'Низкая', time: '15 мин' },
+            { id: 3, name: 'Творог с ягодами', type: 'Завтрак', cal: 290, protein: 28, fat: 6, carbs: 28, weight: '250г',
+                desc: 'Творог 5% 200г, клубника 80г, мёд 10г.', category: 'Яичные', price: 'Средняя', time: '5 мин' },
+            { id: 4, name: 'Гречка с молоком', type: 'Завтрак', cal: 340, protein: 14, fat: 6, carbs: 56, weight: '280г',
+                desc: 'Гречка варёная 150г, молоко 150мл, масло 5г.', category: 'Каши', price: 'Низкая', time: '15 мин' },
+            { id: 5, name: 'Омлет с сыром', type: 'Завтрак', cal: 410, protein: 28, fat: 28, carbs: 6, weight: '260г',
+                desc: '3 яйца, сыр твёрдый 40г, молоко 30мл.', category: 'Яичные', price: 'Средняя', time: '15 мин' },
+            { id: 6, name: 'Каша пшённая с тыквой', type: 'Завтрак', cal: 300, protein: 8, fat: 4, carbs: 58, weight: '320г',
+                desc: 'Пшено 60г, тыква 120г, молоко 150мл.', category: 'Каши', price: 'Низкая', time: '20 мин' },
+            { id: 7, name: 'Бутерброды с авокадо', type: 'Завтрак', cal: 360, protein: 12, fat: 24, carbs: 24,
+                weight: '180г', desc: 'Хлеб цельнозерновой 60г, авокадо 80г, яйцо 50г.', category: 'Веганские',
+                price: 'Средняя', time: '10 мин' },
+            { id: 8, name: 'Куриная грудка с гречкой', type: 'Обед', cal: 470, protein: 42, fat: 12, carbs: 44,
+                weight: '380г', desc: 'Куриная грудка 150г, гречка 180г, масло 10г.', category: 'Мясные', price: 'Средняя',
+                time: '30 мин' },
+            { id: 9, name: 'Суп куриный с лапшой', type: 'Обед', cal: 320, protein: 22, fat: 10, carbs: 34, weight: '400г',
+                desc: 'Курица 100г, лапша 40г, морковь, лук, картофель.', category: 'Мясные', price: 'Низкая',
+                time: '40 мин' },
+            { id: 10, name: 'Рыба запечённая с рисом', type: 'Обед', cal: 440, protein: 36, fat: 16, carbs: 38,
+                weight: '350г', desc: 'Филе минтая 150г, рис варёный 150г, лимон.', category: 'Рыбные', price: 'Средняя',
+                time: '35 мин' },
+            { id: 11, name: 'Говядина с картофелем', type: 'Обед', cal: 520, protein: 34, fat: 22, carbs: 42, weight: '400г',
+                desc: 'Говядина 120г, картофель 180г, лук, морковь.', category: 'Мясные', price: 'Высокая', time: '50 мин' },
+            { id: 12, name: 'Паста с тунцом и томатами', type: 'Обед', cal: 420, protein: 30, fat: 14, carbs: 46,
+                weight: '320г', desc: 'Паста 80г, тунец 80г, томаты 100г, оливки.', category: 'Рыбные', price: 'Средняя',
+                time: '20 мин' },
+            { id: 13, name: 'Овощное рагу с курицей', type: 'Обед', cal: 350, protein: 28, fat: 10, carbs: 36,
+                weight: '400г', desc: 'Курица 120г, кабачок, перец, морковь, томат.', category: 'Мясные', price: 'Низкая',
+                time: '35 мин' },
+            { id: 14, name: 'Лосось с овощами на пару', type: 'Обед', cal: 390, protein: 34, fat: 18, carbs: 20,
+                weight: '300г', desc: 'Филе лосося 140г, брокколи 80г, цветная капуста.', category: 'Рыбные',
+                price: 'Высокая', time: '25 мин' },
+            { id: 15, name: 'Запеканка творожная', type: 'Ужин', cal: 280, protein: 22, fat: 8, carbs: 28, weight: '250г',
+                desc: 'Творог 200г, яйцо, манка 20г, изюм 20г.', category: 'Яичные', price: 'Низкая', time: '30 мин' },
+            { id: 16, name: 'Куриное филе с овощами', type: 'Ужин', cal: 310, protein: 36, fat: 10, carbs: 18, weight: '300г',
+                desc: 'Куриное филе 150г, цукини, помидоры.', category: 'Мясные', price: 'Средняя', time: '25 мин' },
+            { id: 17, name: 'Рыбные котлеты с рисом', type: 'Ужин', cal: 360, protein: 30, fat: 12, carbs: 32,
+                weight: '320г', desc: 'Минтай 120г, рис 140г, яйцо, лук.', category: 'Рыбные', price: 'Средняя',
+                time: '30 мин' },
+            { id: 18, name: 'Гречка с грибами', type: 'Ужин', cal: 280, protein: 12, fat: 8, carbs: 40, weight: '300г',
+                desc: 'Гречка 150г, шампиньоны 100г, лук, масло.', category: 'Веганские', price: 'Низкая', time: '25 мин' },
+            { id: 19, name: 'Омлет с брокколи', type: 'Ужин', cal: 290, protein: 24, fat: 18, carbs: 10, weight: '280г',
+                desc: '3 яйца, брокколи 100г, молоко 40мл.', category: 'Яичные', price: 'Низкая', time: '15 мин' },
+            { id: 20, name: 'Тушеная капуста с фаршем', type: 'Ужин', cal: 330, protein: 22, fat: 16, carbs: 24,
+                weight: '350г', desc: 'Капуста 200г, фарш говяжий 100г, лук, томат.', category: 'Мясные', price: 'Низкая',
+                time: '35 мин' },
+            { id: 21, name: 'Салат с курицей и сухариками', type: 'Ужин', cal: 300, protein: 26, fat: 14, carbs: 18,
+                weight: '260г', desc: 'Курица 120г, салат, сухари 20г, йогурт.', category: 'Мясные', price: 'Средняя',
+                time: '15 мин' },
+            { id: 22, name: 'Яблоко с орехами', type: 'Перекус', cal: 190, protein: 4, fat: 12, carbs: 20, weight: '150г',
+                desc: 'Яблоко 150г, грецкий орех 20г.', category: 'Веганские', price: 'Низкая', time: '2 мин' },
+            { id: 23, name: 'Творожный десерт', type: 'Перекус', cal: 160, protein: 16, fat: 4, carbs: 14, weight: '150г',
+                desc: 'Творог 5% 120г, йогурт 30г, ягоды 30г.', category: 'Яичные', price: 'Низкая', time: '5 мин' },
+            { id: 24, name: 'Орехово-фруктовая смесь', type: 'Перекус', cal: 220, protein: 6, fat: 16, carbs: 18,
+                weight: '80г', desc: 'Миндаль 30г, курага 30г, чернослив 20г.', category: 'Веганские', price: 'Средняя',
+                time: '2 мин' },
+            { id: 25, name: 'Смузи банановый', type: 'Перекус', cal: 180, protein: 4, fat: 2, carbs: 38, weight: '300мл',
+                desc: 'Банан 120г, молоко 150мл, мёд 10г.', category: 'Веганские', price: 'Низкая', time: '5 мин' },
+            { id: 26, name: 'Хлебцы с сыром', type: 'Перекус', cal: 150, protein: 10, fat: 8, carbs: 12, weight: '70г',
+                desc: 'Хлебцы ржаные 30г, сыр 30г, огурец 40г.', category: 'Яичные', price: 'Низкая', time: '5 мин' },
+            { id: 27, name: 'Варёное яйцо', type: 'Перекус', cal: 70, protein: 6, fat: 5, carbs: 0.5, weight: '50г',
+                desc: '1 яйцо варёное.', category: 'Яичные', price: 'Низкая', time: '10 мин' },
+            { id: 28, name: 'Овощные палочки с хумусом', type: 'Перекус', cal: 140, protein: 6, fat: 8, carbs: 14,
+                weight: '120г', desc: 'Морковь 60г, огурец 60г, хумус 30г.', category: 'Веганские', price: 'Средняя',
+                time: '5 мин' },
+            { id: 29, name: 'Протеиновый батончик', type: 'Перекус', cal: 200, protein: 15, fat: 9, carbs: 18, weight: '60г',
+                desc: 'Орехи + финики + протеин.', category: 'Веганские', price: 'Высокая', time: '2 мин' },
+            { id: 30, name: 'Кефир с отрубями', type: 'Перекус', cal: 120, protein: 8, fat: 4, carbs: 14, weight: '250мл',
+                desc: 'Кефир 1% 200мл, отруби 20г, мёд 5г.', category: 'Яичные', price: 'Низкая', time: '3 мин' }
+        ];
 
-    <!-- ==========================================================
-    ВКЛАДКА 7: НАПОМИНАНИЯ
-    ========================================================== -->
-    <div id="tabReminders" class="tab-content">
-        <div class="card">
-            <div class="card-title">⏰ Настройка напоминаний</div>
-            <div id="remindersContainer"></div>
-            <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-                <button class="btn-secondary btn-success" id="testReminderBtn">🔔 Проверить уведомление</button>
-                <button class="btn-secondary" id="resetRemindersBtn">🔄 Сбросить настройки</button>
-            </div>
-            <div style="margin-top:10px;font-size:0.75rem;color:#556;">Уведомления работают, пока открыта страница</div>
-        </div>
-    </div>
-
-</div>
-
-<!-- ============================================================
-JAVASCRIPT — ВСЯ ЛОГИКА
-============================================================ -->
-<script>
-    // ================================================================
-    // 1. БАЗОВЫЕ РЕЦЕПТЫ (30 шт)
-    // ================================================================
-    const BASE_RECIPES = [
-        { id: 1, name: 'Овсянка на молоке с бананом', type: 'Завтрак', cal: 380, protein: 14, fat: 8, carbs: 62, weight: '300г', desc: 'Овсяные хлопья 50г, молоко 200мл, банан 100г.', category: 'Каши', price: 'Низкая', time: '10 мин' },
-        { id: 2, name: 'Яичница с овощами', type: 'Завтрак', cal: 320, protein: 22, fat: 20, carbs: 10, weight: '280г', desc: '2 яйца, помидор, перец, лук, зелень.', category: 'Яичные', price: 'Низкая', time: '15 мин' },
-        { id: 3, name: 'Творог с ягодами', type: 'Завтрак', cal: 290, protein: 28, fat: 6, carbs: 28, weight: '250г', desc: 'Творог 5% 200г, клубника 80г, мёд 10г.', category: 'Яичные', price: 'Средняя', time: '5 мин' },
-        { id: 4, name: 'Гречка с молоком', type: 'Завтрак', cal: 340, protein: 14, fat: 6, carbs: 56, weight: '280г', desc: 'Гречка варёная 150г, молоко 150мл, масло 5г.', category: 'Каши', price: 'Низкая', time: '15 мин' },
-        { id: 5, name: 'Омлет с сыром', type: 'Завтрак', cal: 410, protein: 28, fat: 28, carbs: 6, weight: '260г', desc: '3 яйца, сыр твёрдый 40г, молоко 30мл.', category: 'Яичные', price: 'Средняя', time: '15 мин' },
-        { id: 6, name: 'Каша пшённая с тыквой', type: 'Завтрак', cal: 300, protein: 8, fat: 4, carbs: 58, weight: '320г', desc: 'Пшено 60г, тыква 120г, молоко 150мл.', category: 'Каши', price: 'Низкая', time: '20 мин' },
-        { id: 7, name: 'Бутерброды с авокадо', type: 'Завтрак', cal: 360, protein: 12, fat: 24, carbs: 24, weight: '180г', desc: 'Хлеб цельнозерновой 60г, авокадо 80г, яйцо 50г.', category: 'Веганские', price: 'Средняя', time: '10 мин' },
-        { id: 8, name: 'Куриная грудка с гречкой', type: 'Обед', cal: 470, protein: 42, fat: 12, carbs: 44, weight: '380г', desc: 'Куриная грудка 150г, гречка 180г, масло 10г.', category: 'Мясные', price: 'Средняя', time: '30 мин' },
-        { id: 9, name: 'Суп куриный с лапшой', type: 'Обед', cal: 320, protein: 22, fat: 10, carbs: 34, weight: '400г', desc: 'Курица 100г, лапша 40г, морковь, лук, картофель.', category: 'Мясные', price: 'Низкая', time: '40 мин' },
-        { id: 10, name: 'Рыба запечённая с рисом', type: 'Обед', cal: 440, protein: 36, fat: 16, carbs: 38, weight: '350г', desc: 'Филе минтая 150г, рис варёный 150г, лимон.', category: 'Рыбные', price: 'Средняя', time: '35 мин' },
-        { id: 11, name: 'Говядина с картофелем', type: 'Обед', cal: 520, protein: 34, fat: 22, carbs: 42, weight: '400г', desc: 'Говядина 120г, картофель 180г, лук, морковь.', category: 'Мясные', price: 'Высокая', time: '50 мин' },
-        { id: 12, name: 'Паста с тунцом и томатами', type: 'Обед', cal: 420, protein: 30, fat: 14, carbs: 46, weight: '320г', desc: 'Паста 80г, тунец 80г, томаты 100г, оливки.', category: 'Рыбные', price: 'Средняя', time: '20 мин' },
-        { id: 13, name: 'Овощное рагу с курицей', type: 'Обед', cal: 350, protein: 28, fat: 10, carbs: 36, weight: '400г', desc: 'Курица 120г, кабачок, перец, морковь, томат.', category: 'Мясные', price: 'Низкая', time: '35 мин' },
-        { id: 14, name: 'Лосось с овощами на пару', type: 'Обед', cal: 390, protein: 34, fat: 18, carbs: 20, weight: '300г', desc: 'Филе лосося 140г, брокколи 80г, цветная капуста.', category: 'Рыбные', price: 'Высокая', time: '25 мин' },
-        { id: 15, name: 'Запеканка творожная', type: 'Ужин', cal: 280, protein: 22, fat: 8, carbs: 28, weight: '250г', desc: 'Творог 200г, яйцо, манка 20г, изюм 20г.', category: 'Яичные', price: 'Низкая', time: '30 мин' },
-        { id: 16, name: 'Куриное филе с овощами', type: 'Ужин', cal: 310, protein: 36, fat: 10, carbs: 18, weight: '300г', desc: 'Куриное филе 150г, цукини, помидоры.', category: 'Мясные', price: 'Средняя', time: '25 мин' },
-        { id: 17, name: 'Рыбные котлеты с рисом', type: 'Ужин', cal: 360, protein: 30, fat: 12, carbs: 32, weight: '320г', desc: 'Минтай 120г, рис 140г, яйцо, лук.', category: 'Рыбные', price: 'Средняя', time: '30 мин' },
-        { id: 18, name: 'Гречка с грибами', type: 'Ужин', cal: 280, protein: 12, fat: 8, carbs: 40, weight: '300г', desc: 'Гречка 150г, шампиньоны 100г, лук, масло.', category: 'Веганские', price: 'Низкая', time: '25 мин' },
-        { id: 19, name: 'Омлет с брокколи', type: 'Ужин', cal: 290, protein: 24, fat: 18, carbs: 10, weight: '280г', desc: '3 яйца, брокколи 100г, молоко 40мл.', category: 'Яичные', price: 'Низкая', time: '15 мин' },
-        { id: 20, name: 'Тушеная капуста с фаршем', type: 'Ужин', cal: 330, protein: 22, fat: 16, carbs: 24, weight: '350г', desc: 'Капуста 200г, фарш говяжий 100г, лук, томат.', category: 'Мясные', price: 'Низкая', time: '35 мин' },
-        { id: 21, name: 'Салат с курицей и сухариками', type: 'Ужин', cal: 300, protein: 26, fat: 14, carbs: 18, weight: '260г', desc: 'Курица 120г, салат, сухари 20г, йогурт.', category: 'Мясные', price: 'Средняя', time: '15 мин' },
-        { id: 22, name: 'Яблоко с орехами', type: 'Перекус', cal: 190, protein: 4, fat: 12, carbs: 20, weight: '150г', desc: 'Яблоко 150г, грецкий орех 20г.', category: 'Веганские', price: 'Низкая', time: '2 мин' },
-        { id: 23, name: 'Творожный десерт', type: 'Перекус', cal: 160, protein: 16, fat: 4, carbs: 14, weight: '150г', desc: 'Творог 5% 120г, йогурт 30г, ягоды 30г.', category: 'Яичные', price: 'Низкая', time: '5 мин' },
-        { id: 24, name: 'Орехово-фруктовая смесь', type: 'Перекус', cal: 220, protein: 6, fat: 16, carbs: 18, weight: '80г', desc: 'Миндаль 30г, курага 30г, чернослив 20г.', category: 'Веганские', price: 'Средняя', time: '2 мин' },
-        { id: 25, name: 'Смузи банановый', type: 'Перекус', cal: 180, protein: 4, fat: 2, carbs: 38, weight: '300мл', desc: 'Банан 120г, молоко 150мл, мёд 10г.', category: 'Веганские', price: 'Низкая', time: '5 мин' },
-        { id: 26, name: 'Хлебцы с сыром', type: 'Перекус', cal: 150, protein: 10, fat: 8, carbs: 12, weight: '70г', desc: 'Хлебцы ржаные 30г, сыр 30г, огурец 40г.', category: 'Яичные', price: 'Низкая', time: '5 мин' },
-        { id: 27, name: 'Варёное яйцо', type: 'Перекус', cal: 70, protein: 6, fat: 5, carbs: 0.5, weight: '50г', desc: '1 яйцо варёное.', category: 'Яичные', price: 'Низкая', time: '10 мин' },
-        { id: 28, name: 'Овощные палочки с хумусом', type: 'Перекус', cal: 140, protein: 6, fat: 8, carbs: 14, weight: '120г', desc: 'Морковь 60г, огурец 60г, хумус 30г.', category: 'Веганские', price: 'Средняя', time: '5 мин' },
-        { id: 29, name: 'Протеиновый батончик', type: 'Перекус', cal: 200, protein: 15, fat: 9, carbs: 18, weight: '60г', desc: 'Орехи + финики + протеин.', category: 'Веганские', price: 'Высокая', time: '2 мин' },
-        { id: 30, name: 'Кефир с отрубями', type: 'Перекус', cal: 120, protein: 8, fat: 4, carbs: 14, weight: '250мл', desc: 'Кефир 1% 200мл, отруби 20г, мёд 5г.', category: 'Яичные', price: 'Низкая', time: '3 мин' }
-    ];
-
-    // ================================================================
-    // 2. СОСТОЯНИЕ (загрузка/сохранение)
-    // ================================================================
-    function loadState(key, defaultVal) {
-        try {
-            const data = localStorage.getItem('shapeup_' + key);
-            return data ? JSON.parse(data) : defaultVal;
-        } catch { return defaultVal; }
-    }
-
-    function saveState(key, val) {
-        localStorage.setItem('shapeup_' + key, JSON.stringify(val));
-    }
-
-    const user = {
-        gender: loadState('gender', 'male'),
-        age: loadState('age', 31),
-        height: loadState('height', 180),
-        weight: loadState('weight', 87),
-        activity: loadState('activity', 1.375),
-        deficit: loadState('deficit', 0.85)
-    };
-
-    let weightHistory = loadState('weightHistory', []);
-    if (weightHistory.length === 0) {
-        weightHistory.push({ date: new Date().toLocaleDateString(), weight: user.weight });
-        saveState('weightHistory', weightHistory);
-    }
-
-    let waterDrank = loadState('waterDrank', 0);
-    const WATER_PER_GLASS = 250;
-
-    let foodLog = loadState('foodLog', []);
-    let customRecipes = loadState('customRecipes', []);
-
-    const defaultReminders = [
-        { id: 'rem_breakfast', label: '🍳 Завтрак', time: '08:00', enabled: true },
-        { id: 'rem_lunch', label: '🍲 Обед', time: '13:00', enabled: true },
-        { id: 'rem_dinner', label: '🍽 Ужин', time: '19:00', enabled: true },
-        { id: 'rem_water', label: '💧 Вода (каждые 2 ч)', time: '10:00', enabled: true, interval: 2 }
-    ];
-    let reminders = loadState('reminders', defaultReminders);
-    if (!loadState('reminders', null)) saveState('reminders', reminders);
-
-    let lastResult = loadState('lastResult', null);
-    let weekPlan = loadState('weekPlan', null);
-
-    function getAllRecipes() {
-        return [...BASE_RECIPES, ...customRecipes];
-    }
-
-    // ================================================================
-    // 3. ОСНОВНЫЕ ФУНКЦИИ
-    // ================================================================
-    function calculateCalories(gender, age, height, weight, activity, deficit) {
-        let bmr;
-        if (gender === 'male') bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-        else bmr = 10 * weight + 6.25 * height - 5 * age - 161;
-        const tdee = bmr * activity;
-        const dailyCal = Math.round(tdee * deficit);
-        const protein = Math.round(weight * 1.8);
-        const fat = Math.round(weight * 0.8);
-        const carbs = Math.round((dailyCal - (protein * 4 + fat * 9)) / 4);
-        return { bmr: Math.round(bmr), tdee: Math.round(tdee), dailyCal, protein, fat, carbs };
-    }
-
-    function generateWeekPlan() {
-        const recipes = getAllRecipes();
-        const breakfasts = recipes.filter(r => r.type === 'Завтрак');
-        const lunches = recipes.filter(r => r.type === 'Обед');
-        const dinners = recipes.filter(r => r.type === 'Ужин');
-        const snacks = recipes.filter(r => r.type === 'Перекус');
-
-        function pick(arr, i) { return arr[i % arr.length]; }
-
-        const days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
-        const week = [];
-        for (let i = 0; i < 7; i++) {
-            const b = pick(breakfasts, i);
-            const l = pick(lunches, i + 2);
-            const d = pick(dinners, i + 4);
-            const s1 = pick(snacks, i);
-            const s2 = pick(snacks, i + 3);
-            const meals = [
-                { type: 'Завтрак', name: b.name, cal: b.cal },
-                { type: 'Обед', name: l.name, cal: l.cal },
-                { type: 'Ужин', name: d.name, cal: d.cal },
-                { type: 'Перекус 1', name: s1.name, cal: s1.cal },
-                { type: 'Перекус 2', name: s2.name, cal: s2.cal }
-            ];
-            week.push({ day: days[i], meals: meals, totalCal: meals.reduce((sum, m) => sum + m.cal, 0) });
+        // ================================================================
+        // 2. СОСТОЯНИЕ
+        // ================================================================
+        function loadState(key, defaultVal) {
+            try {
+                const data = localStorage.getItem('shapeup_' + key);
+                return data ? JSON.parse(data) : defaultVal;
+            } catch { return defaultVal; }
         }
-        return week;
-    }
 
-    function generateShoppingList(week) {
-        const recipes = getAllRecipes();
-        const map = {};
-        const categoryMap = {
-            'Мясные': '🥩 Мясо и птица',
-            'Рыбные': '🐟 Рыба и морепродукты',
-            'Яичные': '🥚 Яйца и молочка',
-            'Каши': '🌾 Крупы и злаки',
-            'Овощные': '🥗 Овощи и зелень',
-            'Веганские': '🌱 Веганские продукты'
+        function saveState(key, val) {
+            localStorage.setItem('shapeup_' + key, JSON.stringify(val));
+        }
+
+        const user = {
+            gender: loadState('gender', 'male'),
+            age: loadState('age', 31),
+            height: loadState('height', 180),
+            weight: loadState('weight', 87),
+            activity: loadState('activity', 1.375),
+            deficit: loadState('deficit', 0.85)
         };
-        week.forEach(day => {
-            day.meals.forEach(meal => {
-                const recipe = recipes.find(r => r.name === meal.name);
-                if (!recipe) return;
-                const cat = categoryMap[recipe.category] || recipe.category;
-                if (!map[cat]) map[cat] = new Set();
-                const items = recipe.desc.split(',').map(s => s.trim());
-                items.forEach(item => { if (item.length > 2) map[cat].add(item); });
+
+        let weightHistory = loadState('weightHistory', []);
+        if (weightHistory.length === 0) {
+            weightHistory.push({ date: new Date().toLocaleDateString(), weight: user.weight });
+            saveState('weightHistory', weightHistory);
+        }
+
+        let waterDrank = loadState('waterDrank', 0);
+        const WATER_PER_GLASS = 250;
+        let foodLog = loadState('foodLog', []);
+        let customRecipes = loadState('customRecipes', []);
+
+        const defaultReminders = [
+            { id: 'rem_breakfast', label: '🍳 Завтрак', time: '08:00', enabled: true },
+            { id: 'rem_lunch', label: '🍲 Обед', time: '13:00', enabled: true },
+            { id: 'rem_dinner', label: '🍽 Ужин', time: '19:00', enabled: true },
+            { id: 'rem_water', label: '💧 Вода (каждые 2 ч)', time: '10:00', enabled: true, interval: 2 }
+        ];
+        let reminders = loadState('reminders', defaultReminders);
+        if (!loadState('reminders', null)) saveState('reminders', reminders);
+
+        let lastResult = loadState('lastResult', null);
+        let currentPlan = loadState('currentPlan', null);
+
+        function getAllRecipes() {
+            return [...BASE_RECIPES, ...customRecipes];
+        }
+
+        // ================================================================
+        // 3. РАСЧЁТ КАЛОРИЙ
+        // ================================================================
+        function calculateCalories(gender, age, height, weight, activity, deficit) {
+            let bmr;
+            if (gender === 'male') bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            else bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            const tdee = bmr * activity;
+            const dailyCal = Math.round(tdee * deficit);
+            const protein = Math.round(weight * 1.8);
+            const fat = Math.round(weight * 0.8);
+            const carbs = Math.round((dailyCal - (protein * 4 + fat * 9)) / 4);
+            return { bmr: Math.round(bmr), tdee: Math.round(tdee), dailyCal, protein, fat, carbs };
+        }
+
+        // ================================================================
+        // 4. УМНЫЙ И АВТО-ПОДБОР ПЛАНА
+        // ================================================================
+        function generateSmartPlan(prefs) {
+            const recipes = getAllRecipes();
+            let filtered = recipes;
+
+            // Фильтр по категориям
+            if (prefs.categories && prefs.categories.length > 0) {
+                filtered = filtered.filter(r => prefs.categories.includes(r.type));
+            }
+
+            // Фильтр по любимым продуктам
+            if (prefs.favFood && prefs.favFood !== 'all') {
+                filtered = filtered.filter(r =>
+                    r.desc.toLowerCase().includes(prefs.favFood.toLowerCase())
+                );
+            }
+
+            // Фильтр по исключениям
+            if (prefs.exclude && prefs.exclude !== 'none') {
+                filtered = filtered.filter(r =>
+                    !r.desc.toLowerCase().includes(prefs.exclude.toLowerCase())
+                );
+            }
+
+            // Фильтр по калорийности
+            if (prefs.calLevel === 'low') {
+                filtered = filtered.filter(r => r.cal <= 300);
+            } else if (prefs.calLevel === 'medium') {
+                filtered = filtered.filter(r => r.cal > 300 && r.cal <= 500);
+            } else if (prefs.calLevel === 'high') {
+                filtered = filtered.filter(r => r.cal > 500);
+            }
+
+            // Если рецептов мало — расширяем до всех
+            if (filtered.length < 10) filtered = recipes;
+
+            // Собираем план
+            return buildPlanFromRecipes(filtered);
+        }
+
+        function generateAutoPlan() {
+            const recipes = getAllRecipes();
+            // Перемешиваем
+            const shuffled = [...recipes].sort(() => Math.random() - 0.5);
+            return buildPlanFromRecipes(shuffled);
+        }
+
+        function buildPlanFromRecipes(recipes) {
+            const days = ['Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота', 'Воскресенье'];
+            const types = ['Завтрак', 'Обед', 'Ужин', 'Перекус'];
+            const plan = [];
+            const used = new Set();
+
+            // Для каждого дня выбираем по 4 приёма (завтрак, обед, ужин, перекус)
+            for (let d = 0; d < 7; d++) {
+                const dayMeals = [];
+                for (let t = 0; t < types.length; t++) {
+                    // Ищем рецепт этого типа, который ещё не использовали
+                    let available = recipes.filter(r =>
+                        r.type === types[t] &&
+                        !used.has(r.id)
+                    );
+                    // Если нет — берём любой этого типа (можно повтор)
+                    if (available.length === 0) {
+                        available = recipes.filter(r => r.type === types[t]);
+                    }
+                    // Если всё равно нет — берём любой рецепт
+                    if (available.length === 0) available = recipes;
+
+                    const picked = available[Math.floor(Math.random() * available.length)];
+                    used.add(picked.id);
+                    dayMeals.push({
+                        type: types[t],
+                        name: picked.name,
+                        cal: picked.cal,
+                        id: picked.id
+                    });
+                }
+                const totalCal = dayMeals.reduce((sum, m) => sum + m.cal, 0);
+                plan.push({
+                    day: days[d],
+                    meals: dayMeals,
+                    totalCal: totalCal
+                });
+            }
+            return plan;
+        }
+
+        // ================================================================
+        // 5. ОТРИСОВКА ПЛАНА
+        // ================================================================
+        function renderPlan(plan) {
+            const container = document.getElementById('planResult');
+            if (!plan || plan.length === 0) {
+                container.innerHTML = '<div style="color:#556;text-align:center;padding:20px;">Нажмите «Сгенерировать план»</div>';
+                return;
+            }
+            let html = '<div class="week-grid">';
+            plan.forEach(day => {
+                let mealsHtml = '';
+                day.meals.forEach(m => {
+                    mealsHtml += `
+                        <div class="meal-row">
+                            <span class="meal-type">${m.type}:</span> ${m.name}
+                            <span class="meal-cal">${m.cal} ккал</span>
+                        </div>
+                    `;
+                });
+                html += `
+                    <div class="day-card">
+                        <div class="day-name">${day.day}</div>
+                        ${mealsHtml}
+                        <div class="day-total">Итого: ${day.totalCal} ккал</div>
+                    </div>
+                `;
             });
-        });
-        const result = {};
-        for (const cat in map) result[cat] = Array.from(map[cat]);
-        return result;
-    }
-
-    // ================================================================
-    // 4. ГРАФИК ВЕСА (с анимацией)
-    // ================================================================
-    function drawWeightChart() {
-        const canvas = document.getElementById('weightChart');
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        const rect = canvas.parentElement.getBoundingClientRect();
-        const width = Math.min(rect.width - 20, 780);
-        const height = 260;
-        canvas.width = width;
-        canvas.height = height;
-
-        const data = weightHistory.slice(-14);
-        if (data.length < 2) {
-            ctx.fillStyle = '#556';
-            ctx.font = '16px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText('Добавьте больше записей веса', width / 2, height / 2);
-            return;
+            html += '</div>';
+            container.innerHTML = html;
         }
 
-        const padding = { top: 20, bottom: 28, left: 38, right: 18 };
-        const chartWidth = width - padding.left - padding.right;
-        const chartHeight = height - padding.top - padding.bottom;
-
-        const weights = data.map(d => d.weight);
-        const minWeight = Math.max(40, Math.floor(Math.min(...weights) - 2));
-        const maxWeight = Math.ceil(Math.max(...weights) + 2);
-
-        ctx.clearRect(0, 0, width, height);
-
-        // сетка
-        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
-        ctx.lineWidth = 1;
-        for (let i = 0; i < 5; i++) {
-            const y = padding.top + (i / 4) * chartHeight;
-            ctx.beginPath();
-            ctx.moveTo(padding.left, y);
-            ctx.lineTo(width - padding.right, y);
-            ctx.stroke();
-            const val = maxWeight - (i / 4) * (maxWeight - minWeight);
-            ctx.fillStyle = '#666';
-            ctx.font = '10px sans-serif';
-            ctx.textAlign = 'right';
-            ctx.fillText(Math.round(val) + 'кг', padding.left - 5, y + 3);
+        // ================================================================
+        // 6. РЕНДЕР ВСЕХ ВКЛАДОК
+        // ================================================================
+        function renderAll() {
+            renderCalculator();
+            renderWater();
+            renderFoodLog();
+            renderStats();
+            renderRecipes('all');
+            renderFoodSelect();
+            renderReminders();
+            if (currentPlan) renderPlan(currentPlan);
+            setTimeout(drawWeightChart, 400);
         }
 
-        // ось X
-        ctx.strokeStyle = 'rgba(255,255,255,0.08)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(padding.left, height - padding.bottom);
-        ctx.lineTo(width - padding.right, height - padding.bottom);
-        ctx.stroke();
+        function renderCalculator() {
+            const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user.deficit);
+            lastResult = result;
+            saveState('lastResult', result);
 
-        const step = chartWidth / (data.length - 1);
+            document.getElementById('resultNumbers').innerHTML = `
+                <div class="result-item"><span class="number">${result.dailyCal}</span><div class="desc">Калорий в день</div></div>
+                <div class="result-item"><span class="number">${result.tdee}</span><div class="desc">Поддержание</div></div>
+                <div class="result-item"><span class="number">${result.bmr}</span><div class="desc">Базовый обмен</div></div>
+                <div class="result-item"><span class="number">${Math.round(result.dailyCal/5)}</span><div class="desc">На приём</div></div>
+            `;
+            document.getElementById('bjuDisplay').innerHTML = `
+                <div class="bju-item protein"><div class="bju-value">${result.protein}г</div><div class="bju-label">🥩 Белки</div></div>
+                <div class="bju-item fat"><div class="bju-value">${result.fat}г</div><div class="bju-label">🥑 Жиры</div></div>
+                <div class="bju-item carbs"><div class="bju-value">${result.carbs}г</div><div class="bju-label">🍞 Углеводы</div></div>
+            `;
+            document.getElementById('calcResults').classList.remove('hidden');
+        }
 
-        // линия (анимированная)
-        const animateLine = (progress) => {
-            ctx.beginPath();
-            ctx.strokeStyle = '#00d4ff';
-            ctx.lineWidth = 2.5;
-            const count = Math.max(1, Math.floor(progress * data.length));
-            for (let i = 0; i < count; i++) {
-                const x = padding.left + i * step;
-                const y = padding.top + chartHeight - ((data[i].weight - minWeight) / (maxWeight - minWeight)) * chartHeight;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
+        function renderWater() {
+            const goal = Math.round(user.weight * 30);
+            document.getElementById('waterGoalDisplay').textContent = (goal / 1000).toFixed(1) + ' Л';
+            document.getElementById('waterDrank').textContent = waterDrank + ' мл';
+            const percent = Math.min(100, Math.round((waterDrank / goal) * 100));
+            document.getElementById('waterPercent').textContent = percent + '%';
+            document.getElementById('waterFill').style.width = percent + '%';
+
+            const glassesContainer = document.getElementById('waterGlasses');
+            const totalGlasses = Math.ceil(goal / WATER_PER_GLASS);
+            let html = '';
+            const filledCount = Math.floor(waterDrank / WATER_PER_GLASS);
+            for (let i = 0; i < totalGlasses; i++) {
+                const filled = i < filledCount ? 'filled' : '';
+                html += `<div class="glass ${filled}" onclick="toggleGlass(${i})" style="width:40px;height:50px;border:2px solid rgba(0,212,255,0.3);border-radius:6px 6px 14px 14px;background:${filled ? 'rgba(0,212,255,0.20)' : 'rgba(0,212,255,0.04)'};cursor:pointer;transition:all 0.25s ease;display:flex;align-items:center;justify-content:center;font-size:0.7rem;color:${filled ? '#00d4ff' : '#556'};box-shadow:${filled ? '0 0 20px rgba(0,212,255,0.12)' : 'none'};">${i+1}</div>`;
             }
-            ctx.stroke();
-            // точки
-            for (let i = 0; i < count; i++) {
-                const x = padding.left + i * step;
-                const y = padding.top + chartHeight - ((data[i].weight - minWeight) / (maxWeight - minWeight)) * chartHeight;
-                ctx.beginPath();
-                ctx.arc(x, y, 4, 0, 2 * Math.PI);
-                ctx.fillStyle = '#00d4ff';
-                ctx.fill();
-                ctx.strokeStyle = '#0b0b1a';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                // даты
-                ctx.fillStyle = '#666';
-                ctx.font = '8px sans-serif';
+            glassesContainer.innerHTML = html;
+        }
+
+        function renderFoodLog() {
+            const container = document.getElementById('foodLog');
+            if (foodLog.length === 0) {
+                container.innerHTML = '<div style="color:#556;text-align:center;padding:20px;">Сегодня ничего не добавлено</div>';
+            } else {
+                let html = '';
+                let totalCal = 0,
+                    totalProtein = 0,
+                    totalFat = 0,
+                    totalCarbs = 0;
+                foodLog.forEach((item, idx) => {
+                    totalCal += item.cal;
+                    totalProtein += item.protein || 0;
+                    totalFat += item.fat || 0;
+                    totalCarbs += item.carbs || 0;
+                    html += `
+                        <div class="log-item" style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(0,0,0,0.14);border-radius:12px;margin-bottom:6px;border:1px solid rgba(255,255,255,0.03);">
+                            <span class="log-name" style="font-weight:500;">${item.name}</span>
+                            <span class="log-cal" style="color:#889;font-size:0.85rem;">${item.cal} ккал</span>
+                            <button class="log-del" onclick="removeFood(${idx})" style="color:#ff6b6b;cursor:pointer;background:none;border:none;font-size:1.1rem;">✕</button>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+                document.getElementById('todayCal').textContent = totalCal;
+                document.getElementById('todayProtein').textContent = totalProtein;
+                document.getElementById('todayFat').textContent = totalFat;
+                document.getElementById('todayCarbs').textContent = totalCarbs;
+            }
+            saveState('foodLog', foodLog);
+        }
+
+        function renderStats() {
+            const overview = document.getElementById('statsOverview');
+            const lastWeek = weightHistory.slice(-7);
+            const avgWeight = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
+            const minWeight = lastWeek.length ? Math.min(...lastWeek.map(e => e.weight)) : user.weight;
+            const maxWeight = lastWeek.length ? Math.max(...lastWeek.map(e => e.weight)) : user.weight;
+
+            overview.innerHTML = `
+                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${user.weight}</div>
+                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Текущий вес</div>
+                </div>
+                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${avgWeight.toFixed(1)}</div>
+                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Средний за неделю</div>
+                </div>
+                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${minWeight}</div>
+                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Мин. вес</div>
+                </div>
+                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${maxWeight}</div>
+                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Макс. вес</div>
+                </div>
+                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${foodLog.length}</div>
+                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Записей сегодня</div>
+                </div>
+                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${customRecipes.length}</div>
+                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Своих рецептов</div>
+                </div>
+            `;
+
+            const historyContainer = document.getElementById('weightHistory');
+            if (weightHistory.length === 0) {
+                historyContainer.innerHTML = '<div style="color:#556;">Нет данных</div>';
+            } else {
+                let html = '';
+                const reversed = [...weightHistory].reverse().slice(0, 10);
+                reversed.forEach(entry => {
+                    html += `<div class="weight-entry" style="display:flex;justify-content:space-between;padding:6px 14px;background:rgba(0,0,0,0.12);border-radius:10px;font-size:0.9rem;">
+                        <span class="date" style="color:#889;">${entry.date}</span>
+                        <span class="weight" style="font-weight:600;color:#fff;">${entry.weight} кг</span>
+                    </div>`;
+                });
+                historyContainer.innerHTML = html;
+            }
+        }
+
+        function renderRecipes(filter = 'all') {
+            const recipes = getAllRecipes();
+            const grid = document.getElementById('recipeGrid');
+            let filtered;
+            if (filter === 'all') filtered = recipes;
+            else if (filter === 'Свои') filtered = customRecipes;
+            else filtered = recipes.filter(r => r.category === filter);
+
+            let html = '';
+            filtered.forEach(r => {
+                const isCustom = customRecipes.some(cr => cr.id === r.id);
+                html += `
+                    <div class="recipe-card" style="background:rgba(0,0,0,0.20);border-radius:16px;padding:14px 16px;border:1px solid rgba(255,255,255,0.04);transition:all 0.25s ease;">
+                        <div class="recipe-name" style="font-weight:600;color:#fff;font-size:0.95rem;">
+                            ${r.name}
+                            ${isCustom ? `<button class="recipe-del" onclick="deleteCustomRecipe(${r.id})" style="float:right;background:none;border:none;color:#ff6b6b;cursor:pointer;">✕</button>` : ''}
+                        </div>
+                        <div class="recipe-info" style="font-size:0.75rem;color:#889;">${r.type} · ${r.weight} · ⏱ ${r.time}</div>
+                        <div class="recipe-cal" style="color:#00d4ff;font-weight:700;font-size:0.9rem;">🔥 ${r.cal} ккал</div>
+                        <div class="recipe-info" style="font-size:0.75rem;color:#889;">Б:${r.protein}г · Ж:${r.fat}г · У:${r.carbs}г</div>
+                        <div class="recipe-tags" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;">
+                            <span class="tag" style="font-size:0.6rem;padding:2px 12px;border-radius:30px;background:rgba(255,255,255,0.05);color:#889;">${r.category}</span>
+                            <span class="tag" style="font-size:0.6rem;padding:2px 12px;border-radius:30px;background:rgba(255,255,255,0.05);color:#889;">${r.price}</span>
+                            ${isCustom ? '<span class="tag" style="font-size:0.6rem;padding:2px 12px;border-radius:30px;background:rgba(0,212,255,0.12);color:#00d4ff;">Моё</span>' : ''}
+                        </div>
+                        <div style="font-size:0.75rem;color:#556;margin-top:4px;">${r.desc}</div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html || '<div style="color:#556;text-align:center;padding:20px;">Нет рецептов</div>';
+        }
+
+        function renderFoodSelect() {
+            const select = document.getElementById('foodSelect');
+            const recipes = getAllRecipes();
+            select.innerHTML = '<option value="">-- Выберите рецепт --</option>';
+            recipes.forEach(r => {
+                const option = document.createElement('option');
+                option.value = r.id;
+                option.textContent = `${r.name} (${r.cal} ккал)`;
+                select.appendChild(option);
+            });
+            const custom = document.createElement('option');
+            custom.value = 'custom';
+            custom.textContent = '✏️ Своё блюдо (введите вручную)';
+            select.appendChild(custom);
+        }
+
+        function renderReminders() {
+            const container = document.getElementById('remindersContainer');
+            let html = '';
+            reminders.forEach((rem, idx) => {
+                html += `
+                    <div class="reminder-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(0,0,0,0.14);border-radius:14px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.04);flex-wrap:wrap;gap:10px;">
+                        <div class="rem-info" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                            <input type="checkbox" ${rem.enabled ? 'checked' : ''} onchange="toggleReminder(${idx})" style="accent-color:#00d4ff;width:18px;height:18px;cursor:pointer;">
+                            <span style="font-weight:500;">${rem.label}</span>
+                        </div>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            ${rem.interval ? `<span style="color:#889;font-size:0.8rem;">каждые ${rem.interval} ч</span>` :
+                                `<input type="time" value="${rem.time}" onchange="updateReminderTime(${idx}, this.value)" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#fff;padding:6px 12px;border-radius:10px;font-size:0.9rem;">`}
+                            <button class="btn-secondary btn-danger" style="padding:4px 10px;font-size:0.7rem;border-radius:40px;border:1.5px solid #ff6b6b;color:#ff6b6b;background:transparent;cursor:pointer;" onclick="removeReminder(${idx})">✕</button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += `
+                <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+                    <input type="text" id="newRemLabel" placeholder="Название" style="flex:1;padding:8px 14px;border-radius:12px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
+                    <input type="time" id="newRemTime" value="12:00" style="padding:8px 14px;border-radius:12px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
+                    <button class="btn-secondary btn-success" onclick="addReminder()" style="padding:8px 18px;border-radius:40px;border:1.5px solid #6bcb77;color:#6bcb77;background:transparent;cursor:pointer;transition:all 0.25s ease;font-weight:500;font-size:0.85rem;">➕ Добавить</button>
+                </div>
+            `;
+            container.innerHTML = html;
+        }
+
+        // ================================================================
+        // 7. ГРАФИК ВЕСА
+        // ================================================================
+        function drawWeightChart() {
+            const canvas = document.getElementById('weightChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const width = Math.min(rect.width - 20, 780);
+            const height = 260;
+            canvas.width = width;
+            canvas.height = height;
+
+            const data = weightHistory.slice(-14);
+            if (data.length < 2) {
+                ctx.fillStyle = '#556';
+                ctx.font = '16px sans-serif';
                 ctx.textAlign = 'center';
-                ctx.fillText(data[i].date.slice(0, 5), x, height - padding.bottom + 14);
+                ctx.fillText('Добавьте больше записей веса', width / 2, height / 2);
+                return;
             }
-        };
 
-        // анимация
-        let startTime = null;
-        const duration = 800;
-        function animate(timestamp) {
-            if (!startTime) startTime = timestamp;
-            const elapsed = timestamp - startTime;
-            const progress = Math.min(1, elapsed / duration);
+            const padding = { top: 20, bottom: 28, left: 38, right: 18 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            const weights = data.map(d => d.weight);
+            const minWeight = Math.max(40, Math.floor(Math.min(...weights) - 2));
+            const maxWeight = Math.ceil(Math.max(...weights) + 2);
+
             ctx.clearRect(0, 0, width, height);
-            // рисуем сетку заново
+
             ctx.strokeStyle = 'rgba(255,255,255,0.05)';
             ctx.lineWidth = 1;
             for (let i = 0; i < 5; i++) {
@@ -1263,6 +1383,7 @@ JAVASCRIPT — ВСЯ ЛОГИКА
                 ctx.textAlign = 'right';
                 ctx.fillText(Math.round(val) + 'кг', padding.left - 5, y + 3);
             }
+
             ctx.strokeStyle = 'rgba(255,255,255,0.08)';
             ctx.lineWidth = 1;
             ctx.beginPath();
@@ -1270,703 +1391,529 @@ JAVASCRIPT — ВСЯ ЛОГИКА
             ctx.lineTo(width - padding.right, height - padding.bottom);
             ctx.stroke();
 
-            animateLine(progress);
-            if (progress < 1) requestAnimationFrame(animate);
+            const step = chartWidth / (data.length - 1);
+
+            const animateLine = (progress) => {
+                ctx.beginPath();
+                ctx.strokeStyle = '#00d4ff';
+                ctx.lineWidth = 2.5;
+                const count = Math.max(1, Math.floor(progress * data.length));
+                for (let i = 0; i < count; i++) {
+                    const x = padding.left + i * step;
+                    const y = padding.top + chartHeight - ((data[i].weight - minWeight) / (maxWeight - minWeight)) *
+                    chartHeight;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+                for (let i = 0; i < count; i++) {
+                    const x = padding.left + i * step;
+                    const y = padding.top + chartHeight - ((data[i].weight - minWeight) / (maxWeight - minWeight)) *
+                    chartHeight;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                    ctx.fillStyle = '#00d4ff';
+                    ctx.fill();
+                    ctx.strokeStyle = '#0b0b1a';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.fillStyle = '#666';
+                    ctx.font = '8px sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(data[i].date.slice(0, 5), x, height - padding.bottom + 14);
+                }
+            };
+
+            let startTime = null;
+            const duration = 800;
+
+            function animate(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const progress = Math.min(1, elapsed / duration);
+                ctx.clearRect(0, 0, width, height);
+
+                ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < 5; i++) {
+                    const y = padding.top + (i / 4) * chartHeight;
+                    ctx.beginPath();
+                    ctx.moveTo(padding.left, y);
+                    ctx.lineTo(width - padding.right, y);
+                    ctx.stroke();
+                    const val = maxWeight - (i / 4) * (maxWeight - minWeight);
+                    ctx.fillStyle = '#666';
+                    ctx.font = '10px sans-serif';
+                    ctx.textAlign = 'right';
+                    ctx.fillText(Math.round(val) + 'кг', padding.left - 5, y + 3);
+                }
+                ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, height - padding.bottom);
+                ctx.lineTo(width - padding.right, height - padding.bottom);
+                ctx.stroke();
+
+                animateLine(progress);
+                if (progress < 1) requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
         }
-        requestAnimationFrame(animate);
-    }
 
-    // ================================================================
-    // 5. РЕНДЕР
-    // ================================================================
-    function renderAll() {
-        renderCalculator();
-        renderWeek();
-        renderWater();
-        renderFoodLog();
-        renderStats();
-        renderRecipes('all');
-        renderFoodSelect();
-        renderReminders();
-        setTimeout(drawWeightChart, 400);
-    }
-
-    function renderCalculator() {
-        const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user.deficit);
-        lastResult = result;
-        saveState('lastResult', result);
-
-        document.getElementById('resultNumbers').innerHTML = `
-            <div class="result-item"><span class="number" data-count="${result.dailyCal}">0</span><div class="desc">Калорий в день</div></div>
-            <div class="result-item"><span class="number" data-count="${result.tdee}">0</span><div class="desc">Поддержание</div></div>
-            <div class="result-item"><span class="number" data-count="${result.bmr}">0</span><div class="desc">Базовый обмен</div></div>
-            <div class="result-item"><span class="number" data-count="${Math.round(result.dailyCal/5)}">0</span><div class="desc">На приём</div></div>
-        `;
-        document.getElementById('bjuDisplay').innerHTML = `
-            <div class="bju-item protein"><div class="bju-value">${result.protein}г</div><div class="bju-label">🥩 Белки</div></div>
-            <div class="bju-item fat"><div class="bju-value">${result.fat}г</div><div class="bju-label">🥑 Жиры</div></div>
-            <div class="bju-item carbs"><div class="bju-value">${result.carbs}г</div><div class="bju-label">🍞 Углеводы</div></div>
-        `;
-        document.getElementById('calcResults').classList.remove('hidden');
-
-        // анимация цифр
-        document.querySelectorAll('#resultNumbers .number[data-count]').forEach(el => {
-            const target = parseInt(el.dataset.count);
-            animateNumber(el, target);
-        });
-    }
-
-    function animateNumber(el, target) {
-        let current = 0;
-        const duration = 700;
-        const start = performance.now();
-
-        function step(time) {
-            const progress = Math.min(1, (time - start) / duration);
-            current = Math.round(progress * target);
-            el.textContent = current;
-            if (progress < 1) requestAnimationFrame(step);
-            else el.textContent = target;
-        }
-        requestAnimationFrame(step);
-    }
-
-    function renderWeek() {
-        if (!weekPlan) {
-            weekPlan = generateWeekPlan();
-            saveState('weekPlan', weekPlan);
-        }
-        const container = document.getElementById('weekPlanContainer');
-        container.innerHTML = '<div class="week-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;"></div>';
-        const grid = container.querySelector('.week-grid');
-        weekPlan.forEach(day => {
-            const card = document.createElement('div');
-            card.style.cssText = 'background:rgba(0,0,0,0.18);border-radius:16px;padding:14px 16px;border:1px solid rgba(255,255,255,0.04);';
-            let mealsHtml = '';
-            day.meals.forEach(m => {
-                mealsHtml += `<div style="font-size:0.85rem;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03);">
-                    <span style="color:#889;">${m.type}:</span> ${m.name} <span style="color:#889;float:right;">${m.cal} ккал</span>
-                </div>`;
-            });
-            card.innerHTML = `
-                <div style="font-weight:700;color:#00d4ff;font-size:1rem;margin-bottom:8px;">${day.day}</div>
-                ${mealsHtml}
-                <div style="margin-top:8px;color:#00d4ff;font-weight:700;text-align:right;">Итого: ${day.totalCal} ккал</div>
-            `;
-            grid.appendChild(card);
-        });
-
-        const shopping = generateShoppingList(weekPlan);
-        const shopContainer = document.getElementById('shoppingList');
-        let html = '<div class="shopping-grid">';
-        for (const cat in shopping) {
-            html += `<div class="shopping-category"><div class="cat-title">${cat}</div>`;
-            shopping[cat].forEach(item => {
-                const id = 'shop_' + item.replace(/\s/g, '_');
-                html += `
-                    <div class="shopping-item" id="${id}">
-                        <input type="checkbox" onchange="toggleShopItem('${id}')">
-                        <span>${item}</span>
-                    </div>
-                `;
-            });
-            html += '</div>';
-        }
-        html += '</div>';
-        shopContainer.innerHTML = html;
-
-        const checkedItems = loadState('shoppingChecked', []);
-        checkedItems.forEach(id => {
-            const el = document.getElementById(id);
-            if (el) { const cb = el.querySelector('input[type="checkbox"]'); if (cb) { cb.checked = true;
-                    el.classList.add('checked'); } }
-        });
-    }
-
-    function renderWater() {
-        const goal = Math.round(user.weight * 30);
-        document.getElementById('waterGoalDisplay').textContent = (goal / 1000).toFixed(1) + ' Л';
-        document.getElementById('waterDrank').textContent = waterDrank + ' мл';
-        const percent = Math.min(100, Math.round((waterDrank / goal) * 100));
-        document.getElementById('waterPercent').textContent = percent + '%';
-        document.getElementById('waterFill').style.width = percent + '%';
-
-        const glassesContainer = document.getElementById('waterGlasses');
-        const totalGlasses = Math.ceil(goal / WATER_PER_GLASS);
-        let html = '';
-        const filledCount = Math.floor(waterDrank / WATER_PER_GLASS);
-        for (let i = 0; i < totalGlasses; i++) {
-            const filled = i < filledCount ? 'filled' : '';
-            html += `<div class="glass ${filled}" onclick="toggleGlass(${i})">${i+1}</div>`;
-        }
-        glassesContainer.innerHTML = html;
-    }
-
-    function renderFoodLog() {
-        const container = document.getElementById('foodLog');
-        if (foodLog.length === 0) {
-            container.innerHTML = '<div style="color:#556;text-align:center;padding:20px;">Сегодня ничего не добавлено</div>';
-        } else {
-            let html = '';
-            let totalCal = 0,
-                totalProtein = 0,
-                totalFat = 0,
-                totalCarbs = 0;
-            foodLog.forEach((item, idx) => {
-                totalCal += item.cal;
-                totalProtein += item.protein || 0;
-                totalFat += item.fat || 0;
-                totalCarbs += item.carbs || 0;
-                html += `
-                    <div class="log-item">
-                        <span class="log-name">${item.name}</span>
-                        <span class="log-cal">${item.cal} ккал</span>
-                        <button class="log-del" onclick="removeFood(${idx})">✕</button>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
-            document.getElementById('todayCal').textContent = totalCal;
-            document.getElementById('todayProtein').textContent = totalProtein;
-            document.getElementById('todayFat').textContent = totalFat;
-            document.getElementById('todayCarbs').textContent = totalCarbs;
-        }
-        saveState('foodLog', foodLog);
-    }
-
-    function renderStats() {
-        const overview = document.getElementById('statsOverview');
-        const lastWeek = weightHistory.slice(-7);
-        const avgWeight = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
-        const minWeight = lastWeek.length ? Math.min(...lastWeek.map(e => e.weight)) : user.weight;
-        const maxWeight = lastWeek.length ? Math.max(...lastWeek.map(e => e.weight)) : user.weight;
-
-        overview.innerHTML = `
-            <div class="stats-card"><div class="stat-number">${user.weight}</div><div class="stat-label">Текущий вес</div></div>
-            <div class="stats-card"><div class="stat-number">${avgWeight.toFixed(1)}</div><div class="stat-label">Средний за неделю</div></div>
-            <div class="stats-card"><div class="stat-number">${minWeight}</div><div class="stat-label">Мин. вес</div></div>
-            <div class="stats-card"><div class="stat-number">${maxWeight}</div><div class="stat-label">Макс. вес</div></div>
-            <div class="stats-card"><div class="stat-number">${foodLog.length}</div><div class="stat-label">Записей сегодня</div></div>
-            <div class="stats-card"><div class="stat-number">${customRecipes.length}</div><div class="stat-label">Своих рецептов</div></div>
-        `;
-
-        const historyContainer = document.getElementById('weightHistory');
-        if (weightHistory.length === 0) {
-            historyContainer.innerHTML = '<div style="color:#556;">Нет данных</div>';
-        } else {
-            let html = '';
-            const reversed = [...weightHistory].reverse().slice(0, 10);
-            reversed.forEach(entry => {
-                html += `<div class="weight-entry"><span class="date">${entry.date}</span><span class="weight">${entry.weight} кг</span></div>`;
-            });
-            historyContainer.innerHTML = html;
-        }
-    }
-
-    function renderRecipes(filter = 'all') {
-        const recipes = getAllRecipes();
-        const grid = document.getElementById('recipeGrid');
-        let filtered;
-        if (filter === 'all') filtered = recipes;
-        else if (filter === 'Свои') filtered = customRecipes;
-        else filtered = recipes.filter(r => r.category === filter);
-
-        let html = '';
-        filtered.forEach(r => {
-            const isCustom = customRecipes.some(cr => cr.id === r.id);
-            html += `
-                <div class="recipe-card">
-                    <div class="recipe-name">
-                        ${r.name}
-                        ${isCustom ? `<button class="recipe-del" onclick="deleteCustomRecipe(${r.id})" style="float:right;background:none;border:none;color:#ff6b6b;cursor:pointer;">✕</button>` : ''}
-                    </div>
-                    <div class="recipe-info">${r.type} · ${r.weight} · ⏱ ${r.time}</div>
-                    <div class="recipe-cal">🔥 ${r.cal} ккал</div>
-                    <div class="recipe-info">Б:${r.protein}г · Ж:${r.fat}г · У:${r.carbs}г</div>
-                    <div class="recipe-tags">
-                        <span class="tag">${r.category}</span>
-                        <span class="tag">${r.price}</span>
-                        ${isCustom ? '<span class="tag" style="background:rgba(0,212,255,0.12);color:#00d4ff;">Моё</span>' : ''}
-                    </div>
-                    <div style="font-size:0.75rem;color:#556;margin-top:4px;">${r.desc}</div>
-                </div>
-            `;
-        });
-        grid.innerHTML = html || '<div style="color:#556;text-align:center;padding:20px;">Нет рецептов</div>';
-    }
-
-    function renderFoodSelect() {
-        const select = document.getElementById('foodSelect');
-        const recipes = getAllRecipes();
-        select.innerHTML = '<option value="">-- Выберите рецепт --</option>';
-        recipes.forEach(r => {
-            const option = document.createElement('option');
-            option.value = r.id;
-            option.textContent = `${r.name} (${r.cal} ккал)`;
-            select.appendChild(option);
-        });
-        const custom = document.createElement('option');
-        custom.value = 'custom';
-        custom.textContent = '✏️ Своё блюдо (введите вручную)';
-        select.appendChild(custom);
-    }
-
-    // ================================================================
-    // 6. НАПОМИНАНИЯ
-    // ================================================================
-    function renderReminders() {
-        const container = document.getElementById('remindersContainer');
-        let html = '';
-        reminders.forEach((rem, idx) => {
-            html += `
-                <div class="reminder-item">
-                    <div class="rem-info">
-                        <input type="checkbox" ${rem.enabled ? 'checked' : ''} onchange="toggleReminder(${idx})">
-                        <span style="font-weight:500;">${rem.label}</span>
-                    </div>
-                    <div style="display:flex;gap:8px;align-items:center;">
-                        ${rem.interval ? `<span style="color:#889;font-size:0.8rem;">каждые ${rem.interval} ч</span>` :
-                            `<input type="time" value="${rem.time}" onchange="updateReminderTime(${idx}, this.value)">`}
-                        <button class="btn-secondary btn-danger" style="padding:4px 10px;font-size:0.7rem;" onclick="removeReminder(${idx})">✕</button>
-                    </div>
-                </div>
-            `;
-        });
-        html += `
-            <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
-                <input type="text" id="newRemLabel" placeholder="Название" style="flex:1;padding:8px 14px;border-radius:12px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
-                <input type="time" id="newRemTime" value="12:00" style="padding:8px 14px;border-radius:12px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
-                <button class="btn-secondary btn-success" onclick="addReminder()">➕ Добавить</button>
-            </div>
-        `;
-        container.innerHTML = html;
-    }
-
-    window.toggleReminder = function(idx) {
-        reminders[idx].enabled = !reminders[idx].enabled;
-        saveState('reminders', reminders);
-        renderReminders();
-        scheduleReminders();
-    };
-    window.updateReminderTime = function(idx, time) {
-        reminders[idx].time = time;
-        saveState('reminders', reminders);
-        scheduleReminders();
-    };
-    window.removeReminder = function(idx) {
-        if (confirm('Удалить напоминание?')) {
-            reminders.splice(idx, 1);
+        // ================================================================
+        // 8. НАПОМИНАНИЯ
+        // ================================================================
+        window.toggleReminder = function(idx) {
+            reminders[idx].enabled = !reminders[idx].enabled;
             saveState('reminders', reminders);
             renderReminders();
             scheduleReminders();
-        }
-    };
-    window.addReminder = function() {
-        const label = document.getElementById('newRemLabel').value.trim();
-        const time = document.getElementById('newRemTime').value;
-        if (!label || !time) { alert('Заполните все поля'); return; }
-        reminders.push({ id: 'rem_' + Date.now(), label, time, enabled: true });
-        saveState('reminders', reminders);
-        renderReminders();
-        scheduleReminders();
-        document.getElementById('newRemLabel').value = '';
-    };
-
-    let reminderIntervals = [];
-
-    function scheduleReminders() {
-        reminderIntervals.forEach(clearInterval);
-        reminderIntervals = [];
-        if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
-
-        const now = new Date();
-        reminders.forEach(rem => {
-            if (!rem.enabled) return;
-            if (rem.interval) {
-                const intervalMs = rem.interval * 60 * 60 * 1000;
-                const id = setInterval(() => sendNotification(rem.label, 'Пора выпить воды! 💧'), intervalMs);
-                reminderIntervals.push(id);
-                setTimeout(() => sendNotification(rem.label, 'Пора выпить воды! 💧'), 5 * 60 * 1000);
-            } else {
-                const [hours, minutes] = rem.time.split(':').map(Number);
-                const target = new Date();
-                target.setHours(hours, minutes, 0, 0);
-                if (target <= now) target.setDate(target.getDate() + 1);
-                const delay = target - now;
-                const id = setTimeout(() => {
-                    sendNotification(rem.label, `Время ${rem.label}! 🍽️`);
-                    const nextId = setInterval(() => sendNotification(rem.label, `Время ${rem.label}! 🍽️`), 24 * 60 * 60 * 1000);
-                    reminderIntervals.push(nextId);
-                }, delay);
-                reminderIntervals.push(id);
-            }
-        });
-    }
-
-    function sendNotification(title, body) {
-        if ('Notification' in window && Notification.permission === 'granted') {
-            try { new Notification('🔔 ShapeUp: ' + title, { body, icon: '🍽️' }); } catch (e) { console.log('🔔', title, body); }
-        } else if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
-        } else {
-            console.log('🔔', title, body);
-        }
-    }
-
-    // ================================================================
-    // 7. ЭКСПОРТ/ИМПОРТ
-    // ================================================================
-    document.getElementById('exportBtn')?.addEventListener('click', () => {
-        const data = {
-            version: '2.0',
-            exportedAt: new Date().toISOString(),
-            user,
-            weightHistory,
-            waterDrank,
-            foodLog,
-            customRecipes,
-            reminders,
-            shoppingChecked: loadState('shoppingChecked', [])
         };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `shapeup_backup_${new Date().toISOString().slice(0,10)}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
-    });
 
-    document.getElementById('importFile')?.addEventListener('change', function(e) {
-        const file = this.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(ev) {
-            try {
-                const data = JSON.parse(ev.target.result);
-                if (!data.user || !data.weightHistory) { alert('Неверный формат'); return; }
-                Object.assign(user, data.user);
-                saveState('gender', user.gender);
-                saveState('age', user.age);
-                saveState('height', user.height);
-                saveState('weight', user.weight);
-                saveState('activity', user.activity);
-                saveState('deficit', user.deficit);
-                weightHistory = data.weightHistory;
-                saveState('weightHistory', weightHistory);
-                if (data.waterDrank !== undefined) { waterDrank = data.waterDrank;
-                    saveState('waterDrank', waterDrank); }
-                if (data.foodLog) { foodLog = data.foodLog;
-                    saveState('foodLog', foodLog); }
-                if (data.customRecipes) { customRecipes = data.customRecipes;
-                    saveState('customRecipes', customRecipes); }
-                if (data.reminders) { reminders = data.reminders;
-                    saveState('reminders', reminders); }
-                if (data.shoppingChecked) saveState('shoppingChecked', data.shoppingChecked);
-                restoreUI();
-                renderAll();
+        window.updateReminderTime = function(idx, time) {
+            reminders[idx].time = time;
+            saveState('reminders', reminders);
+            scheduleReminders();
+        };
+
+        window.removeReminder = function(idx) {
+            if (confirm('Удалить напоминание?')) {
+                reminders.splice(idx, 1);
+                saveState('reminders', reminders);
+                renderReminders();
                 scheduleReminders();
-                alert('✅ Бекап загружен!');
-            } catch (err) { alert('Ошибка: ' + err.message); }
+            }
         };
-        reader.readAsText(file);
-        this.value = '';
-    });
 
-    // ================================================================
-    // 8. ОБРАБОТЧИКИ СОБЫТИЙ
-    // ================================================================
+        window.addReminder = function() {
+            const label = document.getElementById('newRemLabel').value.trim();
+            const time = document.getElementById('newRemTime').value;
+            if (!label || !time) { alert('Заполните все поля'); return; }
+            reminders.push({ id: 'rem_' + Date.now(), label, time, enabled: true });
+            saveState('reminders', reminders);
+            renderReminders();
+            scheduleReminders();
+            document.getElementById('newRemLabel').value = '';
+        };
 
-    // --- Шторка ---
-    const burgerBtn = document.getElementById('burgerBtn');
-    const sidebar = document.getElementById('sidebar');
-    const overlay = document.getElementById('overlay');
-    const sidebarClose = document.getElementById('sidebarClose');
+        let reminderIntervals = [];
 
-    function openSidebar() {
-        sidebar.classList.add('open');
-        overlay.classList.add('open');
-        burgerBtn.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
+        function scheduleReminders() {
+            reminderIntervals.forEach(clearInterval);
+            reminderIntervals = [];
+            if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
 
-    function closeSidebar() {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('open');
-        burgerBtn.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-
-    burgerBtn.addEventListener('click', openSidebar);
-    sidebarClose.addEventListener('click', closeSidebar);
-    overlay.addEventListener('click', closeSidebar);
-
-    // --- Навигация по шторке ---
-    document.querySelectorAll('.nav-list a[data-tab]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const tabId = this.dataset.tab;
-
-            // скрываем все вкладки
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            // показываем нужную
-            const target = document.getElementById(tabId);
-            if (target) target.classList.add('active');
-
-            // обновляем активный пункт меню
-            document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
-            this.classList.add('active');
-
-            // закрываем шторку
-            closeSidebar();
-
-            // если выбрана статистика — рисуем график
-            if (tabId === 'tabStats') setTimeout(drawWeightChart, 300);
-        });
-    });
-
-    // --- Ползунки ---
-    ['age', 'height', 'weight'].forEach(param => {
-        const range = document.getElementById(param + 'Range');
-        const display = document.getElementById(param + 'Value');
-        range.addEventListener('input', () => {
-            const val = parseInt(range.value);
-            display.textContent = val;
-            user[param] = val;
-            saveState(param, val);
-        });
-    });
-
-    document.getElementById('genderMale').addEventListener('click', function() {
-        document.querySelectorAll('#tabCalc .btn-group .btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        user.gender = 'male';
-        saveState('gender', 'male');
-    });
-    document.getElementById('genderFemale').addEventListener('click', function() {
-        document.querySelectorAll('#tabCalc .btn-group .btn').forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-        user.gender = 'female';
-        saveState('gender', 'female');
-    });
-
-    document.querySelectorAll('#activityGroup .btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('#activityGroup .btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            user.activity = parseFloat(this.dataset.activity);
-            saveState('activity', user.activity);
-        });
-    });
-
-    document.querySelectorAll('#deficitGroup .btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('#deficitGroup .btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            user.deficit = parseFloat(this.dataset.deficit);
-            saveState('deficit', user.deficit);
-        });
-    });
-
-    document.getElementById('calculateBtn').addEventListener('click', () => {
-        user.age = parseInt(document.getElementById('ageRange').value);
-        user.height = parseInt(document.getElementById('heightRange').value);
-        user.weight = parseInt(document.getElementById('weightRange').value);
-        saveState('age', user.age);
-        saveState('height', user.height);
-        saveState('weight', user.weight);
-        weekPlan = generateWeekPlan();
-        saveState('weekPlan', weekPlan);
-        renderAll();
-        // переключиться на главную
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.getElementById('tabCalc').classList.add('active');
-        document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
-        document.querySelector('.nav-list a[data-tab="tabCalc"]').classList.add('active');
-    });
-
-    // --- Вода ---
-    window.toggleGlass = function(index) {
-        const goal = user.weight * 30;
-        const filledCount = Math.floor(waterDrank / WATER_PER_GLASS);
-        if (index < filledCount) {
-            waterDrank = Math.max(0, waterDrank - WATER_PER_GLASS);
-        } else if (index === filledCount) {
-            waterDrank = Math.min(goal, waterDrank + WATER_PER_GLASS);
+            const now = new Date();
+            reminders.forEach(rem => {
+                if (!rem.enabled) return;
+                if (rem.interval) {
+                    const intervalMs = rem.interval * 60 * 60 * 1000;
+                    const id = setInterval(() => sendNotification(rem.label, 'Пора выпить воды! 💧'), intervalMs);
+                    reminderIntervals.push(id);
+                    setTimeout(() => sendNotification(rem.label, 'Пора выпить воды! 💧'), 5 * 60 * 1000);
+                } else {
+                    const [hours, minutes] = rem.time.split(':').map(Number);
+                    const target = new Date();
+                    target.setHours(hours, minutes, 0, 0);
+                    if (target <= now) target.setDate(target.getDate() + 1);
+                    const delay = target - now;
+                    const id = setTimeout(() => {
+                        sendNotification(rem.label, `Время ${rem.label}! 🍽️`);
+                        const nextId = setInterval(() => sendNotification(rem.label, `Время ${rem.label}! 🍽️`),
+                            24 * 60 * 60 * 1000);
+                        reminderIntervals.push(nextId);
+                    }, delay);
+                    reminderIntervals.push(id);
+                }
+            });
         }
-        saveState('waterDrank', waterDrank);
-        renderWater();
-    };
 
-    document.getElementById('resetWaterBtn').addEventListener('click', () => {
-        waterDrank = 0;
-        saveState('waterDrank', 0);
-        renderWater();
-    });
-    document.getElementById('waterReminderBtn').addEventListener('click', () => {
-        sendNotification('💧 Вода', 'Не забудьте выпить стакан воды!');
-    });
+        function sendNotification(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                try { new Notification('🔔 ShapeUp: ' + title, { body, icon: '🍽️' }); } catch (e) { console.log('🔔',
+                        title, body); }
+            } else if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            } else {
+                console.log('🔔', title, body);
+            }
+        }
 
-    // --- Дневник ---
-    document.getElementById('addFoodBtn').addEventListener('click', () => {
-        const select = document.getElementById('foodSelect');
-        const val = select.value;
-        if (!val) return;
-        if (val === 'custom') {
+        // ================================================================
+        // 9. ОБРАБОТЧИКИ СОБЫТИЙ
+        // ================================================================
+
+        // --- Шторка ---
+        const burgerBtn = document.getElementById('burgerBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const sidebarClose = document.getElementById('sidebarClose');
+
+        function openSidebar() {
+            sidebar.classList.add('open');
+            overlay.classList.add('open');
+            burgerBtn.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('open');
+            burgerBtn.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        burgerBtn.addEventListener('click', openSidebar);
+        sidebarClose.addEventListener('click', closeSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        document.querySelectorAll('.nav-list a[data-tab]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const tabId = this.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                const target = document.getElementById(tabId);
+                if (target) target.classList.add('active');
+                document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+                closeSidebar();
+                if (tabId === 'tabStats') setTimeout(drawWeightChart, 300);
+            });
+        });
+
+        // --- Ползунки ---
+        ['age', 'height', 'weight'].forEach(param => {
+            const range = document.getElementById(param + 'Range');
+            const display = document.getElementById(param + 'Value');
+            range.addEventListener('input', () => {
+                const val = parseInt(range.value);
+                display.textContent = val;
+                user[param] = val;
+                saveState(param, val);
+            });
+        });
+
+        document.getElementById('genderMale').addEventListener('click', function() {
+            document.querySelectorAll('#tabCalc .btn-group .btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            user.gender = 'male';
+            saveState('gender', 'male');
+        });
+        document.getElementById('genderFemale').addEventListener('click', function() {
+            document.querySelectorAll('#tabCalc .btn-group .btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            user.gender = 'female';
+            saveState('gender', 'female');
+        });
+
+        document.querySelectorAll('#activityGroup .btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#activityGroup .btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                user.activity = parseFloat(this.dataset.activity);
+                saveState('activity', user.activity);
+            });
+        });
+
+        document.querySelectorAll('#deficitGroup .btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#deficitGroup .btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                user.deficit = parseFloat(this.dataset.deficit);
+                saveState('deficit', user.deficit);
+            });
+        });
+
+        document.getElementById('calculateBtn').addEventListener('click', () => {
+            user.age = parseInt(document.getElementById('ageRange').value);
+            user.height = parseInt(document.getElementById('heightRange').value);
+            user.weight = parseInt(document.getElementById('weightRange').value);
+            saveState('age', user.age);
+            saveState('height', user.height);
+            saveState('weight', user.weight);
+            renderAll();
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('tabCalc').classList.add('active');
+            document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
+            document.querySelector('.nav-list a[data-tab="tabCalc"]').classList.add('active');
+        });
+
+        // --- Вода ---
+        window.toggleGlass = function(index) {
+            const goal = user.weight * 30;
+            const filledCount = Math.floor(waterDrank / WATER_PER_GLASS);
+            if (index < filledCount) {
+                waterDrank = Math.max(0, waterDrank - WATER_PER_GLASS);
+            } else if (index === filledCount) {
+                waterDrank = Math.min(goal, waterDrank + WATER_PER_GLASS);
+            }
+            saveState('waterDrank', waterDrank);
+            renderWater();
+        };
+
+        document.getElementById('resetWaterBtn').addEventListener('click', () => {
+            waterDrank = 0;
+            saveState('waterDrank', 0);
+            renderWater();
+        });
+        document.getElementById('waterReminderBtn').addEventListener('click', () => {
+            sendNotification('💧 Вода', 'Не забудьте выпить стакан воды!');
+        });
+
+        // --- Дневник ---
+        document.getElementById('addFoodBtn').addEventListener('click', () => {
+            const select = document.getElementById('foodSelect');
+            const val = select.value;
+            if (!val) return;
+            if (val === 'custom') {
+                const name = prompt('Название блюда:');
+                if (!name) return;
+                const cal = parseInt(prompt('Калорийность (ккал):')) || 0;
+                const protein = parseInt(prompt('Белки (г):')) || 0;
+                const fat = parseInt(prompt('Жиры (г):')) || 0;
+                const carbs = parseInt(prompt('Углеводы (г):')) || 0;
+                foodLog.push({ name, cal, protein, fat, carbs });
+            } else {
+                const recipes = getAllRecipes();
+                const recipe = recipes.find(r => r.id == val);
+                if (recipe) foodLog.push({ name: recipe.name, cal: recipe.cal, protein: recipe.protein, fat: recipe.fat,
+                    carbs: recipe.carbs });
+            }
+            saveState('foodLog', foodLog);
+            renderFoodLog();
+            select.value = '';
+        });
+
+        window.removeFood = function(index) {
+            foodLog.splice(index, 1);
+            saveState('foodLog', foodLog);
+            renderFoodLog();
+        };
+
+        document.getElementById('resetFoodBtn').addEventListener('click', () => {
+            if (confirm('Очистить дневник?')) { foodLog = [];
+                saveState('foodLog', foodLog);
+                renderFoodLog(); }
+        });
+
+        // --- Вес ---
+        document.getElementById('addWeightBtn').addEventListener('click', () => {
+            const input = document.getElementById('newWeightInput');
+            const weight = parseFloat(input.value);
+            if (!weight || weight < 30 || weight > 250) { alert('Введите вес (30-250 кг)'); return; }
+            weightHistory.push({ date: new Date().toLocaleDateString(), weight });
+            saveState('weightHistory', weightHistory);
+            user.weight = weight;
+            document.getElementById('weightRange').value = weight;
+            document.getElementById('weightValue').textContent = weight;
+            saveState('weight', weight);
+            input.value = '';
+            renderStats();
+            renderCalculator();
+            drawWeightChart();
+        });
+
+        // --- Рецепты ---
+        document.querySelectorAll('#recipeFilters .filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('#recipeFilters .filter-btn').forEach(b => b.style.background =
+                    'transparent');
+                this.style.background = 'rgba(0,212,255,0.1)';
+                renderRecipes(this.dataset.filter);
+            });
+        });
+        document.querySelector('#recipeFilters .filter-btn[data-filter="all"]').style.background = 'rgba(0,212,255,0.1)';
+
+        document.getElementById('addRecipeBtn').addEventListener('click', () => {
             const name = prompt('Название блюда:');
             if (!name) return;
             const cal = parseInt(prompt('Калорийность (ккал):')) || 0;
             const protein = parseInt(prompt('Белки (г):')) || 0;
             const fat = parseInt(prompt('Жиры (г):')) || 0;
             const carbs = parseInt(prompt('Углеводы (г):')) || 0;
-            foodLog.push({ name, cal, protein, fat, carbs });
-        } else {
-            const recipes = getAllRecipes();
-            const recipe = recipes.find(r => r.id == val);
-            if (recipe) foodLog.push({ name: recipe.name, cal: recipe.cal, protein: recipe.protein, fat: recipe.fat,
-                carbs: recipe.carbs });
+            const weight = prompt('Вес порции (г/мл):') || '200г';
+            const desc = prompt('Описание:') || '';
+            const category = prompt('Категория (Мясные/Рыбные/Яичные/Каши/Овощные/Веганские):') || 'Овощные';
+            const price = prompt('Цена (Низкая/Средняя/Высокая):') || 'Средняя';
+            const time = prompt('Время приготовления:') || '20 мин';
+            const type = prompt('Тип (Завтрак/Обед/Ужин/Перекус):') || 'Перекус';
+
+            const newRecipe = { id: Date.now(), name, cal, protein, fat, carbs, weight, desc, category, price, time,
+                type };
+            customRecipes.push(newRecipe);
+            saveState('customRecipes', customRecipes);
+            renderRecipes('all');
+            renderFoodSelect();
+            alert('✅ Рецепт добавлен!');
+        });
+
+        window.deleteCustomRecipe = function(id) {
+            if (!confirm('Удалить рецепт?')) return;
+            customRecipes = customRecipes.filter(r => r.id !== id);
+            saveState('customRecipes', customRecipes);
+            renderRecipes('all');
+            renderFoodSelect();
+        };
+
+        // --- ПЛАН ПИТАНИЯ (УМНЫЙ + АВТО) ---
+        let currentMode = 'smart'; // 'smart' или 'auto'
+
+        document.getElementById('modeSmart').addEventListener('click', function() {
+            currentMode = 'smart';
+            document.getElementById('smartBlock').classList.remove('hidden');
+            document.getElementById('autoBlock').classList.add('hidden');
+            this.style.borderColor = '#6bcb77';
+            this.style.color = '#6bcb77';
+            document.getElementById('modeAuto').style.borderColor = 'rgba(255,255,255,0.08)';
+            document.getElementById('modeAuto').style.color = '#ccc';
+            // Перегенерировать план автоматически
+            generatePlan();
+        });
+
+        document.getElementById('modeAuto').addEventListener('click', function() {
+            currentMode = 'auto';
+            document.getElementById('smartBlock').classList.add('hidden');
+            document.getElementById('autoBlock').classList.remove('hidden');
+            this.style.borderColor = '#6bcb77';
+            this.style.color = '#6bcb77';
+            document.getElementById('modeSmart').style.borderColor = 'rgba(255,255,255,0.08)';
+            document.getElementById('modeSmart').style.color = '#ccc';
+            generatePlan();
+        });
+
+        function generatePlan() {
+            if (currentMode === 'smart') {
+                const categories = Array.from(document.querySelectorAll('#catFilter input[type="checkbox"]:checked'))
+                    .map(cb => cb.value);
+                const favFood = document.getElementById('favFood').value;
+                const exclude = document.getElementById('excludeFood').value;
+                const calLevel = document.getElementById('calLevel').value;
+
+                const prefs = { categories, favFood, exclude, calLevel };
+                currentPlan = generateSmartPlan(prefs);
+            } else {
+                currentPlan = generateAutoPlan();
+            }
+            saveState('currentPlan', currentPlan);
+            renderPlan(currentPlan);
         }
-        saveState('foodLog', foodLog);
-        renderFoodLog();
-        select.value = '';
-    });
 
-    window.removeFood = function(index) {
-        foodLog.splice(index, 1);
-        saveState('foodLog', foodLog);
-        renderFoodLog();
-    };
+        document.getElementById('generatePlanBtn').addEventListener('click', generatePlan);
 
-    document.getElementById('resetFoodBtn').addEventListener('click', () => {
-        if (confirm('Очистить дневник?')) { foodLog = [];
-            saveState('foodLog', foodLog);
-            renderFoodLog(); }
-    });
-
-    // --- Вес ---
-    document.getElementById('addWeightBtn').addEventListener('click', () => {
-        const input = document.getElementById('newWeightInput');
-        const weight = parseFloat(input.value);
-        if (!weight || weight < 30 || weight > 250) { alert('Введите вес (30-250 кг)'); return; }
-        weightHistory.push({ date: new Date().toLocaleDateString(), weight });
-        saveState('weightHistory', weightHistory);
-        user.weight = weight;
-        document.getElementById('weightRange').value = weight;
-        document.getElementById('weightValue').textContent = weight;
-        saveState('weight', weight);
-        input.value = '';
-        renderStats();
-        renderCalculator();
-        drawWeightChart();
-    });
-
-    // --- Рецепты ---
-    document.querySelectorAll('#recipeFilters .filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('#recipeFilters .filter-btn').forEach(b => b.style.background = 'transparent');
-            this.style.background = 'rgba(0,212,255,0.1)';
-            renderRecipes(this.dataset.filter);
+        // --- Экспорт/Импорт ---
+        document.getElementById('exportBtn').addEventListener('click', () => {
+            const data = {
+                version: '2.0',
+                exportedAt: new Date().toISOString(),
+                user,
+                weightHistory,
+                waterDrank,
+                foodLog,
+                customRecipes,
+                reminders,
+                shoppingChecked: loadState('shoppingChecked', [])
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `shapeup_backup_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
         });
-    });
-    // активируем "Все" по умолчанию
-    document.querySelector('#recipeFilters .filter-btn[data-filter="all"]').style.background = 'rgba(0,212,255,0.1)';
 
-    document.getElementById('addRecipeBtn').addEventListener('click', () => {
-        const name = prompt('Название блюда:');
-        if (!name) return;
-        const cal = parseInt(prompt('Калорийность (ккал):')) || 0;
-        const protein = parseInt(prompt('Белки (г):')) || 0;
-        const fat = parseInt(prompt('Жиры (г):')) || 0;
-        const carbs = parseInt(prompt('Углеводы (г):')) || 0;
-        const weight = prompt('Вес порции (г/мл):') || '200г';
-        const desc = prompt('Описание:') || '';
-        const category = prompt('Категория (Мясные/Рыбные/Яичные/Каши/Овощные/Веганские):') || 'Овощные';
-        const price = prompt('Цена (Низкая/Средняя/Высокая):') || 'Средняя';
-        const time = prompt('Время приготовления:') || '20 мин';
-        const type = prompt('Тип (Завтрак/Обед/Ужин/Перекус):') || 'Перекус';
-
-        const newRecipe = { id: Date.now(), name, cal, protein, fat, carbs, weight, desc, category, price, time, type };
-        customRecipes.push(newRecipe);
-        saveState('customRecipes', customRecipes);
-        renderRecipes('all');
-        renderFoodSelect();
-        weekPlan = generateWeekPlan();
-        saveState('weekPlan', weekPlan);
-        alert('✅ Рецепт добавлен!');
-    });
-
-    window.deleteCustomRecipe = function(id) {
-        if (!confirm('Удалить рецепт?')) return;
-        customRecipes = customRecipes.filter(r => r.id !== id);
-        saveState('customRecipes', customRecipes);
-        renderRecipes('all');
-        renderFoodSelect();
-        weekPlan = generateWeekPlan();
-        saveState('weekPlan', weekPlan);
-    };
-
-    // --- Список покупок ---
-    window.toggleShopItem = function(id) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        const cb = el.querySelector('input[type="checkbox"]');
-        el.classList.toggle('checked', cb.checked);
-        const checkedItems = [];
-        document.querySelectorAll('.shopping-item input[type="checkbox"]:checked').forEach(c => {
-            const parent = c.closest('.shopping-item');
-            if (parent) checkedItems.push(parent.id);
+        document.getElementById('importFile').addEventListener('change', function(e) {
+            const file = this.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if (!data.user || !data.weightHistory) { alert('Неверный формат'); return; }
+                    Object.assign(user, data.user);
+                    saveState('gender', user.gender);
+                    saveState('age', user.age);
+                    saveState('height', user.height);
+                    saveState('weight', user.weight);
+                    saveState('activity', user.activity);
+                    saveState('deficit', user.deficit);
+                    weightHistory = data.weightHistory;
+                    saveState('weightHistory', weightHistory);
+                    if (data.waterDrank !== undefined) { waterDrank = data.waterDrank;
+                        saveState('waterDrank', waterDrank); }
+                    if (data.foodLog) { foodLog = data.foodLog;
+                        saveState('foodLog', foodLog); }
+                    if (data.customRecipes) { customRecipes = data.customRecipes;
+                        saveState('customRecipes', customRecipes); }
+                    if (data.reminders) { reminders = data.reminders;
+                        saveState('reminders', reminders); }
+                    if (data.shoppingChecked) saveState('shoppingChecked', data.shoppingChecked);
+                    restoreUI();
+                    renderAll();
+                    scheduleReminders();
+                    alert('✅ Бекап загружен!');
+                } catch (err) { alert('Ошибка: ' + err.message); }
+            };
+            reader.readAsText(file);
+            this.value = '';
         });
-        saveState('shoppingChecked', checkedItems);
-    };
 
-    // --- Тест уведомлений ---
-    document.getElementById('testReminderBtn').addEventListener('click', () => {
-        sendNotification('🔔 Тест', 'Уведомления работают!');
-    });
-    document.getElementById('resetRemindersBtn').addEventListener('click', () => {
-        if (confirm('Сбросить настройки?')) {
-            reminders = JSON.parse(JSON.stringify(defaultReminders));
-            saveState('reminders', reminders);
-            renderReminders();
-            scheduleReminders();
+        // --- Тест уведомлений ---
+        document.getElementById('testReminderBtn').addEventListener('click', () => {
+            sendNotification('🔔 Тест', 'Уведомления работают!');
+        });
+        document.getElementById('resetRemindersBtn').addEventListener('click', () => {
+            if (confirm('Сбросить настройки?')) {
+                reminders = JSON.parse(JSON.stringify(defaultReminders));
+                saveState('reminders', reminders);
+                renderReminders();
+                scheduleReminders();
+            }
+        });
+
+        // ================================================================
+        // 10. ВОССТАНОВЛЕНИЕ UI
+        // ================================================================
+        function restoreUI() {
+            if (user.gender === 'female') document.getElementById('genderFemale').click();
+            else document.getElementById('genderMale').click();
+
+            document.getElementById('ageRange').value = user.age;
+            document.getElementById('heightRange').value = user.height;
+            document.getElementById('weightRange').value = user.weight;
+            document.getElementById('ageValue').textContent = user.age;
+            document.getElementById('heightValue').textContent = user.height;
+            document.getElementById('weightValue').textContent = user.weight;
+
+            document.querySelectorAll('#activityGroup .btn').forEach(b => {
+                if (parseFloat(b.dataset.activity) === user.activity) b.classList.add('active');
+            });
+            document.querySelectorAll('#deficitGroup .btn').forEach(b => {
+                if (parseFloat(b.dataset.deficit) === user.deficit) b.classList.add('active');
+            });
+
+            // Восстанавливаем режим плана
+            if (currentMode === 'auto') {
+                document.getElementById('modeAuto').click();
+            } else {
+                document.getElementById('modeSmart').click();
+            }
         }
-    });
 
-    // ================================================================
-    // 9. ВОССТАНОВЛЕНИЕ UI
-    // ================================================================
-    function restoreUI() {
-        if (user.gender === 'female') document.getElementById('genderFemale').click();
-        else document.getElementById('genderMale').click();
+        // ================================================================
+        // 11. ЗАПУСК
+        // ================================================================
+        restoreUI();
+        renderAll();
+        setTimeout(scheduleReminders, 2000);
 
-        document.getElementById('ageRange').value = user.age;
-        document.getElementById('heightRange').value = user.height;
-        document.getElementById('weightRange').value = user.weight;
-        document.getElementById('ageValue').textContent = user.age;
-        document.getElementById('heightValue').textContent = user.height;
-        document.getElementById('weightValue').textContent = user.weight;
-
-        document.querySelectorAll('#activityGroup .btn').forEach(b => {
-            if (parseFloat(b.dataset.activity) === user.activity) b.classList.add('active');
-        });
-        document.querySelectorAll('#deficitGroup .btn').forEach(b => {
-            if (parseFloat(b.dataset.deficit) === user.deficit) b.classList.add('active');
-        });
-    }
-
-    // ================================================================
-    // 10. ЗАПУСК
-    // ================================================================
-    restoreUI();
-    renderAll();
-    setTimeout(scheduleReminders, 2000);
-
-    console.log('✅ ShapeUp загружен!');
-    console.log('👤', user.gender === 'male' ? 'Мужчина' : 'Женщина', user.age, 'лет,', user.weight, 'кг');
-    console.log('📊 Записей веса:', weightHistory.length);
-    console.log('📝 Своих рецептов:', customRecipes.length);
-    console.log('⏰ Напоминаний:', reminders.filter(r => r.enabled).length, 'активных');
-</script>
+        console.log('✅ ShapeUp v2.0 загружен!');
+        console.log('🧠 Умный и авто-подбор плана питания включены');
+        console.log('👤', user.gender === 'male' ? 'Мужчина' : 'Женщина', user.age, 'лет,', user.weight, 'кг');
+        console.log('📊 Записей веса:', weightHistory.length);
+        console.log('📝 Своих рецептов:', customRecipes.length);
+        console.log('⏰ Напоминаний:', reminders.filter(r => r.enabled).length, 'активных');
+    </script>
 
 </body>
 </html>
