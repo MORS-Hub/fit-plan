@@ -900,15 +900,23 @@
             width: 0%;
         }
 
+        /* ============================================================
+           НАПОМИНАНИЯ (с днями недели)
+           ============================================================ */
         .reminder-item {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
+            flex-direction: column;
             padding: 10px 16px;
             background: rgba(0, 0, 0, 0.14);
             border-radius: 14px;
             margin-bottom: 8px;
             border: 1px solid rgba(255, 255, 255, 0.04);
+            gap: 8px;
+        }
+        .reminder-item .rem-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             flex-wrap: wrap;
             gap: 10px;
         }
@@ -932,6 +940,27 @@
             height: 18px;
             cursor: pointer;
         }
+        .reminder-item .days-checkboxes {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-left: 30px;
+        }
+        .reminder-item .days-checkboxes label {
+            font-size: 0.7rem;
+            color: #889;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            cursor: pointer;
+        }
+        .reminder-item .days-checkboxes input[type="checkbox"] {
+            accent-color: #00d4ff;
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+
         .chart-wrapper {
             width: 100%;
             overflow-x: auto;
@@ -1012,6 +1041,9 @@
                 width: 34px;
                 height: 44px;
                 font-size: 0.6rem;
+            }
+            .reminder-item .days-checkboxes {
+                margin-left: 0;
             }
         }
         ::-webkit-scrollbar {
@@ -1376,8 +1408,10 @@
     ============================================================ -->
     <script>
         // ================================================================
-        // 1. БАЗОВЫЕ РЕЦЕПТЫ (30 шт)
+        // 1. ДАННЫЕ (рецепты, настройки)
         // ================================================================
+
+        // Базовые рецепты (30 шт)
         const BASE_RECIPES = [
             { id: 1, name: 'Овсянка на молоке с бананом', type: 'Завтрак', cal: 380, protein: 14, fat: 8, carbs: 62,
                 weight: '300г', desc: 'Овсяные хлопья 50г, молоко 200мл, банан 100г.', category: 'Каши', price: 'Низкая',
@@ -1454,6 +1488,30 @@
                 desc: 'Кефир 1% 200мл, отруби 20г, мёд 5г.', category: 'Яичные', price: 'Низкая', time: '3 мин' }
         ];
 
+        // Пользовательские рецепты (будут загружены из localStorage)
+        let customRecipes = [];
+
+        // Настройки по умолчанию
+        const DEFAULT_USER = {
+            gender: 'male',
+            age: 31,
+            height: 180,
+            weight: 87,
+            activity: 1.375,
+            deficit: 0.85
+        };
+
+        const DEFAULT_REMINDERS = [
+            { id: 'rem_breakfast', label: '🍳 Завтрак', time: '08:00', enabled: true, days: [1, 2, 3, 4, 5, 6, 7] },
+            { id: 'rem_lunch', label: '🍲 Обед', time: '13:00', enabled: true, days: [1, 2, 3, 4, 5, 6, 7] },
+            { id: 'rem_dinner', label: '🍽 Ужин', time: '19:00', enabled: true, days: [1, 2, 3, 4, 5, 6, 7] },
+            { id: 'rem_water', label: '💧 Вода (каждые 2 ч)', time: '10:00', enabled: true, interval: 2, days: [1, 2,
+                    3, 4, 5, 6, 7
+                ] }
+        ];
+
+        const WATER_PER_GLASS = 250;
+
         // ================================================================
         // 2. СОСТОЯНИЕ (загрузка/сохранение)
         // ================================================================
@@ -1469,12 +1527,12 @@
         }
 
         const user = {
-            gender: loadState('gender', 'male'),
-            age: loadState('age', 31),
-            height: loadState('height', 180),
-            weight: loadState('weight', 87),
-            activity: loadState('activity', 1.375),
-            deficit: loadState('deficit', 0.85)
+            gender: loadState('gender', DEFAULT_USER.gender),
+            age: loadState('age', DEFAULT_USER.age),
+            height: loadState('height', DEFAULT_USER.height),
+            weight: loadState('weight', DEFAULT_USER.weight),
+            activity: loadState('activity', DEFAULT_USER.activity),
+            deficit: loadState('deficit', DEFAULT_USER.deficit)
         };
 
         let weightHistory = loadState('weightHistory', []);
@@ -1484,17 +1542,10 @@
         }
 
         let waterDrank = loadState('waterDrank', 0);
-        const WATER_PER_GLASS = 250;
         let foodLog = loadState('foodLog', []);
-        let customRecipes = loadState('customRecipes', []);
+        customRecipes = loadState('customRecipes', []);
 
-        const defaultReminders = [
-            { id: 'rem_breakfast', label: '🍳 Завтрак', time: '08:00', enabled: true },
-            { id: 'rem_lunch', label: '🍲 Обед', time: '13:00', enabled: true },
-            { id: 'rem_dinner', label: '🍽 Ужин', time: '19:00', enabled: true },
-            { id: 'rem_water', label: '💧 Вода (каждые 2 ч)', time: '10:00', enabled: true, interval: 2 }
-        ];
-        let reminders = loadState('reminders', defaultReminders);
+        let reminders = loadState('reminders', DEFAULT_REMINDERS);
         if (!loadState('reminders', null)) saveState('reminders', reminders);
 
         let lastResult = loadState('lastResult', null);
@@ -1572,6 +1623,84 @@
             return plan;
         }
 
+        // ================================================================
+        // 5. УМНЫЙ СПИСОК ПОКУПОК
+        // ================================================================
+        function generateShoppingList(week) {
+            const recipes = getAllRecipes();
+            const map = {};
+            const categoryMap = {
+                'Мясные': '🥩 Мясо и птица',
+                'Рыбные': '🐟 Рыба и морепродукты',
+                'Яичные': '🥚 Яйца и молочка',
+                'Каши': '🌾 Крупы и злаки',
+                'Овощные': '🥗 Овощи и зелень',
+                'Веганские': '🌱 Веганские продукты'
+            };
+            week.forEach(day => {
+                day.meals.forEach(meal => {
+                    const recipe = recipes.find(r => r.name === meal.name);
+                    if (!recipe) return;
+                    const cat = categoryMap[recipe.category] || recipe.category;
+                    if (!map[cat]) map[cat] = new Set();
+                    const items = recipe.desc.split(',').map(s => s.trim());
+                    items.forEach(item => { if (item.length > 2) map[cat].add(item); });
+                });
+            });
+            const result = {};
+            for (const cat in map) result[cat] = Array.from(map[cat]);
+            return result;
+        }
+
+        function renderShoppingList(week) {
+            const shopping = generateShoppingList(week);
+            const container = document.getElementById('shoppingList');
+            let html = '<div class="shopping-grid">';
+            for (const cat in shopping) {
+                html += `<div class="shopping-category"><div class="cat-title">${cat}</div>`;
+                shopping[cat].forEach(item => {
+                    const id = 'shop_' + item.replace(/\s/g, '_');
+                    html += `
+                        <div class="shopping-item" id="${id}">
+                            <input type="checkbox" onchange="toggleShopItem('${id}')">
+                            <span>${item}</span>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            html += '</div>';
+            container.innerHTML = html;
+
+            const checkedItems = loadState('shoppingChecked', []);
+            checkedItems.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    const cb = el.querySelector('input[type="checkbox"]');
+                    if (cb) { cb.checked = true;
+                        el.classList.add('checked'); }
+                }
+            });
+        }
+
+        // ================================================================
+        // 6. ОТРИСОВКА ВКЛАДОК
+        // ================================================================
+        function renderAll() {
+            renderCalculator();
+            renderWater();
+            renderFoodLog();
+            renderStats();
+            renderRecipes('all');
+            renderFoodSelect();
+            renderReminders();
+            if (currentPlan) {
+                renderPlan(currentPlan);
+                renderShoppingList(currentPlan);
+            }
+            setTimeout(drawWeightChart, 400);
+        }
+
         function renderPlan(plan) {
             const container = document.getElementById('planResult');
             if (!plan || plan.length === 0) {
@@ -1599,143 +1728,6 @@
             });
             html += '</div>';
             container.innerHTML = html;
-        }
-
-        // ================================================================
-        // 5. ЧАТ-БОТ
-        // ================================================================
-        function getBotReply(message) {
-            const msg = message.toLowerCase().trim();
-            const commands = {
-                'привет': '👋 Привет! Я твой помощник. Задавай любые вопросы про питание, воду или просто попроси мотивации!',
-                'помощь': `
-📌 *Список команд ShapeUp:*
-
-🍳 *Еда и рецепты*
-• "Что съесть на завтрак/обед/ужин?"
-• "Дай рецепт на 300 ккал"
-• "Веганские блюда"
-• "Мой рецепт"
-
-💧 *Вода*
-• "Сколько пить воды?"
-• "Напомни выпить воду"
-
-⚖️ *Калории и вес*
-• "Моя норма калорий"
-• "Сколько я вешу?"
-
-📊 *Прогресс*
-• "Мой прогресс"
-• "Статистика за неделю"
-
-😊 *Мотивация*
-• "Мотивация"
-• "Я устал"
-
-ℹ️ *Общее*
-• "Помощь" — показать этот список
-• "О сайте" — что такое ShapeUp
-                `,
-                'о сайте': '🌿 ShapeUp — это твой персональный помощник в питании. Мы помогаем рассчитать калории, составить план, следить за водой и мотивируем тебя каждый день!',
-                'мотивация': '💪 Ты уже сделал первый шаг! Каждый день — это прогресс. Даже маленький шаг приближает тебя к цели. Ты справишься!',
-                'я устал': '🧘 Отдых — тоже часть пути. Возьми паузу, выпей воды, прогуляйся. А завтра продолжай с новыми силами. Я с тобой!'
-            };
-
-            for (const key in commands) {
-                if (msg.includes(key)) return commands[key];
-            }
-
-            if (msg.includes('калории') || msg.includes('норма') || msg.includes('ккал')) {
-                const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user
-                .deficit);
-                const todayCal = getTodayCalories();
-                const remain = result.dailyCal - todayCal;
-                return `🔥 Твоя норма на день: ${result.dailyCal} ккал (дефицит ${Math.round((1 - user.deficit) * 100)}%). Осталось: ${remain > 0 ? remain : 0} ккал.`;
-            }
-
-            if (msg.includes('вода') || msg.includes('пить') || msg.includes('напомни')) {
-                const goal = user.weight * 30;
-                const percent = Math.round(waterDrank / goal * 100);
-                let advice = waterDrank < goal ? ' Попей ещё!' : ' Молодец, норма выполнена!';
-                return `💧 Норма воды: ${goal} мл. Ты выпил: ${waterDrank} мл (${percent}%).${advice}`;
-            }
-
-            if (msg.includes('вес') || msg.includes('похудел') || msg.includes('килограмм')) {
-                const last = weightHistory[weightHistory.length - 1];
-                const first = weightHistory[0];
-                const diff = first.weight - last.weight;
-                return `⚖️ Твой текущий вес: ${last.weight} кг. С начала: ${diff > 0 ? 'сбросил ' + diff.toFixed(1) : 'прибавил ' + Math.abs(diff).toFixed(1)} кг.`;
-            }
-
-            if (msg.includes('рецепт') || msg.includes('есть') || msg.includes('поесть') || msg.includes('приготовить')) {
-                const recipes = getAllRecipes();
-                let filtered = recipes;
-                if (msg.includes('завтрак')) filtered = recipes.filter(r => r.type === 'Завтрак');
-                else if (msg.includes('обед')) filtered = recipes.filter(r => r.type === 'Обед');
-                else if (msg.includes('ужин')) filtered = recipes.filter(r => r.type === 'Ужин');
-                else if (msg.includes('перекус')) filtered = recipes.filter(r => r.type === 'Перекус');
-
-                if (msg.includes('веган')) filtered = filtered.filter(r => r.category === 'Веганские');
-
-                const match = msg.match(/(\d+)\s*ккал/);
-                if (match) {
-                    const maxCal = parseInt(match[1]);
-                    filtered = filtered.filter(r => r.cal <= maxCal);
-                }
-
-                if (filtered.length === 0) filtered = recipes;
-                const random = filtered[Math.floor(Math.random() * filtered.length)];
-                return `🍳 ${random.name} (${random.cal} ккал). ${random.desc}`;
-            }
-
-            if (msg.includes('план') || msg.includes('сегодня')) {
-                if (currentPlan) {
-                    const todayIdx = new Date().getDay();
-                    const today = currentPlan[todayIdx];
-                    if (today) {
-                        return `📅 Сегодня (${today.day}): ${today.meals.map(m => m.name).join(', ')}. Итого: ${today.totalCal} ккал.`;
-                    }
-                    return '📅 Сегодня нет плана. Сгенерируй новый на вкладке "План питания".';
-                }
-                return '📅 Сначала сгенерируй план на неделю на вкладке "План питания".';
-            }
-
-            if (msg.includes('прогресс') || msg.includes('статистика')) {
-                const lastWeek = weightHistory.slice(-7);
-                const avg = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
-                const totalDays = foodLog.length;
-                return `📊 Твой прогресс: текущий вес ${user.weight} кг, средний за неделю ${avg.toFixed(1)} кг. Записей в дневнике: ${totalDays}. Держи курс!`;
-            }
-
-            if (msg.includes('мой рецепт') || msg.includes('свой рецепт')) {
-                if (customRecipes.length === 0) {
-                    return '📝 У тебя пока нет своих рецептов. Добавь их на вкладке "Рецепты" — я буду их использовать в планах и советах!';
-                }
-                const random = customRecipes[Math.floor(Math.random() * customRecipes.length)];
-                return `🍳 Твой рецепт: ${random.name} (${random.cal} ккал). ${random.desc}`;
-            }
-
-            return '🤔 Я ещё учусь. Попробуй спросить про калории, воду, рецепты или вес. Либо напиши "помощь" для списка команд.';
-        }
-
-        function getTodayCalories() {
-            return foodLog.reduce((sum, item) => sum + (item.cal || 0), 0);
-        }
-
-        // ================================================================
-        // 6. РЕНДЕР ВСЕХ ВКЛАДОК
-        // ================================================================
-        function renderAll() {
-            renderCalculator();
-            renderWater();
-            renderFoodLog();
-            renderStats();
-            renderRecipes('all');
-            renderFoodSelect();
-            renderReminders();
-            if (currentPlan) renderPlan(currentPlan);
-            setTimeout(drawWeightChart, 400);
         }
 
         function renderCalculator() {
@@ -1885,20 +1877,35 @@
             select.appendChild(custom);
         }
 
+        // ================================================================
+        // 7. НАПОМИНАНИЯ (с днями недели)
+        // ================================================================
         function renderReminders() {
             const container = document.getElementById('remindersContainer');
             let html = '';
             reminders.forEach((rem, idx) => {
+                const days = rem.days || [1, 2, 3, 4, 5, 6, 7];
                 html += `
                     <div class="reminder-item">
-                        <div class="rem-info">
-                            <input type="checkbox" ${rem.enabled ? 'checked' : ''} onchange="toggleReminder(${idx})">
-                            <span style="font-weight:500;">${rem.label}</span>
+                        <div class="rem-row">
+                            <div class="rem-info">
+                                <input type="checkbox" ${rem.enabled ? 'checked' : ''} onchange="toggleReminder(${idx})">
+                                <span style="font-weight:500;">${rem.label}</span>
+                            </div>
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                ${rem.interval ? `<span style="color:#889;font-size:0.8rem;">каждые ${rem.interval} ч</span>` :
+                                    `<input type="time" value="${rem.time}" onchange="updateReminderTime(${idx}, this.value)">`}
+                                <button class="btn-secondary btn-danger" style="padding:4px 10px;font-size:0.7rem;" onclick="removeReminder(${idx})">✕</button>
+                            </div>
                         </div>
-                        <div style="display:flex;gap:8px;align-items:center;">
-                            ${rem.interval ? `<span style="color:#889;font-size:0.8rem;">каждые ${rem.interval} ч</span>` :
-                                `<input type="time" value="${rem.time}" onchange="updateReminderTime(${idx}, this.value)">`}
-                            <button class="btn-secondary btn-danger" style="padding:4px 10px;font-size:0.7rem;" onclick="removeReminder(${idx})">✕</button>
+                        <div class="days-checkboxes">
+                            <label><input type="checkbox" ${days.includes(1) ? 'checked' : ''} onchange="toggleDay(${idx}, 1)"> Пн</label>
+                            <label><input type="checkbox" ${days.includes(2) ? 'checked' : ''} onchange="toggleDay(${idx}, 2)"> Вт</label>
+                            <label><input type="checkbox" ${days.includes(3) ? 'checked' : ''} onchange="toggleDay(${idx}, 3)"> Ср</label>
+                            <label><input type="checkbox" ${days.includes(4) ? 'checked' : ''} onchange="toggleDay(${idx}, 4)"> Чт</label>
+                            <label><input type="checkbox" ${days.includes(5) ? 'checked' : ''} onchange="toggleDay(${idx}, 5)"> Пт</label>
+                            <label><input type="checkbox" ${days.includes(6) ? 'checked' : ''} onchange="toggleDay(${idx}, 6)"> Сб</label>
+                            <label><input type="checkbox" ${days.includes(7) ? 'checked' : ''} onchange="toggleDay(${idx}, 7)"> Вс</label>
                         </div>
                     </div>
                 `;
@@ -1913,8 +1920,135 @@
             container.innerHTML = html;
         }
 
+        window.toggleDay = function(idx, day) {
+            if (!reminders[idx].days) reminders[idx].days = [1, 2, 3, 4, 5, 6, 7];
+            const index = reminders[idx].days.indexOf(day);
+            if (index > -1) {
+                reminders[idx].days.splice(index, 1);
+            } else {
+                reminders[idx].days.push(day);
+                reminders[idx].days.sort((a, b) => a - b);
+            }
+            saveState('reminders', reminders);
+            renderReminders();
+            scheduleReminders();
+        };
+
+        window.toggleReminder = function(idx) {
+            reminders[idx].enabled = !reminders[idx].enabled;
+            saveState('reminders', reminders);
+            renderReminders();
+            scheduleReminders();
+        };
+
+        window.updateReminderTime = function(idx, time) {
+            reminders[idx].time = time;
+            saveState('reminders', reminders);
+            scheduleReminders();
+        };
+
+        window.removeReminder = function(idx) {
+            if (confirm('Удалить напоминание?')) {
+                reminders.splice(idx, 1);
+                saveState('reminders', reminders);
+                renderReminders();
+                scheduleReminders();
+            }
+        };
+
+        window.addReminder = function() {
+            const label = document.getElementById('newRemLabel').value.trim();
+            const time = document.getElementById('newRemTime').value;
+            if (!label || !time) { alert('Заполните все поля'); return; }
+            reminders.push({
+                id: 'rem_' + Date.now(),
+                label,
+                time,
+                enabled: true,
+                days: [1, 2, 3, 4, 5, 6, 7]
+            });
+            saveState('reminders', reminders);
+            renderReminders();
+            scheduleReminders();
+            document.getElementById('newRemLabel').value = '';
+        };
+
+        let reminderIntervals = [];
+
+        function scheduleReminders() {
+            reminderIntervals.forEach(clearInterval);
+            reminderIntervals = [];
+            if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+
+            const now = new Date();
+            const today = now.getDay(); // 0 = воскресенье, 1 = понедельник
+            const todayNum = today === 0 ? 7 : today;
+
+            reminders.forEach(rem => {
+                if (!rem.enabled) return;
+                const days = rem.days || [1, 2, 3, 4, 5, 6, 7];
+                if (!days.includes(todayNum)) return;
+
+                if (rem.interval) {
+                    const intervalMs = rem.interval * 60 * 60 * 1000;
+                    const id = setInterval(() => {
+                        const now2 = new Date();
+                        const today2 = now2.getDay();
+                        const todayNum2 = today2 === 0 ? 7 : today2;
+                        if (days.includes(todayNum2)) {
+                            sendNotification(rem.label, 'Пора выпить воды! 💧');
+                        }
+                    }, intervalMs);
+                    reminderIntervals.push(id);
+                    setTimeout(() => {
+                        const now2 = new Date();
+                        const today2 = now2.getDay();
+                        const todayNum2 = today2 === 0 ? 7 : today2;
+                        if (days.includes(todayNum2)) {
+                            sendNotification(rem.label, 'Пора выпить воды! 💧');
+                        }
+                    }, 5 * 60 * 1000);
+                } else {
+                    const [hours, minutes] = rem.time.split(':').map(Number);
+                    const target = new Date();
+                    target.setHours(hours, minutes, 0, 0);
+                    if (target <= now) target.setDate(target.getDate() + 1);
+                    const delay = target - now;
+                    const id = setTimeout(() => {
+                        const now2 = new Date();
+                        const today2 = now2.getDay();
+                        const todayNum2 = today2 === 0 ? 7 : today2;
+                        if (days.includes(todayNum2)) {
+                            sendNotification(rem.label, `Время ${rem.label}! 🍽️`);
+                        }
+                        const nextId = setInterval(() => {
+                            const now3 = new Date();
+                            const today3 = now3.getDay();
+                            const todayNum3 = today3 === 0 ? 7 : today3;
+                            if (days.includes(todayNum3)) {
+                                sendNotification(rem.label, `Время ${rem.label}! 🍽️`);
+                            }
+                        }, 24 * 60 * 60 * 1000);
+                        reminderIntervals.push(nextId);
+                    }, delay);
+                    reminderIntervals.push(id);
+                }
+            });
+        }
+
+        function sendNotification(title, body) {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                try { new Notification('🔔 ShapeUp: ' + title, { body, icon: '🍽️' }); } catch (e) { console.log('🔔',
+                        title, body); }
+            } else if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission();
+            } else {
+                console.log('🔔', title, body);
+            }
+        }
+
         // ================================================================
-        // 7. ГРАФИК ВЕСА
+        // 8. ГРАФИК ВЕСА
         // ================================================================
         function drawWeightChart() {
             const canvas = document.getElementById('weightChart');
@@ -2037,86 +2171,129 @@
         }
 
         // ================================================================
-        // 8. НАПОМИНАНИЯ
+        // 9. ЧАТ-БОТ
         // ================================================================
-        window.toggleReminder = function(idx) {
-            reminders[idx].enabled = !reminders[idx].enabled;
-            saveState('reminders', reminders);
-            renderReminders();
-            scheduleReminders();
-        };
+        function getBotReply(message) {
+            const msg = message.toLowerCase().trim();
+            const commands = {
+                'привет': '👋 Привет! Я твой помощник. Задавай любые вопросы про питание, воду или просто попроси мотивации!',
+                'помощь': `
+📌 *Список команд ShapeUp:*
 
-        window.updateReminderTime = function(idx, time) {
-            reminders[idx].time = time;
-            saveState('reminders', reminders);
-            scheduleReminders();
-        };
+🍳 *Еда и рецепты*
+• "Что съесть на завтрак/обед/ужин?"
+• "Дай рецепт на 300 ккал"
+• "Веганские блюда"
+• "Мой рецепт"
 
-        window.removeReminder = function(idx) {
-            if (confirm('Удалить напоминание?')) {
-                reminders.splice(idx, 1);
-                saveState('reminders', reminders);
-                renderReminders();
-                scheduleReminders();
+💧 *Вода*
+• "Сколько пить воды?"
+• "Напомни выпить воду"
+
+⚖️ *Калории и вес*
+• "Моя норма калорий"
+• "Сколько я вешу?"
+
+📊 *Прогресс*
+• "Мой прогресс"
+• "Статистика за неделю"
+
+😊 *Мотивация*
+• "Мотивация"
+• "Я устал"
+
+ℹ️ *Общее*
+• "Помощь" — показать этот список
+• "О сайте" — что такое ShapeUp
+                `,
+                'о сайте': '🌿 ShapeUp — это твой персональный помощник в питании. Мы помогаем рассчитать калории, составить план, следить за водой и мотивируем тебя каждый день!',
+                'мотивация': '💪 Ты уже сделал первый шаг! Каждый день — это прогресс. Даже маленький шаг приближает тебя к цели. Ты справишься!',
+                'я устал': '🧘 Отдых — тоже часть пути. Возьми паузу, выпей воды, прогуляйся. А завтра продолжай с новыми силами. Я с тобой!'
+            };
+
+            for (const key in commands) {
+                if (msg.includes(key)) return commands[key];
             }
-        };
 
-        window.addReminder = function() {
-            const label = document.getElementById('newRemLabel').value.trim();
-            const time = document.getElementById('newRemTime').value;
-            if (!label || !time) { alert('Заполните все поля'); return; }
-            reminders.push({ id: 'rem_' + Date.now(), label, time, enabled: true });
-            saveState('reminders', reminders);
-            renderReminders();
-            scheduleReminders();
-            document.getElementById('newRemLabel').value = '';
-        };
+            if (msg.includes('калории') || msg.includes('норма') || msg.includes('ккал')) {
+                const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user
+                .deficit);
+                const todayCal = getTodayCalories();
+                const remain = result.dailyCal - todayCal;
+                return `🔥 Твоя норма на день: ${result.dailyCal} ккал (дефицит ${Math.round((1 - user.deficit) * 100)}%). Осталось: ${remain > 0 ? remain : 0} ккал.`;
+            }
 
-        let reminderIntervals = [];
+            if (msg.includes('вода') || msg.includes('пить') || msg.includes('напомни')) {
+                const goal = user.weight * 30;
+                const percent = Math.round(waterDrank / goal * 100);
+                let advice = waterDrank < goal ? ' Попей ещё!' : ' Молодец, норма выполнена!';
+                return `💧 Норма воды: ${goal} мл. Ты выпил: ${waterDrank} мл (${percent}%).${advice}`;
+            }
 
-        function scheduleReminders() {
-            reminderIntervals.forEach(clearInterval);
-            reminderIntervals = [];
-            if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+            if (msg.includes('вес') || msg.includes('похудел') || msg.includes('килограмм')) {
+                const last = weightHistory[weightHistory.length - 1];
+                const first = weightHistory[0];
+                const diff = first.weight - last.weight;
+                return `⚖️ Твой текущий вес: ${last.weight} кг. С начала: ${diff > 0 ? 'сбросил ' + diff.toFixed(1) : 'прибавил ' + Math.abs(diff).toFixed(1)} кг.`;
+            }
 
-            const now = new Date();
-            reminders.forEach(rem => {
-                if (!rem.enabled) return;
-                if (rem.interval) {
-                    const intervalMs = rem.interval * 60 * 60 * 1000;
-                    const id = setInterval(() => sendNotification(rem.label, 'Пора выпить воды! 💧'), intervalMs);
-                    reminderIntervals.push(id);
-                    setTimeout(() => sendNotification(rem.label, 'Пора выпить воды! 💧'), 5 * 60 * 1000);
-                } else {
-                    const [hours, minutes] = rem.time.split(':').map(Number);
-                    const target = new Date();
-                    target.setHours(hours, minutes, 0, 0);
-                    if (target <= now) target.setDate(target.getDate() + 1);
-                    const delay = target - now;
-                    const id = setTimeout(() => {
-                        sendNotification(rem.label, `Время ${rem.label}! 🍽️`);
-                        const nextId = setInterval(() => sendNotification(rem.label, `Время ${rem.label}! 🍽️`),
-                            24 * 60 * 60 * 1000);
-                        reminderIntervals.push(nextId);
-                    }, delay);
-                    reminderIntervals.push(id);
+            if (msg.includes('рецепт') || msg.includes('есть') || msg.includes('поесть') || msg.includes('приготовить')) {
+                const recipes = getAllRecipes();
+                let filtered = recipes;
+                if (msg.includes('завтрак')) filtered = recipes.filter(r => r.type === 'Завтрак');
+                else if (msg.includes('обед')) filtered = recipes.filter(r => r.type === 'Обед');
+                else if (msg.includes('ужин')) filtered = recipes.filter(r => r.type === 'Ужин');
+                else if (msg.includes('перекус')) filtered = recipes.filter(r => r.type === 'Перекус');
+
+                if (msg.includes('веган')) filtered = filtered.filter(r => r.category === 'Веганские');
+
+                const match = msg.match(/(\d+)\s*ккал/);
+                if (match) {
+                    const maxCal = parseInt(match[1]);
+                    filtered = filtered.filter(r => r.cal <= maxCal);
                 }
-            });
+
+                if (filtered.length === 0) filtered = recipes;
+                const random = filtered[Math.floor(Math.random() * filtered.length)];
+                return `🍳 ${random.name} (${random.cal} ккал). ${random.desc}`;
+            }
+
+            if (msg.includes('план') || msg.includes('сегодня')) {
+                if (currentPlan) {
+                    const todayIdx = new Date().getDay();
+                    const today = currentPlan[todayIdx];
+                    if (today) {
+                        return `📅 Сегодня (${today.day}): ${today.meals.map(m => m.name).join(', ')}. Итого: ${today.totalCal} ккал.`;
+                    }
+                    return '📅 Сегодня нет плана. Сгенерируй новый на вкладке "План питания".';
+                }
+                return '📅 Сначала сгенерируй план на неделю на вкладке "План питания".';
+            }
+
+            if (msg.includes('прогресс') || msg.includes('статистика')) {
+                const lastWeek = weightHistory.slice(-7);
+                const avg = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
+                const totalDays = foodLog.length;
+                return `📊 Твой прогресс: текущий вес ${user.weight} кг, средний за неделю ${avg.toFixed(1)} кг. Записей в дневнике: ${totalDays}. Держи курс!`;
+            }
+
+            if (msg.includes('мой рецепт') || msg.includes('свой рецепт')) {
+                if (customRecipes.length === 0) {
+                    return '📝 У тебя пока нет своих рецептов. Добавь их на вкладке "Рецепты" — я буду их использовать в планах и советах!';
+                }
+                const random = customRecipes[Math.floor(Math.random() * customRecipes.length)];
+                return `🍳 Твой рецепт: ${random.name} (${random.cal} ккал). ${random.desc}`;
+            }
+
+            return '🤔 Я ещё учусь. Попробуй спросить про калории, воду, рецепты или вес. Либо напиши "помощь" для списка команд.';
         }
 
-        function sendNotification(title, body) {
-            if ('Notification' in window && Notification.permission === 'granted') {
-                try { new Notification('🔔 ShapeUp: ' + title, { body, icon: '🍽️' }); } catch (e) { console.log('🔔',
-                        title, body); }
-            } else if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission();
-            } else {
-                console.log('🔔', title, body);
-            }
+        function getTodayCalories() {
+            return foodLog.reduce((sum, item) => sum + (item.cal || 0), 0);
         }
 
         // ================================================================
-        // 9. ОБРАБОТЧИКИ СОБЫТИЙ
+        // 10. ОБРАБОТЧИКИ СОБЫТИЙ
         // ================================================================
 
         // --- Шторка ---
@@ -2272,7 +2449,7 @@
                 renderFoodLog(); }
         });
 
-        // --- Вес ---
+        // --- Вес (АДАПТИВНАЯ КАЛОРИЙНОСТЬ) ---
         document.getElementById('addWeightBtn').addEventListener('click', () => {
             const input = document.getElementById('newWeightInput');
             const weight = parseFloat(input.value);
@@ -2284,9 +2461,23 @@
             document.getElementById('weightValue').textContent = weight;
             saveState('weight', weight);
             input.value = '';
-            renderStats();
+
+            // АВТО-ПЕРЕСЧЁТ КАЛОРИЙ
             renderCalculator();
+            renderStats();
             drawWeightChart();
+
+            // Обновляем план, если он есть
+            if (currentPlan) {
+                // Просто перерисовываем план с новыми данными
+                renderPlan(currentPlan);
+            }
+
+            // Уведомление об обновлении калорий
+            const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user.deficit);
+            setTimeout(() => {
+                alert(`✅ Вес обновлён! Твоя новая норма калорий: ${result.dailyCal} ккал.`);
+            }, 300);
         });
 
         // --- Рецепты ---
@@ -2329,7 +2520,7 @@
             renderFoodSelect();
         };
 
-        // --- План питания ---
+        // --- План питания (УМНЫЙ СПИСОК ПОКУПОК) ---
         let currentMode = 'smart';
 
         document.getElementById('modeSmart').addEventListener('click', function() {
@@ -2368,6 +2559,8 @@
             }
             saveState('currentPlan', currentPlan);
             renderPlan(currentPlan);
+            // ОБНОВЛЯЕМ СПИСОК ПОКУПОК
+            renderShoppingList(currentPlan);
         }
 
         document.getElementById('generatePlanBtn').addEventListener('click', generatePlan);
@@ -2436,16 +2629,28 @@
         });
         document.getElementById('resetRemindersBtn').addEventListener('click', () => {
             if (confirm('Сбросить настройки?')) {
-                reminders = JSON.parse(JSON.stringify(defaultReminders));
+                reminders = JSON.parse(JSON.stringify(DEFAULT_REMINDERS));
                 saveState('reminders', reminders);
                 renderReminders();
                 scheduleReminders();
             }
         });
 
-        // ================================================================
-        // 10. ЧАТ-БОТ (обработка сообщений)
-        // ================================================================
+        // --- Список покупок (чекбоксы) ---
+        window.toggleShopItem = function(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const cb = el.querySelector('input[type="checkbox"]');
+            el.classList.toggle('checked', cb.checked);
+            const checkedItems = [];
+            document.querySelectorAll('.shopping-item input[type="checkbox"]:checked').forEach(c => {
+                const parent = c.closest('.shopping-item');
+                if (parent) checkedItems.push(parent.id);
+            });
+            saveState('shoppingChecked', checkedItems);
+        };
+
+        // --- Чат-бот ---
         const chatInput = document.getElementById('chatInput');
         const chatSendBtn = document.getElementById('chatSendBtn');
         const chatMessages = document.getElementById('chatMessages');
@@ -2474,9 +2679,7 @@
             if (e.key === 'Enter') handleChatSend();
         });
 
-        // ================================================================
-        // 11. ВСПЛЫВАЮЩЕЕ ОКНО ПРИВЕТСТВИЯ
-        // ================================================================
+        // --- Всплывающее окно ---
         const welcomePopup = document.getElementById('welcomePopup');
         const popupOkBtn = document.getElementById('popupOkBtn');
         const popupLaterBtn = document.getElementById('popupLaterBtn');
@@ -2514,9 +2717,7 @@
             }, 30 * 60 * 1000);
         });
 
-        // ================================================================
-        // 12. ПОДДЕРЖКА СВАЙПОВ (НОВАЯ ФУНКЦИЯ)
-        // ================================================================
+        // --- Свайпы ---
         (function() {
             const SWIPE_ZONE = 40;
             const SWIPE_THRESHOLD = 80;
@@ -2565,7 +2766,7 @@
         })();
 
         // ================================================================
-        // 13. ВОССТАНОВЛЕНИЕ UI
+        // 11. ВОССТАНОВЛЕНИЕ UI
         // ================================================================
         function restoreUI() {
             if (user.gender === 'female') document.getElementById('genderFemale').click();
@@ -2593,14 +2794,14 @@
         }
 
         // ================================================================
-        // 14. ЗАПУСК
+        // 12. ЗАПУСК
         // ================================================================
         restoreUI();
         renderAll();
         setTimeout(scheduleReminders, 2000);
 
         console.log('✅ ShapeUp v3.0 загружен!');
-        console.log('🤖 Чат-бот и свайпы активны');
+        console.log('🧠 Авто-пересчёт калорий, умный список покупок и гибкие напоминания активны!');
         console.log('👤', user.gender === 'male' ? 'Мужчина' : 'Женщина', user.age, 'лет,', user.weight, 'кг');
         console.log('📊 Записей веса:', weightHistory.length);
         console.log('📝 Своих рецептов:', customRecipes.length);
