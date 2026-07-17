@@ -3,110 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ShapeUp — iOS приложение</title>
+    <title>ShapeUp — Умный помощник</title>
     <style>
         /* ============================================================
-           ГЛОБАЛЬНЫЕ СТИЛИ (iOS-стиль)
+           ГЛОБАЛЬНЫЕ СТИЛИ (тёмная тема)
            ============================================================ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
-            background: #f2f2f7;
-            color: #1c1c1e;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0b0b1a;
+            color: #e8e8f0;
             min-height: 100vh;
             overflow-x: hidden;
-            padding: 0;
-            margin: 0;
         }
 
         /* ============================================================
-           ШАПКА (iOS-стиль)
+           ШАПКА
            ============================================================ */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 0.5px solid rgba(60, 60, 67, 0.08);
+            padding: 16px 24px;
+            background: rgba(11, 11, 26, 0.7);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             position: sticky;
             top: 0;
             z-index: 100;
-            height: 56px;
         }
-
         .header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
-
         .burger {
             background: none;
             border: none;
             cursor: pointer;
-            padding: 4px;
+            padding: 6px 4px;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 5px;
             transition: transform 0.25s ease;
+            z-index: 10;
+        }
+        .burger:hover {
+            transform: scale(1.05);
         }
         .burger span {
             display: block;
-            width: 24px;
-            height: 2px;
-            background: #1c1c1e;
-            border-radius: 2px;
+            width: 26px;
+            height: 2.5px;
+            background: #d0d0e0;
+            border-radius: 4px;
             transition: all 0.3s ease;
         }
         .burger.active span:nth-child(1) {
-            transform: rotate(45deg) translate(4px, 4px);
+            transform: rotate(45deg) translate(5px, 5px);
         }
         .burger.active span:nth-child(2) {
             opacity: 0;
         }
         .burger.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(4px, -4px);
+            transform: rotate(-45deg) translate(5px, -5px);
         }
-
         .logo {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #1c1c1e;
-            letter-spacing: -0.5px;
+            gap: 10px;
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d4ff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            user-select: none;
         }
         .logo svg {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             flex-shrink: 0;
-        }
-        .logo svg path {
-            stroke: #007aff;
-        }
-        .logo svg circle {
-            fill: #007aff;
         }
 
         /* ============================================================
-           ШТОРКА (iOS-стиль)
+           ШТОРКА
            ============================================================ */
         .overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
             z-index: 200;
             opacity: 0;
             visibility: hidden;
@@ -116,21 +109,20 @@
             opacity: 1;
             visibility: visible;
         }
-
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
-            width: 300px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: saturate(180%) blur(30px);
-            -webkit-backdrop-filter: saturate(180%) blur(30px);
-            border-right: 0.5px solid rgba(60, 60, 67, 0.08);
+            width: 290px;
+            background: rgba(18, 18, 40, 0.94);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
             z-index: 300;
             transform: translateX(-100%);
             transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            padding: 20px 16px 30px;
+            padding: 24px 18px 30px;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
@@ -138,36 +130,31 @@
         .sidebar.open {
             transform: translateX(0);
         }
-
         .sidebar-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
             padding-bottom: 16px;
-            border-bottom: 0.5px solid rgba(60, 60, 67, 0.08);
-        }
-        .sidebar-header .logo {
-            font-size: 1.3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
         .sidebar-close {
             background: none;
             border: none;
-            color: #8e8e93;
-            font-size: 1.6rem;
+            color: #a0a0b8;
+            font-size: 1.8rem;
             cursor: pointer;
-            padding: 0 4px;
             transition: color 0.2s;
+            padding: 0 6px;
         }
         .sidebar-close:hover {
-            color: #1c1c1e;
+            color: #fff;
         }
-
         .nav-list {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
             flex: 1;
         }
         .nav-list li a {
@@ -175,8 +162,8 @@
             align-items: center;
             gap: 14px;
             padding: 12px 16px;
-            border-radius: 12px;
-            color: #1c1c1e;
+            border-radius: 14px;
+            color: #b0b0c8;
             text-decoration: none;
             font-weight: 500;
             font-size: 1rem;
@@ -184,68 +171,70 @@
             cursor: pointer;
         }
         .nav-list li a:hover {
-            background: rgba(0, 122, 255, 0.06);
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
         }
         .nav-list li a.active {
-            background: rgba(0, 122, 255, 0.10);
-            color: #007aff;
+            background: rgba(0, 212, 255, 0.12);
+            color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.04);
         }
         .nav-list li a .icon {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             width: 28px;
             text-align: center;
         }
 
         /* ============================================================
-           ОСНОВНОЙ КОНТЕЙНЕР
+           КОНТЕЙНЕР
            ============================================================ */
         .container {
-            max-width: 700px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 16px 18px 60px;
+            padding: 20px 22px 60px;
         }
 
         /* ============================================================
-           КАРТОЧКИ (iOS-стиль)
+           КАРТОЧКИ
            ============================================================ */
         .card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 20px 22px;
-            margin-bottom: 16px;
-            border: 0.5px solid rgba(60, 60, 67, 0.06);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 22px 26px;
+            margin-bottom: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
             transition: all 0.3s ease;
             opacity: 0;
-            transform: scale(0.98) translateY(12px);
-            animation: cardIn 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+            transform: scale(0.96) translateY(18px);
+            animation: cardIn 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
         }
         .card:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+            border-color: rgba(0, 212, 255, 0.15);
+            transform: translateY(-2px);
         }
-        .card:nth-child(2) { animation-delay: 0.05s; }
-        .card:nth-child(3) { animation-delay: 0.10s; }
-        .card:nth-child(4) { animation-delay: 0.15s; }
-
+        .card:nth-child(2) {
+            animation-delay: 0.06s;
+        }
+        .card:nth-child(3) {
+            animation-delay: 0.12s;
+        }
         @keyframes cardIn {
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
             }
         }
-
         .card-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 14px;
-            color: #1c1c1e;
+            margin-bottom: 16px;
+            color: #00d4ff;
             display: flex;
             align-items: center;
-            gap: 8px;
-            letter-spacing: -0.3px;
+            gap: 10px;
         }
 
         /* ============================================================
@@ -253,7 +242,7 @@
            ============================================================ */
         .tab-content {
             display: none;
-            animation: fadeSlide 0.35s ease;
+            animation: fadeSlide 0.4s ease;
         }
         .tab-content.active {
             display: block;
@@ -261,7 +250,7 @@
         @keyframes fadeSlide {
             0% {
                 opacity: 0;
-                transform: translateY(8px);
+                transform: translateY(14px);
             }
             100% {
                 opacity: 1;
@@ -270,7 +259,7 @@
         }
 
         /* ============================================================
-           КНОПКИ (iOS-стиль)
+           КНОПКИ
            ============================================================ */
         .btn-group {
             display: flex;
@@ -279,84 +268,86 @@
         }
         .btn-group .btn {
             padding: 8px 18px;
-            border-radius: 30px;
-            border: 1px solid rgba(60, 60, 67, 0.08);
+            border-radius: 40px;
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
             background: transparent;
-            color: #1c1c1e;
+            color: #aab;
             cursor: pointer;
             transition: all 0.25s ease;
             font-weight: 500;
             font-size: 0.85rem;
         }
         .btn-group .btn:hover {
-            background: rgba(0, 122, 255, 0.06);
+            border-color: #00d4ff;
+            color: #fff;
+            transform: scale(1.02);
         }
         .btn-group .btn.active {
-            background: #007aff;
+            background: rgba(0, 212, 255, 0.12);
+            border-color: #00d4ff;
             color: #fff;
-            border-color: #007aff;
+            box-shadow: 0 0 24px rgba(0, 212, 255, 0.08);
         }
-
         .btn-primary {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             border: none;
-            border-radius: 14px;
-            background: #007aff;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
             color: #fff;
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 6px;
-            box-shadow: 0 2px 10px rgba(0, 122, 255, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 212, 255, 0.15);
+            margin-top: 8px;
         }
         .btn-primary:hover {
-            background: #0066d9;
-            transform: scale(1.01);
-            box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
+            transform: scale(1.02);
+            box-shadow: 0 8px 44px rgba(0, 212, 255, 0.3);
         }
-
         .btn-secondary {
             padding: 8px 18px;
-            border-radius: 30px;
-            border: 1px solid rgba(60, 60, 67, 0.08);
-            background: rgba(255, 255, 255, 0.8);
-            color: #1c1c1e;
+            border-radius: 40px;
+            border: 1.5px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: #ccc;
             cursor: pointer;
             transition: all 0.25s ease;
             font-weight: 500;
             font-size: 0.85rem;
         }
         .btn-secondary:hover {
-            background: rgba(0, 122, 255, 0.06);
+            border-color: #00d4ff;
+            color: #fff;
+            transform: scale(1.02);
         }
         .btn-secondary.btn-success {
-            border-color: #34c759;
-            color: #34c759;
+            border-color: #6bcb77;
+            color: #6bcb77;
         }
         .btn-secondary.btn-success:hover {
-            background: rgba(52, 199, 89, 0.08);
+            background: rgba(107, 203, 119, 0.12);
         }
         .btn-secondary.btn-danger {
-            border-color: #ff3b30;
-            color: #ff3b30;
+            border-color: #ff6b6b;
+            color: #ff6b6b;
         }
         .btn-secondary.btn-danger:hover {
-            background: rgba(255, 59, 48, 0.08);
+            background: rgba(255, 107, 107, 0.1);
         }
 
         /* ============================================================
-           ЧАТ-БОТ (iOS-стиль)
+           ЧАТ-БОТ
            ============================================================ */
         .chat-container {
             display: flex;
             flex-direction: column;
-            height: 400px;
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 16px;
+            height: 420px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
             overflow: hidden;
-            border: 0.5px solid rgba(60, 60, 67, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .chat-messages {
             flex: 1;
@@ -364,7 +355,7 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
         .chat-message {
             max-width: 80%;
@@ -376,20 +367,21 @@
         }
         .chat-message.user {
             align-self: flex-end;
-            background: #007aff;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
             color: #fff;
             border-bottom-right-radius: 4px;
         }
         .chat-message.bot {
             align-self: flex-start;
-            background: rgba(60, 60, 67, 0.04);
-            color: #1c1c1e;
+            background: rgba(255, 255, 255, 0.06);
+            color: #e0e0e8;
             border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         @keyframes msgIn {
             0% {
                 opacity: 0;
-                transform: scale(0.95) translateY(6px);
+                transform: scale(0.95) translateY(8px);
             }
             100% {
                 opacity: 1;
@@ -399,10 +391,10 @@
         .chat-input-area {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding: 10px 16px;
-            background: rgba(255, 255, 255, 0.8);
-            border-top: 0.5px solid rgba(60, 60, 67, 0.06);
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.25);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
         }
         .chat-input-row {
             display: flex;
@@ -412,31 +404,32 @@
             flex: 1;
             padding: 10px 14px;
             border-radius: 30px;
-            border: 0.5px solid rgba(60, 60, 67, 0.08);
-            background: rgba(255, 255, 255, 0.9);
-            color: #1c1c1e;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
             font-size: 0.95rem;
             outline: none;
             transition: border 0.2s;
         }
         .chat-input-area input:focus {
-            border-color: #007aff;
+            border-color: #00d4ff;
         }
         .chat-input-area input::placeholder {
-            color: #8e8e93;
+            color: #556;
         }
         .chat-input-area button {
             padding: 10px 22px;
             border-radius: 30px;
             border: none;
-            background: #007aff;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
             color: #fff;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.25s ease;
         }
         .chat-input-area button:hover {
-            background: #0066d9;
+            transform: scale(1.04);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
         }
         .chat-quick-buttons {
             display: flex;
@@ -446,41 +439,43 @@
         .chat-quick-buttons button {
             padding: 4px 14px;
             border-radius: 30px;
-            border: 0.5px solid rgba(60, 60, 67, 0.08);
-            background: rgba(255, 255, 255, 0.8);
-            color: #1c1c1e;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: #aaa;
             font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
         .chat-quick-buttons button:hover {
-            background: rgba(0, 122, 255, 0.06);
+            border-color: #00d4ff;
+            color: #fff;
+            background: rgba(0, 212, 255, 0.08);
         }
 
         /* ============================================================
-           ВСПЛЫВАЮЩЕЕ ОКНО (iOS-стиль)
+           ВСПЛЫВАЮЩЕЕ ОКНО
            ============================================================ */
         .welcome-popup {
             position: fixed;
             bottom: 30px;
             right: 30px;
             z-index: 500;
-            max-width: 380px;
+            max-width: 400px;
             width: 90%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: saturate(180%) blur(20px);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border: 0.5px solid rgba(60, 60, 67, 0.08);
-            border-radius: 20px;
-            padding: 22px 24px;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-            animation: popUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+            background: rgba(18, 18, 40, 0.94);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 24px 26px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            animation: popUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
             transform-origin: bottom right;
         }
         @keyframes popUp {
             0% {
                 opacity: 0;
-                transform: scale(0.9) translateY(16px);
+                transform: scale(0.85) translateY(20px);
             }
             100% {
                 opacity: 1;
@@ -488,28 +483,28 @@
             }
         }
         .welcome-popup .popup-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            color: #1c1c1e;
-            margin-bottom: 6px;
+            color: #00d4ff;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         .welcome-popup .popup-text {
-            color: #3a3a3c;
-            font-size: 0.9rem;
+            color: #b0b0c8;
+            font-size: 0.95rem;
             line-height: 1.5;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
         .welcome-popup .popup-commands {
-            background: rgba(60, 60, 67, 0.04);
-            border-radius: 12px;
-            padding: 10px 14px;
-            margin: 8px 0 12px;
-            font-size: 0.8rem;
-            color: #3a3a3c;
-            border-left: 3px solid #007aff;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin: 10px 0 14px;
+            font-size: 0.85rem;
+            color: #c0c0d0;
+            border-left: 3px solid #00d4ff;
         }
         .welcome-popup .popup-commands li {
             list-style: none;
@@ -517,7 +512,7 @@
         }
         .welcome-popup .popup-commands li::before {
             content: "• ";
-            color: #007aff;
+            color: #00d4ff;
         }
         .welcome-popup .popup-buttons {
             display: flex;
@@ -526,8 +521,8 @@
             margin-top: 4px;
         }
         .welcome-popup .popup-buttons button {
-            padding: 8px 20px;
-            border-radius: 30px;
+            padding: 8px 22px;
+            border-radius: 40px;
             border: none;
             font-weight: 600;
             cursor: pointer;
@@ -535,32 +530,33 @@
             font-size: 0.9rem;
         }
         .welcome-popup .popup-buttons .btn-primary-popup {
-            background: #007aff;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
             color: #fff;
             flex: 1;
         }
         .welcome-popup .popup-buttons .btn-primary-popup:hover {
-            background: #0066d9;
+            transform: scale(1.04);
         }
         .welcome-popup .popup-buttons .btn-secondary-popup {
-            background: rgba(60, 60, 67, 0.04);
-            color: #1c1c1e;
-            border: 0.5px solid rgba(60, 60, 67, 0.08);
+            background: rgba(255, 255, 255, 0.06);
+            color: #aaa;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .welcome-popup .popup-buttons .btn-secondary-popup:hover {
-            background: rgba(60, 60, 67, 0.08);
+            background: rgba(255, 255, 255, 0.10);
+            color: #fff;
         }
         .welcome-popup.hidden {
             display: none;
         }
 
         /* ============================================================
-           ОСТАЛЬНЫЕ СТИЛИ (адаптированы под iOS)
+           ОСТАЛЬНЫЕ СТИЛИ
            ============================================================ */
         .input-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
         }
         .input-group {
             display: flex;
@@ -568,158 +564,167 @@
             gap: 4px;
         }
         .input-group label {
-            font-size: 0.8rem;
-            color: #3a3a3c;
+            font-size: 0.85rem;
+            color: #aab;
             font-weight: 500;
         }
         .input-group input[type="range"] {
             width: 100%;
-            height: 4px;
+            height: 5px;
             -webkit-appearance: none;
-            background: #d1d1d6;
+            background: linear-gradient(90deg, #00d4ff, #a855f7);
             border-radius: 10px;
             outline: none;
             cursor: pointer;
         }
         .input-group input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
-            background: #007aff;
+            background: #00d4ff;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+            box-shadow: 0 0 24px rgba(0, 212, 255, 0.35);
+        }
+        .input-group input[type="range"]::-webkit-slider-thumb:hover {
+            box-shadow: 0 0 36px rgba(0, 212, 255, 0.55);
         }
         .input-group .value-display {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1c1c1e;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
         }
 
         .result-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
         }
         .result-item {
-            background: rgba(60, 60, 67, 0.04);
-            border-radius: 14px;
-            padding: 12px 10px;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 16px;
+            padding: 14px 12px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .result-item .number {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #007aff;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #00d4ff;
             display: block;
         }
         .result-item .desc {
-            font-size: 0.7rem;
-            color: #8e8e93;
+            font-size: 0.8rem;
+            color: #889;
             margin-top: 2px;
         }
-
         .bju-row {
             display: flex;
             justify-content: center;
-            gap: 24px;
+            gap: 32px;
             flex-wrap: wrap;
-            margin: 10px 0 2px;
+            margin: 12px 0 4px;
         }
         .bju-item {
             text-align: center;
         }
         .bju-item .bju-value {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             font-weight: 700;
         }
-        .bju-item.protein .bju-value { color: #ff3b30; }
-        .bju-item.fat .bju-value { color: #ff9500; }
-        .bju-item.carbs .bju-value { color: #34c759; }
+        .bju-item.protein .bju-value {
+            color: #ff6b6b;
+        }
+        .bju-item.fat .bju-value {
+            color: #ffd93d;
+        }
+        .bju-item.carbs .bju-value {
+            color: #6bcb77;
+        }
         .bju-item .bju-label {
-            font-size: 0.7rem;
-            color: #8e8e93;
+            font-size: 0.75rem;
+            color: #889;
         }
 
         .week-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 14px;
         }
         .day-card {
-            background: rgba(60, 60, 67, 0.04);
-            border-radius: 14px;
-            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.18);
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .day-card .day-name {
-            font-weight: 600;
-            color: #007aff;
-            font-size: 0.95rem;
-            margin-bottom: 6px;
+            font-weight: 700;
+            color: #00d4ff;
+            font-size: 1rem;
+            margin-bottom: 8px;
         }
         .day-card .meal-row {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             padding: 3px 0;
-            border-bottom: 0.5px solid rgba(60, 60, 67, 0.04);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
         .day-card .meal-row .meal-type {
-            color: #8e8e93;
+            color: #889;
         }
         .day-card .meal-row .meal-cal {
-            color: #8e8e93;
+            color: #889;
             float: right;
         }
         .day-card .day-total {
-            margin-top: 6px;
-            color: #007aff;
-            font-weight: 600;
+            margin-top: 8px;
+            color: #00d4ff;
+            font-weight: 700;
             text-align: right;
-            font-size: 0.9rem;
         }
 
         .pref-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
         }
         .pref-group {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
         }
         .pref-group label {
-            font-size: 0.8rem;
-            color: #3a3a3c;
+            font-size: 0.85rem;
+            color: #aab;
             font-weight: 500;
         }
         .pref-group select,
         .pref-group input[type="text"] {
             padding: 8px 12px;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.8);
-            color: #1c1c1e;
-            border: 0.5px solid rgba(60, 60, 67, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.06);
             font-size: 0.9rem;
         }
         .pref-group select option {
-            background: #fff;
-            color: #1c1c1e;
+            background: #1a1a2e;
+            color: #fff;
         }
         .pref-group .checkbox-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 6px;
         }
         .pref-group .checkbox-group label {
             display: flex;
             align-items: center;
             gap: 4px;
-            font-size: 0.75rem;
-            color: #1c1c1e;
+            font-size: 0.8rem;
+            color: #ccc;
             cursor: pointer;
         }
         .pref-group .checkbox-group input[type="checkbox"] {
-            accent-color: #007aff;
+            accent-color: #00d4ff;
             width: 16px;
             height: 16px;
             cursor: pointer;
@@ -727,188 +732,194 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-            gap: 10px;
-            margin-bottom: 14px;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
         }
         .stats-card {
-            background: rgba(60, 60, 67, 0.04);
+            background: rgba(0, 0, 0, 0.20);
             border-radius: 14px;
-            padding: 12px 8px;
+            padding: 14px 10px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .stats-card .stat-number {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            color: #007aff;
+            color: #00d4ff;
         }
         .stats-card .stat-label {
-            font-size: 0.65rem;
-            color: #8e8e93;
+            font-size: 0.7rem;
+            color: #889;
         }
 
         .weight-history {
             display: flex;
             flex-direction: column;
             gap: 4px;
-            max-height: 160px;
+            max-height: 180px;
             overflow-y: auto;
         }
         .weight-entry {
             display: flex;
             justify-content: space-between;
-            padding: 6px 12px;
-            background: rgba(60, 60, 67, 0.04);
+            padding: 6px 14px;
+            background: rgba(0, 0, 0, 0.12);
             border-radius: 10px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
         .weight-entry .date {
-            color: #8e8e93;
+            color: #889;
         }
         .weight-entry .weight {
             font-weight: 600;
-            color: #1c1c1e;
+            color: #fff;
         }
 
         .food-log {
-            max-height: 220px;
+            max-height: 260px;
             overflow-y: auto;
         }
         .food-log .log-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 12px;
-            background: rgba(60, 60, 67, 0.04);
+            padding: 8px 14px;
+            background: rgba(0, 0, 0, 0.14);
             border-radius: 12px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
         .food-log .log-item .log-name {
             font-weight: 500;
         }
         .food-log .log-item .log-cal {
-            color: #8e8e93;
-            font-size: 0.8rem;
+            color: #889;
+            font-size: 0.85rem;
         }
         .food-log .log-item .log-del {
-            color: #ff3b30;
+            color: #ff6b6b;
             cursor: pointer;
             background: none;
             border: none;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         .recipe-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-            gap: 12px;
-            max-height: 560px;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 14px;
+            max-height: 620px;
             overflow-y: auto;
             padding-right: 4px;
         }
         .recipe-card {
-            background: rgba(60, 60, 67, 0.04);
-            border-radius: 14px;
-            padding: 12px 14px;
+            background: rgba(0, 0, 0, 0.20);
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
             transition: all 0.25s ease;
         }
         .recipe-card:hover {
-            background: rgba(60, 60, 67, 0.06);
+            border-color: rgba(123, 47, 252, 0.25);
+            transform: translateY(-3px);
         }
         .recipe-card .recipe-name {
             font-weight: 600;
-            color: #1c1c1e;
-            font-size: 0.9rem;
+            color: #fff;
+            font-size: 0.95rem;
         }
         .recipe-card .recipe-info {
-            font-size: 0.7rem;
-            color: #8e8e93;
+            font-size: 0.75rem;
+            color: #889;
         }
         .recipe-card .recipe-cal {
-            color: #007aff;
+            color: #00d4ff;
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
         }
         .recipe-card .recipe-tags {
             display: flex;
             gap: 4px;
             flex-wrap: wrap;
-            margin-top: 4px;
+            margin-top: 5px;
         }
         .recipe-card .recipe-tags .tag {
-            font-size: 0.55rem;
-            padding: 2px 10px;
+            font-size: 0.6rem;
+            padding: 2px 12px;
             border-radius: 30px;
-            background: rgba(60, 60, 67, 0.04);
-            color: #8e8e93;
+            background: rgba(255, 255, 255, 0.05);
+            color: #889;
         }
 
         .filter-buttons {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
-            margin-bottom: 10px;
+            gap: 6px;
+            margin-bottom: 12px;
         }
         .filter-btn {
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 30px;
-            border: 0.5px solid rgba(60, 60, 67, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             background: transparent;
-            color: #3a3a3c;
+            color: #889;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             transition: all 0.2s ease;
         }
         .filter-btn:hover {
-            background: rgba(0, 122, 255, 0.06);
+            border-color: #00d4ff;
+            color: #fff;
         }
         .filter-btn.active {
-            background: #007aff;
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
             color: #fff;
-            border-color: #007aff;
         }
 
         .water-glasses {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin-top: 12px;
         }
         .glass {
-            width: 38px;
-            height: 48px;
-            border: 1.5px solid rgba(60, 60, 67, 0.08);
-            border-radius: 6px 6px 12px 12px;
-            background: rgba(255, 255, 255, 0.6);
+            width: 40px;
+            height: 50px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 6px 6px 14px 14px;
+            background: rgba(0, 212, 255, 0.04);
             cursor: pointer;
             transition: all 0.25s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.65rem;
-            color: #8e8e93;
+            font-size: 0.7rem;
+            color: #556;
             user-select: none;
         }
         .glass.filled {
-            background: rgba(0, 122, 255, 0.12);
-            border-color: #007aff;
-            color: #007aff;
+            background: rgba(0, 212, 255, 0.20);
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.12);
+            color: #00d4ff;
         }
         .glass:hover {
-            transform: scale(1.04);
+            transform: scale(1.06);
         }
 
         .progress-bar {
             width: 100%;
-            height: 6px;
-            background: rgba(60, 60, 67, 0.08);
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
             border-radius: 20px;
             overflow: hidden;
-            margin-top: 4px;
+            margin-top: 6px;
         }
         .progress-fill {
             height: 100%;
-            background: #007aff;
+            background: linear-gradient(90deg, #00d4ff, #a855f7);
             border-radius: 20px;
             transition: width 0.6s ease;
             width: 0%;
@@ -917,55 +928,56 @@
         .reminder-item {
             display: flex;
             flex-direction: column;
-            padding: 10px 14px;
-            background: rgba(60, 60, 67, 0.04);
+            padding: 10px 16px;
+            background: rgba(0, 0, 0, 0.14);
             border-radius: 14px;
-            margin-bottom: 6px;
-            gap: 6px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            gap: 8px;
         }
         .reminder-item .rem-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 10px;
         }
         .reminder-item .rem-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
         .reminder-item input[type="time"] {
-            background: rgba(255, 255, 255, 0.8);
-            border: 0.5px solid rgba(60, 60, 67, 0.08);
-            color: #1c1c1e;
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-size: 0.9rem;
         }
         .reminder-item input[type="checkbox"] {
-            accent-color: #007aff;
+            accent-color: #00d4ff;
             width: 18px;
             height: 18px;
             cursor: pointer;
         }
         .reminder-item .days-checkboxes {
             display: flex;
-            gap: 4px;
+            gap: 6px;
             flex-wrap: wrap;
-            margin-left: 28px;
+            margin-left: 30px;
         }
         .reminder-item .days-checkboxes label {
-            font-size: 0.65rem;
-            color: #8e8e93;
+            font-size: 0.7rem;
+            color: #889;
             display: flex;
             align-items: center;
-            gap: 2px;
+            gap: 3px;
             cursor: pointer;
         }
         .reminder-item .days-checkboxes input[type="checkbox"] {
-            accent-color: #007aff;
+            accent-color: #00d4ff;
             width: 14px;
             height: 14px;
             cursor: pointer;
@@ -974,14 +986,14 @@
         .chart-wrapper {
             width: 100%;
             overflow-x: auto;
-            padding: 4px 0;
+            padding: 6px 0;
         }
         #weightChart {
             width: 100%;
-            max-width: 700px;
-            height: 220px;
-            background: rgba(60, 60, 67, 0.04);
-            border-radius: 14px;
+            max-width: 780px;
+            height: 260px;
+            background: rgba(0, 0, 0, 0.18);
+            border-radius: 16px;
             display: block;
             margin: 0 auto;
         }
@@ -989,12 +1001,16 @@
         .hidden {
             display: none !important;
         }
-        .mt-10 { margin-top: 10px; }
-        .mb-10 { margin-bottom: 10px; }
+        .mt-10 {
+            margin-top: 10px;
+        }
+        .mb-10 {
+            margin-bottom: 10px;
+        }
         .flex-center {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
@@ -1002,32 +1018,72 @@
            АДАПТИВ
            ============================================================ */
         @media (max-width: 600px) {
-            .header { padding: 10px 16px; height: 50px; }
-            .logo { font-size: 1.2rem; }
-            .logo svg { width: 24px; height: 24px; }
-            .container { padding: 12px 14px 40px; }
-            .card { padding: 16px 16px; }
-            .sidebar { width: 270px; padding: 16px 12px; }
-            .input-grid { grid-template-columns: 1fr; }
-            .pref-grid { grid-template-columns: 1fr; }
-            .result-grid { grid-template-columns: 1fr 1fr; }
-            .week-grid { grid-template-columns: 1fr; }
-            .welcome-popup { bottom: 12px; right: 12px; padding: 16px 18px; max-width: 95%; }
-            .chat-container { height: 320px; }
-            .glass { width: 32px; height: 40px; font-size: 0.55rem; }
-            .reminder-item .days-checkboxes { margin-left: 0; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .header {
+                padding: 12px 16px;
+            }
+            .logo {
+                font-size: 1.3rem;
+            }
+            .logo svg {
+                width: 26px;
+                height: 26px;
+            }
+            .container {
+                padding: 14px 14px 40px;
+            }
+            .card {
+                padding: 16px 16px;
+            }
+            .sidebar {
+                width: 260px;
+                padding: 18px 14px;
+            }
+            .input-grid {
+                grid-template-columns: 1fr;
+            }
+            .pref-grid {
+                grid-template-columns: 1fr;
+            }
+            .result-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .week-grid {
+                grid-template-columns: 1fr;
+            }
+            .welcome-popup {
+                bottom: 16px;
+                right: 16px;
+                padding: 18px 18px;
+                max-width: 95%;
+            }
+            .chat-container {
+                height: 340px;
+            }
+            .glass {
+                width: 34px;
+                height: 44px;
+                font-size: 0.6rem;
+            }
+            .reminder-item .days-checkboxes {
+                margin-left: 0;
+            }
         }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: rgba(60, 60, 67, 0.04); }
-        ::-webkit-scrollbar-thumb { background: #c6c6c8; border-radius: 20px; }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a2e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #7b2ffc;
+            border-radius: 20px;
+        }
     </style>
 </head>
 <body>
 
     <!-- ============================================================
-    ШАПКА (iOS-стиль)
+    ШАПКА
     ============================================================ -->
     <header class="header">
         <div class="header-left">
@@ -1036,9 +1092,15 @@
             </button>
             <div class="logo">
                 <svg viewBox="0 0 32 32" fill="none">
-                    <path d="M4 24 L12 12 L20 20 L28 6" stroke="#007aff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                    <circle cx="12" cy="12" r="3" fill="#007aff" opacity="0.6"/>
-                    <circle cx="20" cy="20" r="3" fill="#007aff" opacity="0.6"/>
+                    <path d="M4 24 L12 12 L20 20 L28 6" stroke="url(#lg)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="12" r="3" fill="#00d4ff" opacity="0.6"/>
+                    <circle cx="20" cy="20" r="3" fill="#a855f7" opacity="0.6"/>
+                    <defs>
+                        <linearGradient id="lg" x1="4" y1="24" x2="28" y2="6">
+                            <stop offset="0%" stop-color="#00d4ff"/>
+                            <stop offset="100%" stop-color="#a855f7"/>
+                        </linearGradient>
+                    </defs>
                 </svg>
                 ShapeUp
             </div>
@@ -1046,7 +1108,7 @@
     </header>
 
     <!-- ============================================================
-    ШТОРКА (iOS-стиль)
+    ШТОРКА
     ============================================================ -->
     <div class="overlay" id="overlay"></div>
     <nav class="sidebar" id="sidebar">
@@ -1080,7 +1142,7 @@
                 <div class="input-grid">
                     <div class="input-group">
                         <label>Пол</label>
-                        <div style="display:flex;gap:6px;margin-top:4px;">
+                        <div style="display:flex;gap:8px;margin-top:4px;">
                             <button class="btn active" id="genderMale">Мужской</button>
                             <button class="btn" id="genderFemale">Женский</button>
                         </div>
@@ -1098,14 +1160,14 @@
                         <input type="range" id="weightRange" min="30" max="200" value="87">
                     </div>
                 </div>
-                <div style="margin-top:14px;">
-                    <label style="color:#3a3a3c;font-size:0.8rem;font-weight:500;">Уровень активности</label>
+                <div style="margin-top:16px;">
+                    <label style="color:#aab;font-size:0.85rem;">Уровень активности</label>
                     <div class="btn-group" id="activityGroup">
                         <button class="btn" data-activity="1.2">Сидячий</button>
                         <button class="btn active" data-activity="1.375">Средний</button>
                         <button class="btn" data-activity="1.55">Активный</button>
                         <button class="btn" data-activity="1.725">Очень активный</button>
-                        <button class="btn" data-activity="1.9">🔥 Спорт</button>
+                        <button class="btn" data-activity="1.9">🔥 Очень активный (спорт)</button>
                     </div>
                 </div>
             </div>
@@ -1136,7 +1198,7 @@
         <div id="tabPlan" class="tab-content">
             <div class="card">
                 <div class="card-title">📅 План питания на неделю</div>
-                <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+                <div style="display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
                     <button class="btn-secondary btn-success" id="modeSmart">🧠 Умный подбор</button>
                     <button class="btn-secondary" id="modeAuto">🎲 Авто-подбор</button>
                 </div>
@@ -1185,14 +1247,16 @@
                     </div>
                 </div>
                 <div id="autoBlock" class="hidden">
-                    <div style="text-align:center;padding:10px 0;color:#8e8e93;">🎲 Нажмите кнопку ниже — получите случайный сбалансированный план без повторов</div>
+                    <div style="text-align:center;padding:12px 0;color:#889;">
+                        🎲 Нажмите кнопку ниже — получите случайный сбалансированный план без повторов
+                    </div>
                 </div>
-                <button class="btn-primary" id="generatePlanBtn" style="margin-top:12px;">🎲 Сгенерировать план</button>
+                <button class="btn-primary" id="generatePlanBtn" style="margin-top:16px;">🎲 Сгенерировать план</button>
             </div>
             <div class="card">
                 <div class="card-title">📋 Ваш план</div>
                 <div id="planResult">
-                    <div style="color:#8e8e93;text-align:center;padding:16px;">Нажмите «Сгенерировать план»</div>
+                    <div style="color:#556;text-align:center;padding:20px;">Нажмите «Сгенерировать план»</div>
                 </div>
             </div>
         </div>
@@ -1204,13 +1268,13 @@
             <div class="card">
                 <div class="card-title">💧 Водный баланс</div>
                 <div id="waterDisplay">
-                    <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
                         <div>
-                            <div style="font-size:1.6rem;font-weight:700;color:#007aff;" id="waterGoalDisplay">2.6 Л</div>
-                            <div style="color:#8e8e93;font-size:0.75rem;">Норма на день</div>
+                            <div style="font-size:1.8rem;font-weight:700;color:#00d4ff;" id="waterGoalDisplay">2.6 Л</div>
+                            <div style="color:#889;font-size:0.8rem;">Норма на день</div>
                         </div>
-                        <div style="flex:1;min-width:120px;">
-                            <div style="display:flex;justify-content:space-between;font-size:0.8rem;">
+                        <div style="flex:1;min-width:140px;">
+                            <div style="display:flex;justify-content:space-between;">
                                 <span id="waterDrank">0</span>
                                 <span id="waterPercent">0%</span>
                             </div>
@@ -1220,7 +1284,7 @@
                         </div>
                     </div>
                     <div class="water-glasses" id="waterGlasses"></div>
-                    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+                    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;">
                         <button class="btn-secondary" id="resetWaterBtn">🔄 Сбросить воду</button>
                         <button class="btn-secondary btn-success" id="waterReminderBtn">💧 Напомнить о воде</button>
                     </div>
@@ -1234,20 +1298,20 @@
         <div id="tabTracker" class="tab-content">
             <div class="card">
                 <div class="card-title">📝 Дневник питания (сегодня)</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
-                    <select id="foodSelect" style="flex:1;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,0.8);color:#1c1c1e;border:0.5px solid rgba(60,60,67,0.08);">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+                    <select id="foodSelect" style="flex:1;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
                         <option value="">-- Выберите рецепт --</option>
                     </select>
                     <button class="btn-secondary" id="addFoodBtn">➕ Добавить</button>
                 </div>
-                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:8px;font-size:0.85rem;">
+                <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:10px;">
                     <span>🔥 <span id="todayCal">0</span> ккал</span>
-                    <span style="color:#ff3b30;">🥩 <span id="todayProtein">0</span>г</span>
-                    <span style="color:#ff9500;">🥑 <span id="todayFat">0</span>г</span>
-                    <span style="color:#34c759;">🍞 <span id="todayCarbs">0</span>г</span>
+                    <span style="color:#ff6b6b;">🥩 <span id="todayProtein">0</span>г</span>
+                    <span style="color:#ffd93d;">🥑 <span id="todayFat">0</span>г</span>
+                    <span style="color:#6bcb77;">🍞 <span id="todayCarbs">0</span>г</span>
                 </div>
                 <div class="food-log" id="foodLog"></div>
-                <button class="btn-secondary btn-danger" id="resetFoodBtn" style="margin-top:8px;">🗑 Очистить дневник</button>
+                <button class="btn-secondary btn-danger" id="resetFoodBtn" style="margin-top:10px;">🗑 Очистить дневник</button>
             </div>
         </div>
 
@@ -1258,9 +1322,9 @@
             <div class="card">
                 <div class="card-title">📈 Статистика</div>
                 <div class="stats-grid" id="statsOverview"></div>
-                <div style="margin-top:12px;">
-                    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
-                        <input type="number" id="newWeightInput" placeholder="Новый вес (кг)" style="flex:1;padding:8px 12px;border-radius:12px;background:rgba(255,255,255,0.8);color:#1c1c1e;border:0.5px solid rgba(60,60,67,0.08);">
+                <div style="margin-top:14px;">
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+                        <input type="number" id="newWeightInput" placeholder="Новый вес (кг)" style="flex:1;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
                         <button class="btn-secondary" id="addWeightBtn">📌 Записать вес</button>
                     </div>
                     <div class="weight-history" id="weightHistory"></div>
@@ -1274,12 +1338,12 @@
             </div>
             <div class="card">
                 <div class="card-title">💾 Резервное копирование</div>
-                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
                     <button class="btn-secondary btn-success" id="exportBtn">📤 Скачать бекап</button>
                     <button class="btn-secondary" id="importBtn" onclick="document.getElementById('importFile').click()">📥 Загрузить бекап</button>
                     <input type="file" id="importFile" accept=".json" style="display:none;">
                 </div>
-                <div style="margin-top:8px;font-size:0.7rem;color:#8e8e93;">Бекап содержит все ваши данные</div>
+                <div style="margin-top:10px;font-size:0.75rem;color:#556;">Бекап содержит все ваши данные</div>
             </div>
         </div>
 
@@ -1289,7 +1353,7 @@
         <div id="tabRecipes" class="tab-content">
             <div class="card">
                 <div class="card-title">🍳 Рецепты</div>
-                <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
                     <button class="btn-secondary btn-success" id="addRecipeBtn">➕ Добавить свой рецепт</button>
                 </div>
                 <div class="filter-buttons" id="recipeFilters">
@@ -1311,11 +1375,11 @@
             <div class="card">
                 <div class="card-title">⏰ Настройка напоминаний</div>
                 <div id="remindersContainer"></div>
-                <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
                     <button class="btn-secondary btn-success" id="testReminderBtn">🔔 Проверить уведомление</button>
                     <button class="btn-secondary" id="resetRemindersBtn">🔄 Сбросить настройки</button>
                 </div>
-                <div style="margin-top:8px;font-size:0.7rem;color:#8e8e93;">Уведомления работают, пока открыта страница</div>
+                <div style="margin-top:10px;font-size:0.75rem;color:#556;">Уведомления работают, пока открыта страница</div>
             </div>
         </div>
 
@@ -1349,7 +1413,7 @@
     </div>
 
     <!-- ============================================================
-    ВСПЛЫВАЮЩЕЕ ОКНО (iOS-стиль)
+    ВСПЛЫВАЮЩЕЕ ОКНО
     ============================================================ -->
     <div class="welcome-popup" id="welcomePopup">
         <div class="popup-title">💬 Нужна помощь?</div>
@@ -1374,10 +1438,9 @@
     ============================================================ -->
     <script>
         // ================================================================
-        // 1. ВАШИ РЕЦЕПТЫ (60 шт, без моих)
+        // 1. ВАШИ РЕЦЕПТЫ (60 шт)
         // ================================================================
         const BASE_RECIPES = [
-            // ЗАВТРАКИ (№1–50)
             { id: 1, name: 'Овсяная каша с фруктами и орехами', type: 'Завтрак', cal: 390, protein: 14, fat: 14, carbs: 55,
                 weight: '300г', desc: 'Овсяные хлопья 50г, молоко 200мл, банан 50г, орехи грецкие 15г, курага 30г',
                 category: 'Завтрак', price: 'Средняя', time: '15 мин' },
@@ -1528,8 +1591,6 @@
             { id: 50, name: 'Шакшука с сыром фета', type: 'Завтрак', cal: 330, protein: 22, fat: 24, carbs: 12,
                 weight: '400г', desc: 'Яйца 4шт, помидоры 300г, перец сладкий 100г, лук 50г, сыр фета 50г, оливковое масло 10г',
                 category: 'Завтрак', price: 'Средняя', time: '25 мин' },
-
-            // ОБЕДЫ (№51–60)
             { id: 51, name: 'Куриная грудка с гречкой и овощами', type: 'Обед', cal: 520, protein: 45, fat: 14,
                 carbs: 55, weight: '400г', desc: 'Куриная грудка 300г, гречка 140г, морковь 100г, лук 70г, огурец или овощной салат 150г, масло растительное 10г',
                 category: 'Обед', price: 'Средняя', time: '40 мин' },
@@ -1562,10 +1623,7 @@
                 category: 'Обед', price: 'Средняя', time: '35 мин' }
         ];
 
-        // Пользовательские рецепты
         let customRecipes = [];
-
-        // Настройки по умолчанию
         const DEFAULT_USER = {
             gender: 'male',
             age: 31,
@@ -1574,7 +1632,6 @@
             activity: 1.375,
             deficit: 0.85
         };
-
         const DEFAULT_REMINDERS = [
             { id: 'rem_breakfast', label: '🍳 Завтрак', time: '08:00', enabled: true, days: [1, 2, 3, 4, 5, 6, 7] },
             { id: 'rem_lunch', label: '🍲 Обед', time: '13:00', enabled: true, days: [1, 2, 3, 4, 5, 6, 7] },
@@ -1583,7 +1640,6 @@
                     3, 4, 5, 6, 7
                 ] }
         ];
-
         const WATER_PER_GLASS = 250;
 
         // ================================================================
@@ -1614,14 +1670,11 @@
             weightHistory.push({ date: new Date().toLocaleDateString(), weight: user.weight });
             saveState('weightHistory', weightHistory);
         }
-
         let waterDrank = loadState('waterDrank', 0);
         let foodLog = loadState('foodLog', []);
         customRecipes = loadState('customRecipes', []);
-
         let reminders = loadState('reminders', DEFAULT_REMINDERS);
         if (!loadState('reminders', null)) saveState('reminders', reminders);
-
         let lastResult = loadState('lastResult', null);
         let currentPlan = loadState('currentPlan', null);
         let userName = loadState('userName', '');
@@ -1745,7 +1798,6 @@
             }
             html += '</div>';
             container.innerHTML = html;
-
             const checkedItems = loadState('shoppingChecked', []);
             checkedItems.forEach(id => {
                 const el = document.getElementById(id);
@@ -1778,7 +1830,7 @@
         function renderPlan(plan) {
             const container = document.getElementById('planResult');
             if (!plan || plan.length === 0) {
-                container.innerHTML = '<div style="color:#8e8e93;text-align:center;padding:16px;">Нажмите «Сгенерировать план»</div>';
+                container.innerHTML = '<div style="color:#556;text-align:center;padding:20px;">Нажмите «Сгенерировать план»</div>';
                 return;
             }
             let html = '<div class="week-grid">';
@@ -1808,14 +1860,12 @@
             const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user.deficit);
             lastResult = result;
             saveState('lastResult', result);
-
             const minCal = user.gender === 'male' ? 1500 : 1200;
             if (result.dailyCal < minCal) {
                 setTimeout(() => {
                     alert(`⚠️ Ваша норма калорий (${result.dailyCal} ккал) ниже рекомендуемой для ${user.gender === 'male' ? 'мужчин' : 'женщин'} (${minCal} ккал).`);
                 }, 500);
             }
-
             document.getElementById('resultNumbers').innerHTML = `
                 <div class="result-item"><span class="number">${result.dailyCal}</span><div class="desc">Калорий в день</div></div>
                 <div class="result-item"><span class="number">${result.tdee}</span><div class="desc">Поддержание</div></div>
@@ -1837,7 +1887,6 @@
             const percent = Math.min(100, Math.round((waterDrank / goal) * 100));
             document.getElementById('waterPercent').textContent = percent + '%';
             document.getElementById('waterFill').style.width = percent + '%';
-
             const glassesContainer = document.getElementById('waterGlasses');
             const totalGlasses = Math.ceil(goal / WATER_PER_GLASS);
             let html = '';
@@ -1852,7 +1901,7 @@
         function renderFoodLog() {
             const container = document.getElementById('foodLog');
             if (foodLog.length === 0) {
-                container.innerHTML = '<div style="color:#8e8e93;text-align:center;padding:16px;">Сегодня ничего не добавлено</div>';
+                container.innerHTML = '<div style="color:#556;text-align:center;padding:20px;">Сегодня ничего не добавлено</div>';
             } else {
                 let html = '';
                 let totalCal = 0,
@@ -1887,7 +1936,6 @@
             const avgWeight = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
             const minWeight = lastWeek.length ? Math.min(...lastWeek.map(e => e.weight)) : user.weight;
             const maxWeight = lastWeek.length ? Math.max(...lastWeek.map(e => e.weight)) : user.weight;
-
             overview.innerHTML = `
                 <div class="stats-card"><div class="stat-number">${user.weight}</div><div class="stat-label">Текущий вес</div></div>
                 <div class="stats-card"><div class="stat-number">${avgWeight.toFixed(1)}</div><div class="stat-label">Средний за неделю</div></div>
@@ -1896,10 +1944,9 @@
                 <div class="stats-card"><div class="stat-number">${foodLog.length}</div><div class="stat-label">Записей сегодня</div></div>
                 <div class="stats-card"><div class="stat-number">${customRecipes.length}</div><div class="stat-label">Своих рецептов</div></div>
             `;
-
             const historyContainer = document.getElementById('weightHistory');
             if (weightHistory.length === 0) {
-                historyContainer.innerHTML = '<div style="color:#8e8e93;">Нет данных</div>';
+                historyContainer.innerHTML = '<div style="color:#556;">Нет данных</div>';
             } else {
                 let html = '';
                 const reversed = [...weightHistory].reverse().slice(0, 10);
@@ -1917,7 +1964,6 @@
             if (filter === 'all') filtered = recipes;
             else if (filter === 'Свои') filtered = customRecipes;
             else filtered = recipes.filter(r => r.category === filter);
-
             let html = '';
             filtered.forEach(r => {
                 const isCustom = customRecipes.some(cr => cr.id === r.id);
@@ -1925,7 +1971,7 @@
                     <div class="recipe-card">
                         <div class="recipe-name">
                             ${r.name}
-                            ${isCustom ? `<button class="recipe-del" onclick="deleteCustomRecipe(${r.id})" style="float:right;background:none;border:none;color:#ff3b30;cursor:pointer;">✕</button>` : ''}
+                            ${isCustom ? `<button class="recipe-del" onclick="deleteCustomRecipe(${r.id})" style="float:right;background:none;border:none;color:#ff6b6b;cursor:pointer;">✕</button>` : ''}
                         </div>
                         <div class="recipe-info">${r.type} · ${r.weight} · ⏱ ${r.time}</div>
                         <div class="recipe-cal">🔥 ${r.cal} ккал</div>
@@ -1933,13 +1979,13 @@
                         <div class="recipe-tags">
                             <span class="tag">${r.category}</span>
                             <span class="tag">${r.price}</span>
-                            ${isCustom ? '<span class="tag" style="background:rgba(0,122,255,0.08);color:#007aff;">Моё</span>' : ''}
+                            ${isCustom ? '<span class="tag" style="background:rgba(0,212,255,0.12);color:#00d4ff;">Моё</span>' : ''}
                         </div>
-                        <div style="font-size:0.7rem;color:#8e8e93;margin-top:4px;">${r.desc}</div>
+                        <div style="font-size:0.75rem;color:#556;margin-top:4px;">${r.desc}</div>
                     </div>
                 `;
             });
-            grid.innerHTML = html || '<div style="color:#8e8e93;text-align:center;padding:16px;">Нет рецептов</div>';
+            grid.innerHTML = html || '<div style="color:#556;text-align:center;padding:20px;">Нет рецептов</div>';
         }
 
         function renderFoodSelect() {
@@ -1973,10 +2019,10 @@
                                 <input type="checkbox" ${rem.enabled ? 'checked' : ''} onchange="toggleReminder(${idx})">
                                 <span style="font-weight:500;">${rem.label}</span>
                             </div>
-                            <div style="display:flex;gap:6px;align-items:center;">
-                                ${rem.interval ? `<span style="color:#8e8e93;font-size:0.75rem;">каждые ${rem.interval} ч</span>` :
+                            <div style="display:flex;gap:8px;align-items:center;">
+                                ${rem.interval ? `<span style="color:#889;font-size:0.8rem;">каждые ${rem.interval} ч</span>` :
                                     `<input type="time" value="${rem.time}" onchange="updateReminderTime(${idx}, this.value)">`}
-                                <button class="btn-secondary btn-danger" style="padding:2px 8px;font-size:0.65rem;" onclick="removeReminder(${idx})">✕</button>
+                                <button class="btn-secondary btn-danger" style="padding:4px 10px;font-size:0.7rem;" onclick="removeReminder(${idx})">✕</button>
                             </div>
                         </div>
                         <div class="days-checkboxes">
@@ -1992,9 +2038,9 @@
                 `;
             });
             html += `
-                <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;">
-                    <input type="text" id="newRemLabel" placeholder="Название" style="flex:1;padding:6px 12px;border-radius:10px;background:rgba(255,255,255,0.8);color:#1c1c1e;border:0.5px solid rgba(60,60,67,0.08);">
-                    <input type="time" id="newRemTime" value="12:00" style="padding:6px 12px;border-radius:10px;background:rgba(255,255,255,0.8);color:#1c1c1e;border:0.5px solid rgba(60,60,67,0.08);">
+                <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+                    <input type="text" id="newRemLabel" placeholder="Название" style="flex:1;padding:8px 14px;border-radius:12px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
+                    <input type="time" id="newRemTime" value="12:00" style="padding:8px 14px;border-radius:12px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
                     <button class="btn-secondary btn-success" onclick="addReminder()">➕ Добавить</button>
                 </div>
             `;
@@ -2060,16 +2106,13 @@
             reminderIntervals.forEach(clearInterval);
             reminderIntervals = [];
             if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
-
             const now = new Date();
             const today = now.getDay();
             const todayNum = today === 0 ? 7 : today;
-
             reminders.forEach(rem => {
                 if (!rem.enabled) return;
                 const days = rem.days || [1, 2, 3, 4, 5, 6, 7];
                 if (!days.includes(todayNum)) return;
-
                 if (rem.interval) {
                     const intervalMs = rem.interval * 60 * 60 * 1000;
                     const id = setInterval(() => {
@@ -2136,31 +2179,26 @@
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const rect = canvas.parentElement.getBoundingClientRect();
-            const width = Math.min(rect.width - 20, 700);
-            const height = 220;
+            const width = Math.min(rect.width - 20, 780);
+            const height = 260;
             canvas.width = width;
             canvas.height = height;
-
             const data = weightHistory.slice(-14);
             if (data.length < 2) {
-                ctx.fillStyle = '#8e8e93';
-                ctx.font = '14px -apple-system, sans-serif';
+                ctx.fillStyle = '#556';
+                ctx.font = '16px sans-serif';
                 ctx.textAlign = 'center';
                 ctx.fillText('Добавьте больше записей веса', width / 2, height / 2);
                 return;
             }
-
-            const padding = { top: 16, bottom: 24, left: 32, right: 14 };
+            const padding = { top: 20, bottom: 28, left: 38, right: 18 };
             const chartWidth = width - padding.left - padding.right;
             const chartHeight = height - padding.top - padding.bottom;
-
             const weights = data.map(d => d.weight);
             const minWeight = Math.max(40, Math.floor(Math.min(...weights) - 2));
             const maxWeight = Math.ceil(Math.max(...weights) + 2);
-
             ctx.clearRect(0, 0, width, height);
-
-            ctx.strokeStyle = 'rgba(60,60,67,0.06)';
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
             ctx.lineWidth = 1;
             for (let i = 0; i < 5; i++) {
                 const y = padding.top + (i / 4) * chartHeight;
@@ -2169,24 +2207,21 @@
                 ctx.lineTo(width - padding.right, y);
                 ctx.stroke();
                 const val = maxWeight - (i / 4) * (maxWeight - minWeight);
-                ctx.fillStyle = '#8e8e93';
-                ctx.font = '9px -apple-system, sans-serif';
+                ctx.fillStyle = '#666';
+                ctx.font = '10px sans-serif';
                 ctx.textAlign = 'right';
-                ctx.fillText(Math.round(val) + 'кг', padding.left - 4, y + 3);
+                ctx.fillText(Math.round(val) + 'кг', padding.left - 5, y + 3);
             }
-
-            ctx.strokeStyle = 'rgba(60,60,67,0.08)';
+            ctx.strokeStyle = 'rgba(255,255,255,0.08)';
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(padding.left, height - padding.bottom);
             ctx.lineTo(width - padding.right, height - padding.bottom);
             ctx.stroke();
-
             const step = chartWidth / (data.length - 1);
-
             const animateLine = (progress) => {
                 ctx.beginPath();
-                ctx.strokeStyle = '#007aff';
+                ctx.strokeStyle = '#00d4ff';
                 ctx.lineWidth = 2.5;
                 const count = Math.max(1, Math.floor(progress * data.length));
                 for (let i = 0; i < count; i++) {
@@ -2203,28 +2238,26 @@
                     chartHeight;
                     ctx.beginPath();
                     ctx.arc(x, y, 4, 0, 2 * Math.PI);
-                    ctx.fillStyle = '#007aff';
+                    ctx.fillStyle = '#00d4ff';
                     ctx.fill();
-                    ctx.strokeStyle = '#fff';
-                    ctx.lineWidth = 1.5;
+                    ctx.strokeStyle = '#0b0b1a';
+                    ctx.lineWidth = 2;
                     ctx.stroke();
-                    ctx.fillStyle = '#8e8e93';
-                    ctx.font = '8px -apple-system, sans-serif';
+                    ctx.fillStyle = '#666';
+                    ctx.font = '8px sans-serif';
                     ctx.textAlign = 'center';
-                    ctx.fillText(data[i].date.slice(0, 5), x, height - padding.bottom + 12);
+                    ctx.fillText(data[i].date.slice(0, 5), x, height - padding.bottom + 14);
                 }
             };
-
             let startTime = null;
-            const duration = 700;
+            const duration = 800;
 
             function animate(timestamp) {
                 if (!startTime) startTime = timestamp;
                 const elapsed = timestamp - startTime;
                 const progress = Math.min(1, elapsed / duration);
                 ctx.clearRect(0, 0, width, height);
-
-                ctx.strokeStyle = 'rgba(60,60,67,0.06)';
+                ctx.strokeStyle = 'rgba(255,255,255,0.05)';
                 ctx.lineWidth = 1;
                 for (let i = 0; i < 5; i++) {
                     const y = padding.top + (i / 4) * chartHeight;
@@ -2233,18 +2266,17 @@
                     ctx.lineTo(width - padding.right, y);
                     ctx.stroke();
                     const val = maxWeight - (i / 4) * (maxWeight - minWeight);
-                    ctx.fillStyle = '#8e8e93';
-                    ctx.font = '9px -apple-system, sans-serif';
+                    ctx.fillStyle = '#666';
+                    ctx.font = '10px sans-serif';
                     ctx.textAlign = 'right';
-                    ctx.fillText(Math.round(val) + 'кг', padding.left - 4, y + 3);
+                    ctx.fillText(Math.round(val) + 'кг', padding.left - 5, y + 3);
                 }
-                ctx.strokeStyle = 'rgba(60,60,67,0.08)';
+                ctx.strokeStyle = 'rgba(255,255,255,0.08)';
                 ctx.lineWidth = 1;
                 ctx.beginPath();
                 ctx.moveTo(padding.left, height - padding.bottom);
                 ctx.lineTo(width - padding.right, height - padding.bottom);
                 ctx.stroke();
-
                 animateLine(progress);
                 if (progress < 1) requestAnimationFrame(animate);
             }
@@ -2258,7 +2290,6 @@
 
         function getBotReply(message) {
             const msg = message.toLowerCase().trim();
-
             if (msg.startsWith('меня зовут')) {
                 const name = message.replace(/меня зовут/i, '').trim();
                 if (name) {
@@ -2267,7 +2298,6 @@
                     return `👋 Приятно познакомиться, ${userName}! Я запомнил твоё имя. Теперь я буду обращаться к тебе по имени. Чем могу помочь?`;
                 }
             }
-
             if (msg === '/отчёт') {
                 const lastWeek = weightHistory.slice(-7);
                 const avg = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
@@ -2289,7 +2319,6 @@
 ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : '🧘 Не сдавайся! Каждый день — это шаг к цели.'}
                 `;
             }
-
             const commands = {
                 'привет': `👋 Привет${userName ? ', ' + userName : ''}! Я твой помощник. Задавай любые вопросы про питание, воду или просто попроси мотивации!`,
                 'помощь': `
@@ -2324,11 +2353,9 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
                 'мотивация': `💪 ${userName ? userName + ', т' : 'Т'}ы уже сделал первый шаг! Каждый день — это прогресс. Даже маленький шаг приближает тебя к цели. Ты справишься!`,
                 'я устал': `🧘 ${userName ? userName + ', о' : 'О'}тдых — тоже часть пути. Возьми паузу, выпей воды, прогуляйся. А завтра продолжай с новыми силами. Я с тобой!`
             };
-
             for (const key in commands) {
                 if (msg.includes(key)) return commands[key];
             }
-
             if (msg.includes('калории') || msg.includes('норма') || msg.includes('ккал')) {
                 const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user
                 .deficit);
@@ -2336,21 +2363,18 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
                 const remain = result.dailyCal - todayCal;
                 return `🔥 Твоя норма на день: ${result.dailyCal} ккал (дефицит ${Math.round((1 - user.deficit) * 100)}%). Осталось: ${remain > 0 ? remain : 0} ккал.`;
             }
-
             if (msg.includes('вода') || msg.includes('пить') || msg.includes('напомни')) {
                 const goal = user.weight * 30;
                 const percent = Math.round(waterDrank / goal * 100);
                 let advice = waterDrank < goal ? ' Попей ещё!' : ' Молодец, норма выполнена!';
                 return `💧 Норма воды: ${goal} мл. Ты выпил: ${waterDrank} мл (${percent}%).${advice}`;
             }
-
             if (msg.includes('вес') || msg.includes('похудел') || msg.includes('килограмм')) {
                 const last = weightHistory[weightHistory.length - 1];
                 const first = weightHistory[0];
                 const diff = first.weight - last.weight;
                 return `⚖️ Твой текущий вес: ${last.weight} кг. С начала: ${diff > 0 ? 'сбросил ' + diff.toFixed(1) : 'прибавил ' + Math.abs(diff).toFixed(1)} кг.`;
             }
-
             if (msg.includes('рецепт') || msg.includes('есть') || msg.includes('поесть') || msg.includes('приготовить')) {
                 const recipes = getAllRecipes();
                 let filtered = recipes;
@@ -2358,18 +2382,15 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
                 else if (msg.includes('обед')) filtered = recipes.filter(r => r.type === 'Обед');
                 else if (msg.includes('ужин')) filtered = recipes.filter(r => r.type === 'Ужин');
                 else if (msg.includes('перекус')) filtered = recipes.filter(r => r.type === 'Перекус');
-
                 const match = msg.match(/(\d+)\s*ккал/);
                 if (match) {
                     const maxCal = parseInt(match[1]);
                     filtered = filtered.filter(r => r.cal <= maxCal);
                 }
-
                 if (filtered.length === 0) filtered = recipes;
                 const random = filtered[Math.floor(Math.random() * filtered.length)];
                 return `🍳 ${random.name} (${random.cal} ккал). ${random.desc}`;
             }
-
             if (msg.includes('план') || msg.includes('сегодня')) {
                 if (currentPlan) {
                     const todayIdx = new Date().getDay();
@@ -2381,14 +2402,12 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
                 }
                 return '📅 Сначала сгенерируй план на неделю на вкладке "План питания".';
             }
-
             if (msg.includes('прогресс') || msg.includes('статистика')) {
                 const lastWeek = weightHistory.slice(-7);
                 const avg = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
                 const totalDays = foodLog.length;
                 return `📊 Твой прогресс: текущий вес ${user.weight} кг, средний за неделю ${avg.toFixed(1)} кг. Записей в дневнике: ${totalDays}. Держи курс!`;
             }
-
             if (msg.includes('мой рецепт') || msg.includes('свой рецепт')) {
                 if (customRecipes.length === 0) {
                     return '📝 У тебя пока нет своих рецептов. Добавь их на вкладке "Рецепты" — я буду их использовать в планах и советах!';
@@ -2396,24 +2415,20 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
                 const random = customRecipes[Math.floor(Math.random() * customRecipes.length)];
                 return `🍳 Твой рецепт: ${random.name} (${random.cal} ккал). ${random.desc}`;
             }
-
             const goal = user.weight * 30;
             if (waterDrank < goal * 0.5) {
                 return `💧 Я заметил, что сегодня ты выпил всего ${waterDrank} мл воды. Норма — ${goal} мл. Давай пополним баланс? 💪`;
             }
-
             const calResult = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user.deficit);
             const todayCal = getTodayCalories();
             if (todayCal > 0 && todayCal < calResult.dailyCal * 0.7) {
                 return `🍽 Ты сегодня съел ${todayCal} ккал, а норма — ${calResult.dailyCal}. Может, добавим перекус? Я могу подобрать рецепт.`;
             }
-
             const lastWeight = weightHistory[weightHistory.length - 1];
             const daysSinceWeight = Math.floor((new Date() - new Date(lastWeight.date)) / (1000 * 60 * 60 * 24));
             if (daysSinceWeight > 5) {
                 return `⚖️ Давно не записывал вес (${daysSinceWeight} дней). Может, обновим данные? Это поможет точнее считать калории.`;
             }
-
             return '🤔 Я ещё учусь. Попробуй спросить про калории, воду, рецепты или вес. Либо напиши "помощь" для списка команд.';
         }
 
@@ -2424,7 +2439,6 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
         // ================================================================
         // 10. ОБРАБОТЧИКИ СОБЫТИЙ
         // ================================================================
-
         const burgerBtn = document.getElementById('burgerBtn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
@@ -2443,7 +2457,6 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
             burgerBtn.classList.remove('active');
             document.body.style.overflow = '';
         }
-
         burgerBtn.addEventListener('click', openSidebar);
         sidebarClose.addEventListener('click', closeSidebar);
         overlay.addEventListener('click', closeSidebar);
@@ -2616,7 +2629,6 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
             const price = prompt('Цена (Низкая/Средняя/Высокая):') || 'Средняя';
             const time = prompt('Время приготовления:') || '20 мин';
             const type = category;
-
             const newRecipe = { id: Date.now(), name, cal, protein, fat, carbs, weight, desc, category, price, time,
                 type };
             customRecipes.push(newRecipe);
@@ -2640,10 +2652,10 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
             currentMode = 'smart';
             document.getElementById('smartBlock').classList.remove('hidden');
             document.getElementById('autoBlock').classList.add('hidden');
-            this.style.borderColor = '#34c759';
-            this.style.color = '#34c759';
-            document.getElementById('modeAuto').style.borderColor = 'rgba(60,60,67,0.08)';
-            document.getElementById('modeAuto').style.color = '#1c1c1e';
+            this.style.borderColor = '#6bcb77';
+            this.style.color = '#6bcb77';
+            document.getElementById('modeAuto').style.borderColor = 'rgba(255,255,255,0.08)';
+            document.getElementById('modeAuto').style.color = '#ccc';
             generatePlan();
         });
 
@@ -2651,10 +2663,10 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
             currentMode = 'auto';
             document.getElementById('smartBlock').classList.add('hidden');
             document.getElementById('autoBlock').classList.remove('hidden');
-            this.style.borderColor = '#34c759';
-            this.style.color = '#34c759';
-            document.getElementById('modeSmart').style.borderColor = 'rgba(60,60,67,0.08)';
-            document.getElementById('modeSmart').style.color = '#1c1c1e';
+            this.style.borderColor = '#6bcb77';
+            this.style.color = '#6bcb77';
+            document.getElementById('modeSmart').style.borderColor = 'rgba(255,255,255,0.08)';
+            document.getElementById('modeSmart').style.color = '#ccc';
             generatePlan();
         });
 
@@ -2784,7 +2796,6 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
                 addChatMessage(reply, false);
             }, 300);
         }
-
         chatSendBtn.addEventListener('click', handleChatSend);
         chatInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') handleChatSend();
@@ -2807,7 +2818,7 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
         if (!hasSeenPopup) {
             setTimeout(() => {
                 welcomePopup.classList.remove('hidden');
-                welcomePopup.style.animation = 'popUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards';
+                welcomePopup.style.animation = 'popUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards';
             }, 3000);
         }
 
@@ -2830,7 +2841,7 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
             setTimeout(() => {
                 if (!loadState('hasSeenPopup', false)) {
                     welcomePopup.classList.remove('hidden');
-                    welcomePopup.style.animation = 'popUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1) forwards';
+                    welcomePopup.style.animation = 'popUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards';
                 }
             }, 30 * 60 * 1000);
         });
@@ -2838,11 +2849,9 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
         (function() {
             const SWIPE_ZONE = 40;
             const SWIPE_THRESHOLD = 80;
-
             let touchStartX = 0;
             let touchStartY = 0;
             let isSwiping = false;
-
             document.addEventListener('touchstart', function(e) {
                 const touch = e.touches[0];
                 if (touch.clientX < SWIPE_ZONE) {
@@ -2851,34 +2860,27 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
                     isSwiping = true;
                 }
             }, { passive: true });
-
             document.addEventListener('touchmove', function(e) {
                 if (!isSwiping) return;
-
                 const touch = e.touches[0];
                 const deltaX = touch.clientX - touchStartX;
                 const deltaY = touch.clientY - touchStartY;
-
                 if (Math.abs(deltaY) > Math.abs(deltaX)) {
                     isSwiping = false;
                     return;
                 }
-
                 if (deltaX > SWIPE_THRESHOLD && !sidebar.classList.contains('open')) {
                     openSidebar();
                     isSwiping = false;
                 }
-
                 if (deltaX < -SWIPE_THRESHOLD && sidebar.classList.contains('open')) {
                     closeSidebar();
                     isSwiping = false;
                 }
             }, { passive: true });
-
             document.addEventListener('touchend', function() {
                 isSwiping = false;
             }, { passive: true });
-
             console.log('✅ Свайпы для шторки активированы!');
         })();
 
@@ -2888,21 +2890,18 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
         function restoreUI() {
             if (user.gender === 'female') document.getElementById('genderFemale').click();
             else document.getElementById('genderMale').click();
-
             document.getElementById('ageRange').value = user.age;
             document.getElementById('heightRange').value = user.height;
             document.getElementById('weightRange').value = user.weight;
             document.getElementById('ageValue').textContent = user.age;
             document.getElementById('heightValue').textContent = user.height;
             document.getElementById('weightValue').textContent = user.weight;
-
             document.querySelectorAll('#activityGroup .btn').forEach(b => {
                 if (parseFloat(b.dataset.activity) === user.activity) b.classList.add('active');
             });
             document.querySelectorAll('#deficitGroup .btn').forEach(b => {
                 if (parseFloat(b.dataset.deficit) === user.deficit) b.classList.add('active');
             });
-
             if (currentMode === 'auto') {
                 document.getElementById('modeAuto').click();
             } else {
@@ -2916,9 +2915,8 @@ ${diff > 0 ? '💪 Отличный прогресс! Так держать!' : 
         restoreUI();
         renderAll();
         setTimeout(scheduleReminders, 2000);
-
-        console.log('✅ ShapeUp iOS-style загружен!');
-        console.log('🍎 Дизайн в стиле iPhone, вся логика сохранена');
+        console.log('✅ ShapeUp (тёмная тема) загружен!');
+        console.log('🧠 Все улучшения активны: коэффициент 1.9, проверка калорий, умный чат-бот');
         console.log('👤', user.gender === 'male' ? 'Мужчина' : 'Женщина', user.age, 'лет,', user.weight, 'кг');
         console.log('📊 Записей веса:', weightHistory.length);
         console.log('📝 Своих рецептов:', customRecipes.length);
