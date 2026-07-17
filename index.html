@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShapeUp — Умный план питания</title>
+    <title>ShapeUp — Умный помощник</title>
     <style>
         /* ===== ГЛОБАЛЬНЫЕ СТИЛИ ===== */
         * {
@@ -240,46 +240,6 @@
             }
         }
 
-        /* ===== ПОЛЗУНКИ ===== */
-        .input-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-            gap: 16px;
-        }
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .input-group label {
-            font-size: 0.85rem;
-            color: #aab;
-            font-weight: 500;
-        }
-        .input-group input[type="range"] {
-            width: 100%;
-            height: 5px;
-            -webkit-appearance: none;
-            background: linear-gradient(90deg, #00d4ff, #a855f7);
-            border-radius: 10px;
-            outline: none;
-            cursor: pointer;
-        }
-        .input-group input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #00d4ff;
-            cursor: pointer;
-            box-shadow: 0 0 24px rgba(0, 212, 255, 0.35);
-        }
-        .input-group .value-display {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #fff;
-        }
-
         /* ===== КНОПКИ ===== */
         .btn-group {
             display: flex;
@@ -350,93 +310,229 @@
             background: rgba(107, 203, 119, 0.12);
         }
 
-        /* ===== ПЛАН НЕДЕЛИ (сетка) ===== */
-        .week-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 14px;
-        }
-        .day-card {
-            background: rgba(0, 0, 0, 0.18);
-            border-radius: 16px;
-            padding: 14px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-        .day-card .day-name {
-            font-weight: 700;
-            color: #00d4ff;
-            font-size: 1rem;
-            margin-bottom: 8px;
-        }
-        .day-card .meal-row {
-            font-size: 0.85rem;
-            padding: 3px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-        }
-        .day-card .meal-row .meal-type {
-            color: #889;
-        }
-        .day-card .meal-row .meal-cal {
-            color: #889;
-            float: right;
-        }
-        .day-card .day-total {
-            margin-top: 8px;
-            color: #00d4ff;
-            font-weight: 700;
-            text-align: right;
-        }
-
-        /* ===== ФИЛЬТРЫ ДЛЯ УМНОГО ПОДБОРА ===== */
-        .pref-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-        }
-        .pref-group {
+        /* ===== ЧАТ-БОТ ===== */
+        .chat-container {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            height: 420px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .pref-group label {
+        .chat-messages {
+            flex: 1;
+            padding: 16px 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-message {
+            max-width: 80%;
+            padding: 10px 16px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            animation: msgIn 0.3s ease;
+        }
+        .chat-message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-message.bot {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.06);
+            color: #e0e0e8;
+            border-bottom-left-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        @keyframes msgIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.25);
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+        .chat-input-area input:focus {
+            border-color: #00d4ff;
+        }
+        .chat-input-area input::placeholder {
+            color: #556;
+        }
+        .chat-input-area button {
+            padding: 10px 22px;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .chat-input-area button:hover {
+            transform: scale(1.04);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        /* ===== ВСПЛЫВАЮЩЕЕ ОКНО ПРИВЕТСТВИЯ ===== */
+        .welcome-popup {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 500;
+            max-width: 400px;
+            width: 90%;
+            background: rgba(18, 18, 40, 0.94);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 24px 26px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            animation: popUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+            transform-origin: bottom right;
+        }
+        @keyframes popUp {
+            0% {
+                opacity: 0;
+                transform: scale(0.85) translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .welcome-popup .popup-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #00d4ff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .welcome-popup .popup-text {
+            color: #b0b0c8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 6px;
+        }
+        .welcome-popup .popup-commands {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 14px;
+            padding: 12px 16px;
+            margin: 10px 0 14px;
+            font-size: 0.85rem;
+            color: #c0c0d0;
+            border-left: 3px solid #00d4ff;
+        }
+        .welcome-popup .popup-commands li {
+            list-style: none;
+            padding: 2px 0;
+        }
+        .welcome-popup .popup-commands li::before {
+            content: "• ";
+            color: #00d4ff;
+        }
+        .welcome-popup .popup-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        .welcome-popup .popup-buttons button {
+            padding: 8px 22px;
+            border-radius: 40px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-size: 0.9rem;
+        }
+        .welcome-popup .popup-buttons .btn-primary-popup {
+            background: linear-gradient(135deg, #00d4ff, #7b2ffc);
+            color: #fff;
+            flex: 1;
+        }
+        .welcome-popup .popup-buttons .btn-primary-popup:hover {
+            transform: scale(1.04);
+        }
+        .welcome-popup .popup-buttons .btn-secondary-popup {
+            background: rgba(255, 255, 255, 0.06);
+            color: #aaa;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .welcome-popup .popup-buttons .btn-secondary-popup:hover {
+            background: rgba(255, 255, 255, 0.10);
+            color: #fff;
+        }
+        .welcome-popup.hidden {
+            display: none;
+        }
+
+        /* ===== ОСТАЛЬНЫЕ СТИЛИ (совместимость) ===== */
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .input-group label {
             font-size: 0.85rem;
             color: #aab;
             font-weight: 500;
         }
-        .pref-group select,
-        .pref-group input[type="text"] {
-            padding: 8px 12px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            font-size: 0.9rem;
-        }
-        .pref-group select option {
-            background: #1a1a2e;
-            color: #fff;
-        }
-        .pref-group .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .pref-group .checkbox-group label {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 0.8rem;
-            color: #ccc;
+        .input-group input[type="range"] {
+            width: 100%;
+            height: 5px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, #00d4ff, #a855f7);
+            border-radius: 10px;
+            outline: none;
             cursor: pointer;
         }
-        .pref-group .checkbox-group input[type="checkbox"] {
-            accent-color: #00d4ff;
-            width: 16px;
-            height: 16px;
+        .input-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #00d4ff;
             cursor: pointer;
+            box-shadow: 0 0 24px rgba(0, 212, 255, 0.35);
+        }
+        .input-group .value-display {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #fff;
         }
 
-        /* ===== РЕЗУЛЬТАТЫ ===== */
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -488,7 +584,233 @@
             color: #889;
         }
 
-        /* ===== ОСТАЛЬНОЕ ===== */
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 14px;
+        }
+        .day-card {
+            background: rgba(0, 0, 0, 0.18);
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .day-card .day-name {
+            font-weight: 700;
+            color: #00d4ff;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        .day-card .meal-row {
+            font-size: 0.85rem;
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .day-card .meal-row .meal-type {
+            color: #889;
+        }
+        .day-card .meal-row .meal-cal {
+            color: #889;
+            float: right;
+        }
+        .day-card .day-total {
+            margin-top: 8px;
+            color: #00d4ff;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .pref-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+        .pref-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .pref-group label {
+            font-size: 0.85rem;
+            color: #aab;
+            font-weight: 500;
+        }
+        .pref-group select,
+        .pref-group input[type="text"] {
+            padding: 8px 12px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.9rem;
+        }
+        .pref-group select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        .pref-group .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .pref-group .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.8rem;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .pref-group .checkbox-group input[type="checkbox"] {
+            accent-color: #00d4ff;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .stats-card {
+            background: rgba(0, 0, 0, 0.20);
+            border-radius: 14px;
+            padding: 14px 10px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .stats-card .stat-number {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #00d4ff;
+        }
+        .stats-card .stat-label {
+            font-size: 0.7rem;
+            color: #889;
+        }
+
+        .weight-history {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+        .weight-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 14px;
+            background: rgba(0, 0, 0, 0.12);
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+        .weight-entry .date {
+            color: #889;
+        }
+        .weight-entry .weight {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .food-log {
+            max-height: 260px;
+            overflow-y: auto;
+        }
+        .food-log .log-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 14px;
+            background: rgba(0, 0, 0, 0.14);
+            border-radius: 12px;
+            margin-bottom: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .food-log .log-item .log-name {
+            font-weight: 500;
+        }
+        .food-log .log-item .log-cal {
+            color: #889;
+            font-size: 0.85rem;
+        }
+        .food-log .log-item .log-del {
+            color: #ff6b6b;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+        }
+
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 14px;
+            max-height: 620px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .recipe-card {
+            background: rgba(0, 0, 0, 0.20);
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: all 0.25s ease;
+        }
+        .recipe-card:hover {
+            border-color: rgba(123, 47, 252, 0.25);
+            transform: translateY(-3px);
+        }
+        .recipe-card .recipe-name {
+            font-weight: 600;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+        .recipe-card .recipe-info {
+            font-size: 0.75rem;
+            color: #889;
+        }
+        .recipe-card .recipe-cal {
+            color: #00d4ff;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .recipe-card .recipe-tags {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+        .recipe-card .recipe-tags .tag {
+            font-size: 0.6rem;
+            padding: 2px 12px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #889;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .filter-btn {
+            padding: 5px 14px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: transparent;
+            color: #889;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover {
+            border-color: #00d4ff;
+            color: #fff;
+        }
+
         .hidden {
             display: none !important;
         }
@@ -534,6 +856,15 @@
             }
             .week-grid {
                 grid-template-columns: 1fr;
+            }
+            .welcome-popup {
+                bottom: 16px;
+                right: 16px;
+                padding: 18px 18px;
+                max-width: 95%;
+            }
+            .chat-container {
+                height: 340px;
             }
         }
         ::-webkit-scrollbar {
@@ -588,6 +919,7 @@
             <li><a data-tab="tabStats"><span class="icon">📈</span> Статистика</a></li>
             <li><a data-tab="tabRecipes"><span class="icon">🍳</span> Рецепты</a></li>
             <li><a data-tab="tabReminders"><span class="icon">⏰</span> Напоминания</a></li>
+            <li><a data-tab="tabBot"><span class="icon">💬</span> Помощник</a></li>
         </ul>
     </nav>
 
@@ -653,19 +985,15 @@
         </div>
 
         <!-- ==========================================================
-        ВКЛАДКА 2: ПЛАН ПИТАНИЯ (УМНЫЙ + АВТО)
+        ВКЛАДКА 2: ПЛАН ПИТАНИЯ
         ========================================================== -->
         <div id="tabPlan" class="tab-content">
             <div class="card">
                 <div class="card-title">📅 План питания на неделю</div>
-
-                <!-- Переключатель режимов -->
                 <div style="display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;">
-                    <button class="btn-secondary btn-success" id="modeSmart" style="flex:1;text-align:center;">🧠 Умный подбор</button>
-                    <button class="btn-secondary" id="modeAuto" style="flex:1;text-align:center;">🎲 Авто-подбор</button>
+                    <button class="btn-secondary btn-success" id="modeSmart">🧠 Умный подбор</button>
+                    <button class="btn-secondary" id="modeAuto">🎲 Авто-подбор</button>
                 </div>
-
-                <!-- Блок умного подбора -->
                 <div id="smartBlock">
                     <div class="pref-grid">
                         <div class="pref-group">
@@ -710,18 +1038,13 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Блок авто-подбора -->
                 <div id="autoBlock" class="hidden">
                     <div style="text-align:center;padding:12px 0;color:#889;">
                         🎲 Нажмите кнопку ниже — получите случайный сбалансированный план без повторов
                     </div>
                 </div>
-
                 <button class="btn-primary" id="generatePlanBtn" style="margin-top:16px;">🎲 Сгенерировать план</button>
             </div>
-
-            <!-- Результат: план недели -->
             <div class="card">
                 <div class="card-title">📋 Ваш план</div>
                 <div id="planResult">
@@ -737,7 +1060,7 @@
             <div class="card">
                 <div class="card-title">💧 Водный баланс</div>
                 <div id="waterDisplay">
-                    <div class="water-tracker" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+                    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
                         <div>
                             <div style="font-size:1.8rem;font-weight:700;color:#00d4ff;" id="waterGoalDisplay">2.6 Л</div>
                             <div style="color:#889;font-size:0.8rem;">Норма на день</div>
@@ -779,7 +1102,7 @@
                     <span style="color:#ffd93d;">🥑 <span id="todayFat">0</span>г</span>
                     <span style="color:#6bcb77;">🍞 <span id="todayCarbs">0</span>г</span>
                 </div>
-                <div class="food-log" id="foodLog" style="max-height:260px;overflow-y:auto;"></div>
+                <div class="food-log" id="foodLog"></div>
                 <button class="btn-secondary btn-danger" id="resetFoodBtn" style="margin-top:10px;">🗑 Очистить дневник</button>
             </div>
         </div>
@@ -790,18 +1113,18 @@
         <div id="tabStats" class="tab-content">
             <div class="card">
                 <div class="card-title">📈 Статистика</div>
-                <div class="stats-grid" id="statsOverview" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px;"></div>
+                <div class="stats-grid" id="statsOverview"></div>
                 <div style="margin-top:14px;">
                     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
                         <input type="number" id="newWeightInput" placeholder="Новый вес (кг)" style="flex:1;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,0.04);color:#fff;border:1px solid rgba(255,255,255,0.06);">
                         <button class="btn-secondary" id="addWeightBtn">📌 Записать вес</button>
                     </div>
-                    <div class="weight-history" id="weightHistory" style="display:flex;flex-direction:column;gap:4px;max-height:180px;overflow-y:auto;"></div>
+                    <div class="weight-history" id="weightHistory"></div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-title">📉 График изменения веса</div>
-                <div class="chart-wrapper" style="width:100%;overflow-x:auto;padding:6px 0;">
+                <div style="width:100%;overflow-x:auto;padding:6px 0;">
                     <canvas id="weightChart" style="width:100%;max-width:780px;height:260px;background:rgba(0,0,0,0.18);border-radius:16px;display:block;margin:0 auto;"></canvas>
                 </div>
             </div>
@@ -825,17 +1148,17 @@
                 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
                     <button class="btn-secondary btn-success" id="addRecipeBtn">➕ Добавить свой рецепт</button>
                 </div>
-                <div class="filter-buttons" id="recipeFilters" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
-                    <button class="filter-btn active" data-filter="all" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">Все</button>
-                    <button class="filter-btn" data-filter="Мясные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🥩 Мясные</button>
-                    <button class="filter-btn" data-filter="Рыбные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🐟 Рыбные</button>
-                    <button class="filter-btn" data-filter="Яичные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🥚 Яичные</button>
-                    <button class="filter-btn" data-filter="Каши" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🌾 Каши</button>
-                    <button class="filter-btn" data-filter="Овощные" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🥗 Овощные</button>
-                    <button class="filter-btn" data-filter="Веганские" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">🌱 Веганские</button>
-                    <button class="filter-btn" data-filter="Свои" style="padding:5px 14px;border-radius:30px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#889;cursor:pointer;font-size:0.8rem;">✏️ Мои</button>
+                <div class="filter-buttons" id="recipeFilters">
+                    <button class="filter-btn active" data-filter="all">Все</button>
+                    <button class="filter-btn" data-filter="Мясные">🥩 Мясные</button>
+                    <button class="filter-btn" data-filter="Рыбные">🐟 Рыбные</button>
+                    <button class="filter-btn" data-filter="Яичные">🥚 Яичные</button>
+                    <button class="filter-btn" data-filter="Каши">🌾 Каши</button>
+                    <button class="filter-btn" data-filter="Овощные">🥗 Овощные</button>
+                    <button class="filter-btn" data-filter="Веганские">🌱 Веганские</button>
+                    <button class="filter-btn" data-filter="Свои">✏️ Мои</button>
                 </div>
-                <div class="recipe-grid" id="recipeGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;max-height:620px;overflow-y:auto;padding-right:4px;"></div>
+                <div class="recipe-grid" id="recipeGrid"></div>
             </div>
         </div>
 
@@ -854,10 +1177,47 @@
             </div>
         </div>
 
+        <!-- ==========================================================
+        ВКЛАДКА 8: ЧАТ-БОТ
+        ========================================================== -->
+        <div id="tabBot" class="tab-content">
+            <div class="card">
+                <div class="card-title">💬 Помощник ShapeUp</div>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="chat-message bot">👋 Привет! Я твой персональный помощник. Спрашивай меня о чём угодно: еда, вода, калории, вес, мотивация. Напиши "помощь" для списка команд.</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="Спроси меня..." autofocus>
+                        <button id="chatSendBtn">Отправить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== ВСПЛЫВАЮЩЕЕ ОКНО ПРИВЕТСТВИЯ ===== -->
+    <div class="welcome-popup" id="welcomePopup">
+        <div class="popup-title">💬 Нужна помощь?</div>
+        <div class="popup-text">
+            Я — твой персональный помощник. Напиши мне что-нибудь, например:
+        </div>
+        <ul class="popup-commands">
+            <li><strong>«Что съесть на ужин?»</strong> — подберу рецепт</li>
+            <li><strong>«Сколько пить воды?»</strong> — рассчитаю норму</li>
+            <li><strong>«Мои калории»</strong> — покажу норму</li>
+            <li><strong>«Мотивация»</strong> — поддержу</li>
+            <li><strong>«Помощь»</strong> — список всех команд</li>
+        </ul>
+        <div class="popup-buttons">
+            <button class="btn-primary-popup" id="popupOkBtn">💬 Перейти в чат</button>
+            <button class="btn-secondary-popup" id="popupLaterBtn">⏳ Напомнить позже</button>
+        </div>
     </div>
 
     <!-- ============================================================
-    JAVASCRIPT
+    JAVASCRIPT — ВСЯ ЛОГИКА
     ============================================================ -->
     <script>
         // ================================================================
@@ -1010,27 +1370,15 @@
         function generateSmartPlan(prefs) {
             const recipes = getAllRecipes();
             let filtered = recipes;
-
-            // Фильтр по категориям
             if (prefs.categories && prefs.categories.length > 0) {
                 filtered = filtered.filter(r => prefs.categories.includes(r.type));
             }
-
-            // Фильтр по любимым продуктам
             if (prefs.favFood && prefs.favFood !== 'all') {
-                filtered = filtered.filter(r =>
-                    r.desc.toLowerCase().includes(prefs.favFood.toLowerCase())
-                );
+                filtered = filtered.filter(r => r.desc.toLowerCase().includes(prefs.favFood.toLowerCase()));
             }
-
-            // Фильтр по исключениям
             if (prefs.exclude && prefs.exclude !== 'none') {
-                filtered = filtered.filter(r =>
-                    !r.desc.toLowerCase().includes(prefs.exclude.toLowerCase())
-                );
+                filtered = filtered.filter(r => !r.desc.toLowerCase().includes(prefs.exclude.toLowerCase()));
             }
-
-            // Фильтр по калорийности
             if (prefs.calLevel === 'low') {
                 filtered = filtered.filter(r => r.cal <= 300);
             } else if (prefs.calLevel === 'medium') {
@@ -1038,17 +1386,12 @@
             } else if (prefs.calLevel === 'high') {
                 filtered = filtered.filter(r => r.cal > 500);
             }
-
-            // Если рецептов мало — расширяем до всех
             if (filtered.length < 10) filtered = recipes;
-
-            // Собираем план
             return buildPlanFromRecipes(filtered);
         }
 
         function generateAutoPlan() {
             const recipes = getAllRecipes();
-            // Перемешиваем
             const shuffled = [...recipes].sort(() => Math.random() - 0.5);
             return buildPlanFromRecipes(shuffled);
         }
@@ -1058,45 +1401,22 @@
             const types = ['Завтрак', 'Обед', 'Ужин', 'Перекус'];
             const plan = [];
             const used = new Set();
-
-            // Для каждого дня выбираем по 4 приёма (завтрак, обед, ужин, перекус)
             for (let d = 0; d < 7; d++) {
                 const dayMeals = [];
                 for (let t = 0; t < types.length; t++) {
-                    // Ищем рецепт этого типа, который ещё не использовали
-                    let available = recipes.filter(r =>
-                        r.type === types[t] &&
-                        !used.has(r.id)
-                    );
-                    // Если нет — берём любой этого типа (можно повтор)
-                    if (available.length === 0) {
-                        available = recipes.filter(r => r.type === types[t]);
-                    }
-                    // Если всё равно нет — берём любой рецепт
+                    let available = recipes.filter(r => r.type === types[t] && !used.has(r.id));
+                    if (available.length === 0) available = recipes.filter(r => r.type === types[t]);
                     if (available.length === 0) available = recipes;
-
                     const picked = available[Math.floor(Math.random() * available.length)];
                     used.add(picked.id);
-                    dayMeals.push({
-                        type: types[t],
-                        name: picked.name,
-                        cal: picked.cal,
-                        id: picked.id
-                    });
+                    dayMeals.push({ type: types[t], name: picked.name, cal: picked.cal, id: picked.id });
                 }
                 const totalCal = dayMeals.reduce((sum, m) => sum + m.cal, 0);
-                plan.push({
-                    day: days[d],
-                    meals: dayMeals,
-                    totalCal: totalCal
-                });
+                plan.push({ day: days[d], meals: dayMeals, totalCal });
             }
             return plan;
         }
 
-        // ================================================================
-        // 5. ОТРИСОВКА ПЛАНА
-        // ================================================================
         function renderPlan(plan) {
             const container = document.getElementById('planResult');
             if (!plan || plan.length === 0) {
@@ -1124,6 +1444,137 @@
             });
             html += '</div>';
             container.innerHTML = html;
+        }
+
+        // ================================================================
+        // 5. ЧАТ-БОТ
+        // ================================================================
+        function getBotReply(message) {
+            const msg = message.toLowerCase().trim();
+            const commands = {
+                'привет': '👋 Привет! Я твой помощник. Задавай любые вопросы про питание, воду или просто попроси мотивации!',
+                'помощь': `
+📌 *Список команд ShapeUp:*
+
+🍳 *Еда и рецепты*
+• "Что съесть на завтрак/обед/ужин?"
+• "Дай рецепт на 300 ккал"
+• "Веганские блюда"
+• "Мой рецепт"
+
+💧 *Вода*
+• "Сколько пить воды?"
+• "Напомни выпить воду"
+
+⚖️ *Калории и вес*
+• "Моя норма калорий"
+• "Сколько я вешу?"
+
+📊 *Прогресс*
+• "Мой прогресс"
+• "Статистика за неделю"
+
+😊 *Мотивация*
+• "Мотивация"
+• "Я устал"
+
+ℹ️ *Общее*
+• "Помощь" — показать этот список
+• "О сайте" — что такое ShapeUp
+                `,
+                'о сайте': '🌿 ShapeUp — это твой персональный помощник в питании. Мы помогаем рассчитать калории, составить план, следить за водой и мотивируем тебя каждый день!',
+                'мотивация': '💪 Ты уже сделал первый шаг! Каждый день — это прогресс. Даже маленький шаг приближает тебя к цели. Ты справишься!',
+                'я устал': '🧘 Отдых — тоже часть пути. Возьми паузу, выпей воды, прогуляйся. А завтра продолжай с новыми силами. Я с тобой!'
+            };
+
+            // 1. Команды
+            for (const key in commands) {
+                if (msg.includes(key)) return commands[key];
+            }
+
+            // 2. Калории
+            if (msg.includes('калории') || msg.includes('норма') || msg.includes('ккал')) {
+                const result = calculateCalories(user.gender, user.age, user.height, user.weight, user.activity, user
+                .deficit);
+                const todayCal = getTodayCalories();
+                const remain = result.dailyCal - todayCal;
+                return `🔥 Твоя норма на день: ${result.dailyCal} ккал (дефицит ${Math.round((1 - user.deficit) * 100)}%). Осталось: ${remain > 0 ? remain : 0} ккал.`;
+            }
+
+            // 3. Вода
+            if (msg.includes('вода') || msg.includes('пить') || msg.includes('напомни')) {
+                const goal = user.weight * 30;
+                const percent = Math.round(waterDrank / goal * 100);
+                let advice = waterDrank < goal ? ' Попей ещё!' : ' Молодец, норма выполнена!';
+                return `💧 Норма воды: ${goal} мл. Ты выпил: ${waterDrank} мл (${percent}%).${advice}`;
+            }
+
+            // 4. Вес
+            if (msg.includes('вес') || msg.includes('похудел') || msg.includes('килограмм')) {
+                const last = weightHistory[weightHistory.length - 1];
+                const first = weightHistory[0];
+                const diff = first.weight - last.weight;
+                return `⚖️ Твой текущий вес: ${last.weight} кг. С начала: ${diff > 0 ? 'сбросил ' + diff.toFixed(1) : 'прибавил ' + Math.abs(diff).toFixed(1)} кг.`;
+            }
+
+            // 5. Рецепты
+            if (msg.includes('рецепт') || msg.includes('есть') || msg.includes('поесть') || msg.includes('приготовить')) {
+                const recipes = getAllRecipes();
+                let filtered = recipes;
+                if (msg.includes('завтрак')) filtered = recipes.filter(r => r.type === 'Завтрак');
+                else if (msg.includes('обед')) filtered = recipes.filter(r => r.type === 'Обед');
+                else if (msg.includes('ужин')) filtered = recipes.filter(r => r.type === 'Ужин');
+                else if (msg.includes('перекус')) filtered = recipes.filter(r => r.type === 'Перекус');
+
+                if (msg.includes('веган')) filtered = filtered.filter(r => r.category === 'Веганские');
+
+                const match = msg.match(/(\d+)\s*ккал/);
+                if (match) {
+                    const maxCal = parseInt(match[1]);
+                    filtered = filtered.filter(r => r.cal <= maxCal);
+                }
+
+                if (filtered.length === 0) filtered = recipes;
+                const random = filtered[Math.floor(Math.random() * filtered.length)];
+                return `🍳 ${random.name} (${random.cal} ккал). ${random.desc}`;
+            }
+
+            // 6. План
+            if (msg.includes('план') || msg.includes('сегодня')) {
+                if (currentPlan) {
+                    const todayIdx = new Date().getDay();
+                    const today = currentPlan[todayIdx];
+                    if (today) {
+                        return `📅 Сегодня (${today.day}): ${today.meals.map(m => m.name).join(', ')}. Итого: ${today.totalCal} ккал.`;
+                    }
+                    return '📅 Сегодня нет плана. Сгенерируй новый на вкладке "План питания".';
+                }
+                return '📅 Сначала сгенерируй план на неделю на вкладке "План питания".';
+            }
+
+            // 7. Прогресс
+            if (msg.includes('прогресс') || msg.includes('статистика')) {
+                const lastWeek = weightHistory.slice(-7);
+                const avg = lastWeek.length ? (lastWeek.reduce((s, e) => s + e.weight, 0) / lastWeek.length) : user.weight;
+                const totalDays = foodLog.length;
+                return `📊 Твой прогресс: текущий вес ${user.weight} кг, средний за неделю ${avg.toFixed(1)} кг. Записей в дневнике: ${totalDays}. Держи курс!`;
+            }
+
+            // 8. Мои рецепты
+            if (msg.includes('мой рецепт') || msg.includes('свой рецепт')) {
+                if (customRecipes.length === 0) {
+                    return '📝 У тебя пока нет своих рецептов. Добавь их на вкладке "Рецепты" — я буду их использовать в планах и советах!';
+                }
+                const random = customRecipes[Math.floor(Math.random() * customRecipes.length)];
+                return `🍳 Твой рецепт: ${random.name} (${random.cal} ккал). ${random.desc}`;
+            }
+
+            // 9. Если не понял
+            return '🤔 Я ещё учусь. Попробуй спросить про калории, воду, рецепты или вес. Либо напиши "помощь" для списка команд.';
+        }
+
+        function getTodayCalories() {
+            return foodLog.reduce((sum, item) => sum + (item.cal || 0), 0);
         }
 
         // ================================================================
@@ -1195,10 +1646,10 @@
                     totalFat += item.fat || 0;
                     totalCarbs += item.carbs || 0;
                     html += `
-                        <div class="log-item" style="display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:rgba(0,0,0,0.14);border-radius:12px;margin-bottom:6px;border:1px solid rgba(255,255,255,0.03);">
-                            <span class="log-name" style="font-weight:500;">${item.name}</span>
-                            <span class="log-cal" style="color:#889;font-size:0.85rem;">${item.cal} ккал</span>
-                            <button class="log-del" onclick="removeFood(${idx})" style="color:#ff6b6b;cursor:pointer;background:none;border:none;font-size:1.1rem;">✕</button>
+                        <div class="log-item">
+                            <span class="log-name">${item.name}</span>
+                            <span class="log-cal">${item.cal} ккал</span>
+                            <button class="log-del" onclick="removeFood(${idx})">✕</button>
                         </div>
                     `;
                 });
@@ -1219,30 +1670,12 @@
             const maxWeight = lastWeek.length ? Math.max(...lastWeek.map(e => e.weight)) : user.weight;
 
             overview.innerHTML = `
-                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
-                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${user.weight}</div>
-                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Текущий вес</div>
-                </div>
-                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
-                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${avgWeight.toFixed(1)}</div>
-                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Средний за неделю</div>
-                </div>
-                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
-                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${minWeight}</div>
-                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Мин. вес</div>
-                </div>
-                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
-                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${maxWeight}</div>
-                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Макс. вес</div>
-                </div>
-                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
-                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${foodLog.length}</div>
-                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Записей сегодня</div>
-                </div>
-                <div class="stats-card" style="background:rgba(0,0,0,0.20);border-radius:14px;padding:14px 10px;text-align:center;border:1px solid rgba(255,255,255,0.04);">
-                    <div class="stat-number" style="font-size:1.6rem;font-weight:700;color:#00d4ff;">${customRecipes.length}</div>
-                    <div class="stat-label" style="font-size:0.7rem;color:#889;">Своих рецептов</div>
-                </div>
+                <div class="stats-card"><div class="stat-number">${user.weight}</div><div class="stat-label">Текущий вес</div></div>
+                <div class="stats-card"><div class="stat-number">${avgWeight.toFixed(1)}</div><div class="stat-label">Средний за неделю</div></div>
+                <div class="stats-card"><div class="stat-number">${minWeight}</div><div class="stat-label">Мин. вес</div></div>
+                <div class="stats-card"><div class="stat-number">${maxWeight}</div><div class="stat-label">Макс. вес</div></div>
+                <div class="stats-card"><div class="stat-number">${foodLog.length}</div><div class="stat-label">Записей сегодня</div></div>
+                <div class="stats-card"><div class="stat-number">${customRecipes.length}</div><div class="stat-label">Своих рецептов</div></div>
             `;
 
             const historyContainer = document.getElementById('weightHistory');
@@ -1252,10 +1685,7 @@
                 let html = '';
                 const reversed = [...weightHistory].reverse().slice(0, 10);
                 reversed.forEach(entry => {
-                    html += `<div class="weight-entry" style="display:flex;justify-content:space-between;padding:6px 14px;background:rgba(0,0,0,0.12);border-radius:10px;font-size:0.9rem;">
-                        <span class="date" style="color:#889;">${entry.date}</span>
-                        <span class="weight" style="font-weight:600;color:#fff;">${entry.weight} кг</span>
-                    </div>`;
+                    html += `<div class="weight-entry"><span class="date">${entry.date}</span><span class="weight">${entry.weight} кг</span></div>`;
                 });
                 historyContainer.innerHTML = html;
             }
@@ -1273,18 +1703,18 @@
             filtered.forEach(r => {
                 const isCustom = customRecipes.some(cr => cr.id === r.id);
                 html += `
-                    <div class="recipe-card" style="background:rgba(0,0,0,0.20);border-radius:16px;padding:14px 16px;border:1px solid rgba(255,255,255,0.04);transition:all 0.25s ease;">
-                        <div class="recipe-name" style="font-weight:600;color:#fff;font-size:0.95rem;">
+                    <div class="recipe-card">
+                        <div class="recipe-name">
                             ${r.name}
                             ${isCustom ? `<button class="recipe-del" onclick="deleteCustomRecipe(${r.id})" style="float:right;background:none;border:none;color:#ff6b6b;cursor:pointer;">✕</button>` : ''}
                         </div>
-                        <div class="recipe-info" style="font-size:0.75rem;color:#889;">${r.type} · ${r.weight} · ⏱ ${r.time}</div>
-                        <div class="recipe-cal" style="color:#00d4ff;font-weight:700;font-size:0.9rem;">🔥 ${r.cal} ккал</div>
-                        <div class="recipe-info" style="font-size:0.75rem;color:#889;">Б:${r.protein}г · Ж:${r.fat}г · У:${r.carbs}г</div>
-                        <div class="recipe-tags" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;">
-                            <span class="tag" style="font-size:0.6rem;padding:2px 12px;border-radius:30px;background:rgba(255,255,255,0.05);color:#889;">${r.category}</span>
-                            <span class="tag" style="font-size:0.6rem;padding:2px 12px;border-radius:30px;background:rgba(255,255,255,0.05);color:#889;">${r.price}</span>
-                            ${isCustom ? '<span class="tag" style="font-size:0.6rem;padding:2px 12px;border-radius:30px;background:rgba(0,212,255,0.12);color:#00d4ff;">Моё</span>' : ''}
+                        <div class="recipe-info">${r.type} · ${r.weight} · ⏱ ${r.time}</div>
+                        <div class="recipe-cal">🔥 ${r.cal} ккал</div>
+                        <div class="recipe-info">Б:${r.protein}г · Ж:${r.fat}г · У:${r.carbs}г</div>
+                        <div class="recipe-tags">
+                            <span class="tag">${r.category}</span>
+                            <span class="tag">${r.price}</span>
+                            ${isCustom ? '<span class="tag" style="background:rgba(0,212,255,0.12);color:#00d4ff;">Моё</span>' : ''}
                         </div>
                         <div style="font-size:0.75rem;color:#556;margin-top:4px;">${r.desc}</div>
                     </div>
@@ -1315,7 +1745,7 @@
             reminders.forEach((rem, idx) => {
                 html += `
                     <div class="reminder-item" style="display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:rgba(0,0,0,0.14);border-radius:14px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.04);flex-wrap:wrap;gap:10px;">
-                        <div class="rem-info" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+                        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
                             <input type="checkbox" ${rem.enabled ? 'checked' : ''} onchange="toggleReminder(${idx})" style="accent-color:#00d4ff;width:18px;height:18px;cursor:pointer;">
                             <span style="font-weight:500;">${rem.label}</span>
                         </div>
@@ -1755,8 +2185,8 @@
             renderFoodSelect();
         };
 
-        // --- ПЛАН ПИТАНИЯ (УМНЫЙ + АВТО) ---
-        let currentMode = 'smart'; // 'smart' или 'auto'
+        // --- План питания ---
+        let currentMode = 'smart';
 
         document.getElementById('modeSmart').addEventListener('click', function() {
             currentMode = 'smart';
@@ -1766,7 +2196,6 @@
             this.style.color = '#6bcb77';
             document.getElementById('modeAuto').style.borderColor = 'rgba(255,255,255,0.08)';
             document.getElementById('modeAuto').style.color = '#ccc';
-            // Перегенерировать план автоматически
             generatePlan();
         });
 
@@ -1788,7 +2217,6 @@
                 const favFood = document.getElementById('favFood').value;
                 const exclude = document.getElementById('excludeFood').value;
                 const calLevel = document.getElementById('calLevel').value;
-
                 const prefs = { categories, favFood, exclude, calLevel };
                 currentPlan = generateSmartPlan(prefs);
             } else {
@@ -1872,7 +2300,82 @@
         });
 
         // ================================================================
-        // 10. ВОССТАНОВЛЕНИЕ UI
+        // 10. ЧАТ-БОТ (обработка сообщений)
+        // ================================================================
+        const chatInput = document.getElementById('chatInput');
+        const chatSendBtn = document.getElementById('chatSendBtn');
+        const chatMessages = document.getElementById('chatMessages');
+
+        function addChatMessage(text, isUser) {
+            const div = document.createElement('div');
+            div.className = `chat-message ${isUser ? 'user' : 'bot'}`;
+            div.innerHTML = text.replace(/\n/g, '<br>');
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleChatSend() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            addChatMessage(text, true);
+            chatInput.value = '';
+            const reply = getBotReply(text);
+            setTimeout(() => {
+                addChatMessage(reply, false);
+            }, 300);
+        }
+
+        chatSendBtn.addEventListener('click', handleChatSend);
+        chatInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleChatSend();
+        });
+
+        // ================================================================
+        // 11. ВСПЛЫВАЮЩЕЕ ОКНО ПРИВЕТСТВИЯ
+        // ================================================================
+        const welcomePopup = document.getElementById('welcomePopup');
+        const popupOkBtn = document.getElementById('popupOkBtn');
+        const popupLaterBtn = document.getElementById('popupLaterBtn');
+
+        // Проверяем, показывали ли уже
+        const hasSeenPopup = loadState('hasSeenPopup', false);
+
+        if (!hasSeenPopup) {
+            // Показываем через 3 секунды
+            setTimeout(() => {
+                welcomePopup.classList.remove('hidden');
+                welcomePopup.style.animation = 'popUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards';
+            }, 3000);
+        }
+
+        function closePopup() {
+            welcomePopup.classList.add('hidden');
+            saveState('hasSeenPopup', true);
+        }
+
+        popupOkBtn.addEventListener('click', () => {
+            closePopup();
+            // Переключаем на вкладку чата
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById('tabBot').classList.add('active');
+            document.querySelectorAll('.nav-list a').forEach(a => a.classList.remove('active'));
+            document.querySelector('.nav-list a[data-tab="tabBot"]').classList.add('active');
+            chatInput.focus();
+        });
+
+        popupLaterBtn.addEventListener('click', () => {
+            welcomePopup.classList.add('hidden');
+            // Не сохраняем, покажем через 30 минут
+            setTimeout(() => {
+                if (!loadState('hasSeenPopup', false)) {
+                    welcomePopup.classList.remove('hidden');
+                    welcomePopup.style.animation = 'popUp 0.5s cubic-bezier(0.2, 0.9, 0.3, 1) forwards';
+                }
+            }, 30 * 60 * 1000);
+        });
+
+        // ================================================================
+        // 12. ВОССТАНОВЛЕНИЕ UI
         // ================================================================
         function restoreUI() {
             if (user.gender === 'female') document.getElementById('genderFemale').click();
@@ -1892,7 +2395,6 @@
                 if (parseFloat(b.dataset.deficit) === user.deficit) b.classList.add('active');
             });
 
-            // Восстанавливаем режим плана
             if (currentMode === 'auto') {
                 document.getElementById('modeAuto').click();
             } else {
@@ -1901,14 +2403,14 @@
         }
 
         // ================================================================
-        // 11. ЗАПУСК
+        // 13. ЗАПУСК
         // ================================================================
         restoreUI();
         renderAll();
         setTimeout(scheduleReminders, 2000);
 
-        console.log('✅ ShapeUp v2.0 загружен!');
-        console.log('🧠 Умный и авто-подбор плана питания включены');
+        console.log('✅ ShapeUp v3.0 загружен!');
+        console.log('🤖 Чат-бот и всплывающая подсказка активны');
         console.log('👤', user.gender === 'male' ? 'Мужчина' : 'Женщина', user.age, 'лет,', user.weight, 'кг');
         console.log('📊 Записей веса:', weightHistory.length);
         console.log('📝 Своих рецептов:', customRecipes.length);
